@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>blaze-install – The Fastest Node.js Installer</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #181a20;
+      color: #f5f6fa;
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 16px 0 16px;
+    }
+    .logo {
+      display: block;
+      margin: 40px auto 16px auto;
+      width: 120px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      letter-spacing: 1px;
+    }
+    .tagline {
+      text-align: center;
+      font-size: 1.3rem;
+      color: #ff9800;
+      margin-bottom: 32px;
+    }
+    .badges {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .badges img {
+      margin: 0 8px;
+      vertical-align: middle;
+    }
+    .cta {
+      text-align: center;
+      margin: 32px 0 40px 0;
+    }
+    .cta code {
+      background: #23272f;
+      color: #ff9800;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-family: 'Fira Mono', monospace;
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin: 40px 0 32px 0;
+    }
+    .feature {
+      background: #23272f;
+      border-radius: 12px;
+      padding: 24px 20px;
+      width: 240px;
+      box-shadow: 0 2px 12px #0002;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .feature:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 4px 24px #0004;
+    }
+    .feature-icon {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .feature-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #ff9800;
+    }
+    .feature-desc {
+      font-size: 1rem;
+      color: #bdbdbd;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 40px 0 32px 0;
+      background: #23272f;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px #0002;
+    }
+    .compare-table th, .compare-table td {
+      padding: 14px 10px;
+      text-align: left;
+    }
+    .compare-table th {
+      background: #181a20;
+      color: #ff9800;
+      font-size: 1.05rem;
+    }
+    .compare-table tr:nth-child(even) {
+      background: #20232a;
+    }
+    .compare-table tr:nth-child(odd) {
+      background: #23272f;
+    }
+    .footer {
+      text-align: center;
+      color: #bdbdbd;
+      font-size: 1rem;
+      margin: 60px 0 24px 0;
+    }
+    .footer a {
+      color: #ff9800;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    @media (max-width: 700px) {
+      .features {
+        flex-direction: column;
+        align-items: center;
+      }
+      .feature {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://raw.githubusercontent.com/TrialLord/Blazed-install/main/logo.svg" alt="blaze-install logo" class="logo" />
+    <h1>blaze-install</h1>
+    <div class="tagline">The blazing fast, modern alternative to <code>npm install</code> for Node.js projects.</div>
+    <div class="badges">
+      <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/v/blaze-install?color=orange&label=npm" alt="npm version"></a>
+      <a href="https://github.com/TrialLord/Blazed-install"><img src="https://img.shields.io/github/stars/TrialLord/Blazed-install?style=social" alt="GitHub stars"></a>
+    </div>
+    <div class="cta">
+      <div style="font-size:1.2rem; margin-bottom:10px;">Get started in seconds:</div>
+      <code>npm install -g blaze-install</code>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <span class="feature-icon">🚀</span>
+        <div class="feature-title">Blazing Fast</div>
+        <div class="feature-desc">Parallel downloads, global cache, and deduplication for instant installs.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📦</span>
+        <div class="feature-title">Clean Lockfile</div>
+        <div class="feature-desc">Only what you need, always pruned. No stale dependencies.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🎨</span>
+        <div class="feature-title">Beautiful CLI</div>
+        <div class="feature-desc">Progress bars, color, and clear feedback for a great developer experience.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🏗️</span>
+        <div class="feature-title">Workspaces</div>
+        <div class="feature-desc">Fast, native support for monorepos and modern project structures.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🔒</span>
+        <div class="feature-title">Security</div>
+        <div class="feature-desc">Built-in audit using the npm audit API. Stay safe by default.</div>
+      </div>
+    </div>
+    <h2 style="text-align:center; margin-top:60px; color:#ff9800;">How does blaze-install compare?</h2>
+    <table class="compare-table">
+      <tr>
+        <th>Feature</th>
+        <th>blaze-install</th>
+        <th>npm install</th>
+      </tr>
+      <tr>
+        <td>Speed</td>
+        <td>🚀 Blazing fast: parallel downloads, global cache, deduplication</td>
+        <td>Slower, sequential, no global cache</td>
+      </tr>
+      <tr>
+        <td>Lockfile</td>
+        <td>Always pruned, only what you need</td>
+        <td>Can become bloated, stale deps remain</td>
+      </tr>
+      <tr>
+        <td>UX</td>
+        <td>Beautiful CLI, progress bars, colored output</td>
+        <td>Basic CLI, minimal feedback</td>
+      </tr>
+      <tr>
+        <td>Workspaces</td>
+        <td>Native support, fast monorepo installs</td>
+        <td>Supported, but slower and more complex</td>
+      </tr>
+      <tr>
+        <td>Peer/Optional Deps</td>
+        <td>Clear warnings, robust handling</td>
+        <td>Sometimes cryptic or missing warnings</td>
+      </tr>
+      <tr>
+        <td>Audit</td>
+        <td>Built-in, fast, npm audit API</td>
+        <td>Built-in</td>
+      </tr>
+      <tr>
+        <td>Lifecycle Scripts</td>
+        <td>Full support (preinstall, install, postinstall)</td>
+        <td>Supported</td>
+      </tr>
+      <tr>
+        <td>Global Store</td>
+        <td>Yes, dedupes across projects</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Error Handling</td>
+        <td>Clear, actionable, modern</td>
+        <td>Sometimes cryptic</td>
+      </tr>
+      <tr>
+        <td>Modern Focus</td>
+        <td>No legacy cruft, focused on 90% use case</td>
+        <td>Lots of legacy baggage</td>
+      </tr>
+    </table>
+    <h2 style="text-align:center; color:#ff9800;">Usage</h2>
+    <pre style="background:#23272f; color:#ff9800; padding:18px 16px; border-radius:8px; font-size:1.1rem; overflow-x:auto;">blaze install                # Install all dependencies from package.json
+blaze install &lt;package&gt;      # Add and install a package
+blaze uninstall &lt;package&gt;    # Remove a package and prune lockfile
+blaze update &lt;package&gt;       # Update a package to the latest version
+blaze audit                  # Run a security audit
+</pre>
+    <div style="text-align:center; margin: 32px 0 0 0;">
+      <a href="https://github.com/TrialLord/Blazed-install" style="color:#ff9800; font-weight:700; text-decoration:none; margin:0 12px;">GitHub</a>
+      <a href="https://www.npmjs.com/package/blaze-install" style="color:#ff9800; font-weight:700; text-decoration:none; margin:0 12px;">npm</a>
+      <a href="https://triallord.github.io/Blazed-install/" style="color:#ff9800; font-weight:700; text-decoration:none; margin:0 12px;">Docs</a>
+    </div>
+    <div class="footer">
+      <p>blaze-install is the future of Node.js dependency management. <br> <b>Join the revolution!</b></p>
+      <p>&copy; 2025 <a href="https://github.com/TrialLord/Blazed-install">TrialLord</a> &mdash; MIT License</p>
+    </div>
+  </div>
+</body>
+</html> 
