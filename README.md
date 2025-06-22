@@ -51,12 +51,32 @@ blaze audit                  # Run a security audit
 ### Workspaces/Monorepo
 If your `package.json` includes a `workspaces` field, blaze-install will automatically resolve and install all workspace dependencies.
 
+## Why Choose blaze-install?
+
+| Feature                | blaze-install         | npm install         |
+|------------------------|----------------------|---------------------|
+| **Speed**              | 🚀 Blazing fast: parallel downloads, global cache, deduplication | Slower, sequential, no global cache |
+| **Lockfile**           | Always pruned, only what you need | Can become bloated, stale deps remain |
+| **UX**                 | Beautiful CLI, progress bars, colored output | Basic CLI, minimal feedback |
+| **Workspaces**         | Native support, fast monorepo installs | Supported, but slower and more complex |
+| **Peer/Optional Deps** | Clear warnings, robust handling | Sometimes cryptic or missing warnings |
+| **Audit**              | Built-in, fast, npm audit API | Built-in |
+| **Lifecycle Scripts**  | Full support (preinstall, install, postinstall) | Supported |
+| **Global Store**       | Yes, dedupes across projects | No |
+| **Error Handling**     | Clear, actionable, modern | Sometimes cryptic |
+| **Modern Focus**       | No legacy cruft, focused on 90% use case | Lots of legacy baggage |
+
+### Key Advantages
+- **Much faster installs** thanks to parallelization and a global cache.
+- **Cleaner lockfile**: No stale or unused dependencies.
+- **Better developer experience**: Progress bars, color, and clear output.
+- **Automatic lockfile pruning** after uninstall/update.
+- **Modern workflows**: Workspaces, peer/optional deps, lifecycle scripts.
+- **No legacy code paths**: Focused on what modern Node.js projects need.
+
 ## How is blaze-install different from npm?
-- **Much faster**: Parallelized, with a global cache and deduplication.
-- **Cleaner lockfile**: Only what you need, always pruned.
-- **Better UX**: Progress bars, colored output, clear warnings.
-- **Modern workflows**: Workspaces, peer/optional dependencies, lifecycle scripts.
-- **No legacy cruft**: Focused on the 90% use case for modern Node.js projects.
+
+blaze-install is designed for speed, simplicity, and a better developer experience. It avoids the legacy complexity of npm, making it ideal for modern projects and monorepos. If you want blazing fast installs, a clean lockfile, and a beautiful CLI, blaze-install is for you.
 
 ## Project Philosophy
 - **Speed and simplicity first**
