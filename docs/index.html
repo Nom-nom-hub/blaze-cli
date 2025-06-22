@@ -6,251 +6,934 @@
   <title>blaze-install – The Fastest Node.js Installer</title>
   <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
   <style>
+    html { box-sizing: border-box; }
+    *, *:before, *:after { box-sizing: inherit; }
     body {
-      background: #181a20;
-      color: #f5f6fa;
+      background: linear-gradient(135deg, #0a1020 0%, #1a2233 60%, #0d1b2a 100%);
+      color: #eaf6fb;
       font-family: 'Montserrat', Arial, sans-serif;
       margin: 0;
       padding: 0;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 32px 16px 0 16px;
+    .fire-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 80%, rgba(0,255,255,0.10) 0%, rgba(0,212,255,0.08) 40%, transparent 80%);
+      animation: firePulse 3s infinite alternate;
     }
-    .logo {
-      display: block;
-      margin: 40px auto 16px auto;
-      width: 120px;
+    @keyframes firePulse {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
     }
-    h1 {
-      text-align: center;
-      font-size: 2.8rem;
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 44vh;
+      padding: 64px 0 32px 0;
+      position: relative;
+      z-index: 3;
+      background: linear-gradient(120deg, rgba(0,234,255,0.10) 0%, rgba(0,212,255,0.08) 40%, transparent 80%);
+      box-shadow: 0 8px 48px #00eaff22;
+    }
+    .hero .logo-3d {
+      margin: 0 auto 18px auto;
+      filter: drop-shadow(0 0 32px #00eaff88);
+      transition: filter 0.4s;
+    }
+    .hero .logo-3d img {
+      max-width: 260px;
+      filter: drop-shadow(0 0 32px #00eaff) drop-shadow(0 0 64px #fffbe7);
+    }
+    .hero .light-switch {
+      margin-left: 24px;
+      box-shadow: 0 0 24px #00eaff88, 0 0 48px #fffbe7;
+      border: 2.5px solid #00eaff;
+      width: 48px; height: 48px;
+    }
+    .hero .switch-helper {
+      margin-left: 18px;
+      font-size: 1.25rem;
+      padding: 10px 24px;
+      background: rgba(10,32,40,0.92);
+      box-shadow: 0 0 16px #00eaff44;
+      border-radius: 10px;
       font-weight: 700;
-      margin: 0 0 8px 0;
+    }
+    .hero-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .hero-title {
+      text-align: center;
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin: 0 0 10px 0;
+      letter-spacing: 2.5px;
+      color: #00eaff;
+      text-shadow: 0 0 24px #00eaff, 0 0 48px #00bfff;
+    }
+    .hero-tagline {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #eaf6fb;
+      margin-bottom: 36px;
+      text-shadow: 0 0 12px #00eaff;
+      font-weight: 500;
+    }
+    .terminal-frame {
+      margin: 0 auto 40px auto;
+      position: relative;
+      left: unset;
+      top: unset;
+      transform: none;
+      width: 820px;
+      max-width: 98vw;
+      height: 480px;
+      max-height: 72vh;
+      z-index: 4;
+      border-radius: 22px;
+      box-shadow: 0 12px 64px #00eaff44, 0 0 0 2.5px #0ff;
+      background: rgba(18, 28, 48, 0.82);
+      backdrop-filter: blur(16px) saturate(1.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1.5px solid #00eaff44;
+      transition: box-shadow 0.4s, border 0.4s, background 0.4s;
+    }
+    body.live .terminal-frame {
+      box-shadow: 0 0 32px 8px #00eaffcc, 0 0 64px 16px #fffbe7;
+      border: 2.5px solid #00eaff;
+      background: rgba(18, 28, 48, 0.92);
+    }
+    .terminal-titlebar {
+      height: 40px;
+      background: linear-gradient(90deg, #1a2233 80%, #0a1020 100%);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
+      border-bottom: 2px solid #0ff;
+      font-size: 1.18rem;
+    }
+    .terminal-lines {
+      font-size: 1.18rem;
+      padding: 0 40px 40px 40px;
+    }
+    .term-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      display: inline-block;
+    }
+    .term-dot.red { background: #ff5f56; }
+    .term-dot.yellow { background: #ffbd2e; }
+    .term-dot.green { background: #27c93f; }
+    .terminal-title {
+      color: #b2eaff;
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-left: 16px;
       letter-spacing: 1px;
+      user-select: none;
+    }
+    .terminal-bg {
+      flex: 1;
+      position: relative;
+      background: repeating-linear-gradient(0deg, #1a2233 0px, #1a2233 1px, #0a1020 1px, #0a1020 24px);
+      overflow: hidden;
+      height: 100%;
+    }
+    .terminal-canvas {
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .terminal-overlay {
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 0 18px 0;
+    }
+    .term-prompt {
+      color: #00eaff;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+    .term-progress {
+      color: #00ffc3;
+      font-weight: bold;
+    }
+    .term-pkg {
+      color: #00bfff;
+      font-weight: bold;
+    }
+    .term-comment {
+      color: #7eeeff;
+      font-style: italic;
+      opacity: 0.8;
+      margin-left: 12px;
+      text-shadow: 0 0 8px #00eaff;
+    }
+    .term-check {
+      color: #00ffc3;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    .blinking-cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      background: #00eaff;
+      margin-left: 2px;
+      animation: blink 1.1s steps(1) infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    @media (max-width: 900px) {
+      .terminal-frame { width: 99vw; min-width: 0; max-width: 99vw; }
+      .hero { padding: 36px 0 18px 0; }
+      .hero-title { font-size: 2.2rem; }
+      .terminal-frame { height: 320px; }
+      .terminal-lines { font-size: 1.02rem; padding: 0 12px 18px 12px; }
+    }
+    @media (max-width: 700px) {
+      .hero-row { flex-direction: column; gap: 10px; }
+      .hero .logo-3d { max-width: 180px; }
+      .hero-title { font-size: 1.3rem; }
+      .terminal-frame { height: 180px; }
+      .terminal-titlebar { font-size: 0.92rem; }
+      .terminal-lines { font-size: 0.82rem; padding: 0 2px; }
+    }
+    @media (max-width: 480px) {
+      .hero .logo-3d { flex-direction: column; align-items: center; width: 100vw; max-width: 320px; margin: 12px auto 8px auto; }
+      .hero .switch-helper { font-size: 0.92rem; padding: 5px 6px; }
+      .terminal-frame { height: 180px; font-size: 0.85rem; width: 100vw; max-width: 100vw; }
+      .terminal-titlebar { font-size: 0.92rem; }
+      .terminal-lines { font-size: 0.82rem; padding: 0 2px; }
+      h1, .left-col h1 { font-size: 1.5rem; }
+      .tagline { font-size: 1rem; }
+    }
+    .main-layout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 0 0 0;
+      position: relative;
+      z-index: 2;
+      min-height: 90vh;
+      width: 100%;
+    }
+    .left-col, .right-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 100%;
+      padding: 0;
+    }
+    .right-col {
+      margin-top: 32px;
+      align-items: center;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+      justify-content: center;
+      align-items: stretch;
+      margin: 0 auto 48px auto;
+      width: 100%;
+      max-width: 1100px;
+      padding: 0 12px;
+    }
+    .feature {
+      background: rgba(10, 32, 40, 0.85);
+      border-radius: 18px;
+      padding: 36px 22px 30px 22px;
+      width: 100%;
+      min-width: 0;
+      box-shadow: 0 0 24px 6px #00eaff55, 0 0 48px 12px #00bfff33;
+      text-align: center;
+      border: 2.5px solid #00eaff44;
+      position: relative;
+      transition: transform 0.22s, box-shadow 0.22s, border 0.22s;
+      backdrop-filter: blur(8px) saturate(1.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .feature:hover {
+      transform: translateY(-8px) scale(1.045);
+      box-shadow: 0 0 48px 12px #00eaff, 0 0 64px 24px #00bfff;
+      border-color: #00bfff;
+    }
+    .feature-icon {
+      font-size: 2.7rem;
+      margin-bottom: 16px;
+      display: block;
+      text-shadow: 0 0 12px #00eaff, 0 0 24px #00bfff;
+    }
+    .feature-title {
+      font-size: 1.22rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+      color: #00eaff;
+      letter-spacing: 1.2px;
+      text-shadow: 0 0 10px #00eaff;
+    }
+    .feature-desc {
+      font-size: 1.08rem;
+      color: #b2eaff;
+      text-shadow: 0 0 6px #00eaff;
+    }
+    .compare-section {
+      margin: 64px auto 48px auto;
+      max-width: 900px;
+      background: rgba(10, 32, 40, 0.85);
+      border-radius: 20px;
+      box-shadow: 0 0 32px 8px #00eaff33, 0 0 64px 16px #00bfff22;
+      padding: 38px 24px 32px 24px;
+      backdrop-filter: blur(8px) saturate(1.1);
+      border: 2.5px solid #00eaff44;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .compare-title {
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: #00eaff;
+      text-shadow: 0 0 18px #00eaff, 0 0 32px #00bfff;
+      margin-bottom: 24px;
+      text-align: center;
+      letter-spacing: 1.2px;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: rgba(18, 28, 48, 0.92);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 24px 8px #00eaff55, 0 0 48px 16px #00bfff33;
+      border: 2px solid #00eaff44;
+      margin: 0;
+    }
+    .compare-table th, .compare-table td {
+      padding: 18px 14px;
+      text-align: left;
+      font-size: 1.08rem;
+      border-bottom: 1.5px solid #00eaff22;
+    }
+    .compare-table th {
+      background: #0a1020;
+      color: #00eaff;
+      font-size: 1.18rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #00eaff;
+      border-bottom: 2.5px solid #00eaff44;
+    }
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+    .compare-table tr:nth-child(even) {
+      background: #112233cc;
+    }
+    .compare-table tr:nth-child(odd) {
+      background: #1a2233cc;
+    }
+    .compare-table td.blaze {
+      color: #00ffc3;
+      font-weight: 700;
+      text-shadow: 0 0 8px #00eaff;
+      background: linear-gradient(90deg, #00eaff22 0%, #00ffc322 100%);
+      border-left: 3.5px solid #00eaff;
+    }
+    .compare-table td.npm {
+      color: #b2eaff;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+    .compare-table td.feature {
+      color: #eaf6fb;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 700px) {
+      .compare-section { padding: 18px 2vw 18px 2vw; }
+      .compare-title { font-size: 1.3rem; }
+      .compare-table th, .compare-table td { font-size: 0.92rem; padding: 10px 4px; }
+    }
+    .logo-3d {
+      margin: 24px auto 8px auto;
+      background: none;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 320px;
+      min-width: 0;
+      height: auto;
+      position: relative;
+      z-index: 2;
+    }
+    .logo-3d img {
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 0 16px #00eaff) drop-shadow(0 0 32px #00bfff);
+      transition: filter 0.4s, opacity 0.4s;
+    }
+    .light-switch {
+      margin-left: 18px;
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #222 0%, #444 100%);
+      border: 2px solid #00eaff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px #00eaff44;
+      transition: background 0.4s, box-shadow 0.4s;
+      position: relative;
+    }
+    .light-switch svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+    /* Electrically live mode */
+    body.live {
+      /* No color inversion, just add electric effects */
+    }
+    body.live .logo-3d img {
+      filter: drop-shadow(0 0 32px #00eaff) drop-shadow(0 0 64px #fffbe7) brightness(1.3);
+      animation: electricPulse 0.7s infinite alternate;
+    }
+    /* Power-on sweep effect */
+    body.live::before {
+      content: '';
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+      background: linear-gradient(120deg, #fffbe7 0%, #00eaff 40%, transparent 80%);
+      opacity: 0.18;
+      animation: powerOnSweep 0.45s cubic-bezier(.7,0,.3,1) 1;
+    }
+    @keyframes powerOnSweep {
+      0% { opacity: 0.22; transform: translateY(100vh); }
+      60% { opacity: 0.18; transform: translateY(-10vh); }
+      100% { opacity: 0; transform: translateY(-120vh); }
+    }
+    /* Flowing electricity borders */
+    body.live .terminal-frame,
+    body.live .feature,
+    body.live .cta code,
+    body.live .cta .fire-btn {
+      box-shadow: 0 0 12px 2px #00eaff88, 0 0 24px 4px #fffbe7;
+      border: 2px solid #00eaff;
+      animation: electricFlow 1.2s linear infinite;
+      position: relative;
+    }
+    @keyframes electricFlow {
+      0% { box-shadow: 0 0 6px #00eaff, 0 0 0 #fffbe7; }
+      50% { box-shadow: 0 0 14px #00eaff, 0 0 8px #fffbe7; }
+      100% { box-shadow: 0 0 6px #00eaff, 0 0 0 #fffbe7; }
+    }
+    /* Flicker effect for headings */
+    body.live h1, body.live .feature-title {
+      animation: flicker 0.18s infinite alternate;
+      text-shadow: 0 0 16px #00eaff, 0 0 32px #fffbe7;
+    }
+    @keyframes flicker {
+      0% { opacity: 0.95; }
+      100% { opacity: 1; }
+    }
+    .left-col h1, h1 {
+      text-align: center;
+      font-size: 2.7rem;
+      font-weight: 900;
+      margin: 0 0 8px 0;
+      letter-spacing: 2px;
+      color: #00eaff;
+      text-shadow: 0 0 16px #00eaff, 0 0 32px #00bfff;
     }
     .tagline {
       text-align: center;
       font-size: 1.3rem;
-      color: #ff9800;
+      color: #eaf6fb;
       margin-bottom: 32px;
+      text-shadow: 0 0 8px #00eaff;
     }
     .badges {
-      text-align: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
       margin-bottom: 32px;
     }
     .badges img {
-      margin: 0 8px;
+      margin: 0;
       vertical-align: middle;
+      filter: drop-shadow(0 0 6px #00eaff);
     }
     .cta {
       text-align: center;
-      margin: 32px 0 40px 0;
+      margin: 44px 0 56px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
     }
     .cta code {
-      background: #23272f;
-      color: #ff9800;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 1.1rem;
-      font-family: 'Fira Mono', monospace;
-    }
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 24px;
-      margin: 40px 0 32px 0;
-    }
-    .feature {
-      background: #23272f;
-      border-radius: 12px;
-      padding: 24px 20px;
-      width: 240px;
-      box-shadow: 0 2px 12px #0002;
-      text-align: center;
-      transition: transform 0.2s;
-    }
-    .feature:hover {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 4px 24px #0004;
-    }
-    .feature-icon {
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-      display: block;
-    }
-    .feature-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: #ff9800;
-    }
-    .feature-desc {
-      font-size: 1rem;
-      color: #bdbdbd;
-    }
-    .compare-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 40px 0 32px 0;
-      background: #23272f;
+      background: linear-gradient(90deg, #00eaff 0%, #00bfff 100%);
+      color: #0a1020;
+      padding: 14px 4vw;
       border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px #0002;
+      font-size: 1.28rem;
+      font-family: 'Fira Mono', monospace;
+      box-shadow: 0 0 24px #00eaff, 0 0 48px #00bfff;
+      font-weight: bold;
+      letter-spacing: 1.2px;
+      transition: box-shadow 0.2s;
+      animation: ctaGlow 2s infinite alternate;
+      margin-bottom: 16px;
+      max-width: 100%;
+      word-break: break-all;
+      overflow-wrap: break-word;
+      text-align: center;
+      margin-left: 0;
+      margin-right: 0;
+      box-sizing: border-box;
     }
-    .compare-table th, .compare-table td {
-      padding: 14px 10px;
-      text-align: left;
+    .cta .fire-btn {
+      display: inline-block;
+      margin-top: 14px;
+      background: linear-gradient(90deg, #00eaff 0%, #00bfff 100%);
+      color: #0a1020;
+      padding: 16px 4vw;
+      border-radius: 36px;
+      font-size: 1.28rem;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 24px #00eaff, 0 0 48px #00bfff;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      text-decoration: none;
+      animation: ctaGlow 2s infinite alternate;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+      margin-left: 0;
+      margin-right: 0;
+      box-sizing: border-box;
     }
-    .compare-table th {
-      background: #181a20;
-      color: #ff9800;
-      font-size: 1.05rem;
+    .cta .fire-btn:hover {
+      background: linear-gradient(90deg, #00bfff 0%, #00eaff 100%);
+      box-shadow: 0 0 48px #00eaff, 0 0 64px #00bfff;
+      transform: scale(1.04);
     }
-    .compare-table tr:nth-child(even) {
-      background: #20232a;
+    @media (max-width: 900px) {
+      .features { grid-template-columns: 1fr 1fr; gap: 18px; }
+      .cta code { font-size: 1.08rem; padding: 12px 8vw; }
+      .cta .fire-btn { font-size: 1.08rem; padding: 14px 8vw; }
     }
-    .compare-table tr:nth-child(odd) {
-      background: #23272f;
+    @media (max-width: 700px) {
+      .features { grid-template-columns: 1fr; gap: 14px; }
+      .cta { margin: 28px 0 36px 0; }
+      .cta code { font-size: 0.98rem; padding: 10px 4vw; }
+      .cta .fire-btn { font-size: 0.98rem; padding: 12px 4vw; }
+    }
+    @media (max-width: 480px) {
+      .cta { margin: 18px 0 24px 0; }
+      .cta code { font-size: 0.88rem; padding: 8px 2vw; }
+      .cta .fire-btn { font-size: 0.88rem; padding: 10px 2vw; }
     }
     .footer {
       text-align: center;
-      color: #bdbdbd;
-      font-size: 1rem;
-      margin: 60px 0 24px 0;
+      color: #b2eaff;
+      font-size: 1.12rem;
+      margin: 70px 0 28px 0;
+      text-shadow: 0 0 8px #00eaff;
+      border-top: 1.5px solid #00eaff33;
+      padding-top: 24px;
+      background: none;
+      box-shadow: 0 -8px 32px #00eaff11;
     }
     .footer a {
-      color: #ff9800;
+      color: #00eaff;
       text-decoration: none;
-      margin: 0 8px;
+      margin: 0 10px;
+      font-weight: 700;
+      text-shadow: 0 0 8px #00eaff;
     }
-    @media (max-width: 700px) {
-      .features {
-        flex-direction: column;
-        align-items: center;
-      }
-      .feature {
-        width: 90%;
-      }
+    .switch-helper {
+      margin-left: 12px;
+      font-size: 1.18rem;
+      color: #b2eaff;
+      background: rgba(10,32,40,0.85);
+      border-radius: 8px;
+      padding: 8px 20px;
+      box-shadow: 0 0 8px #00eaff44;
+      transition: opacity 0.4s, filter 0.4s;
+      opacity: 1;
+      filter: none;
+      position: relative;
+      top: 2px;
+      pointer-events: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .switch-helper-icon {
+      display: inline-block;
+      margin-right: 6px;
+      animation: helperPulse 1.2s infinite alternate;
+    }
+    @keyframes helperPulse {
+      0% { filter: drop-shadow(0 0 2px #00eaff); opacity: 0.85; }
+      100% { filter: drop-shadow(0 0 8px #00eaff); opacity: 1; }
+    }
+    body.live .switch-helper {
+      opacity: 0;
+      filter: blur(2px);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <img src="https://raw.githubusercontent.com/TrialLord/Blazed-install/main/logo.svg" alt="blaze-install logo" class="logo" />
-    <h1>blaze-install</h1>
-    <div class="tagline">The blazing fast, modern alternative to <code>npm install</code> for Node.js projects.</div>
-    <div class="badges">
-      <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/v/blaze-install?color=orange&label=npm" alt="npm version"></a>
-      <a href="https://github.com/TrialLord/Blazed-install"><img src="https://img.shields.io/github/stars/TrialLord/Blazed-install?style=social" alt="GitHub stars"></a>
+  <div class="fire-bg"></div>
+  <section class="hero">
+    <div class="hero-row">
+      <div class="logo-3d">
+        <img src="../logo.svg" alt="blaze-install logo" />
+      </div>
+      <button class="light-switch" id="lightSwitch" title="Light it up!">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00eaff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="6" fill="#fffbe7"/>
+          <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+        </svg>
+      </button>
+      <span id="switchHelper" class="switch-helper">
+        <span class="switch-helper-icon">
+          <svg viewBox="0 0 20 20" width="20" height="20" fill="none" style="vertical-align:middle;">
+            <circle cx="10" cy="10" r="8" stroke="#00eaff" stroke-width="2" fill="#181a20"/>
+            <rect x="9" y="4" width="2" height="7" rx="1" fill="#00eaff"/>
+          </svg>
+        </span>
+        Flip the Switch to Boot the Terminal!
+      </span>
     </div>
-    <div class="cta">
-      <div style="font-size:1.2rem; margin-bottom:10px;">Get started in seconds:</div>
-      <code>npm install -g blaze-install</code>
+    <div class="hero-title">blaze-install</div>
+    <div class="hero-tagline">The blazing fast, modern alternative to <code>npm install</code> for Node.js projects.</div>
+  </section>
+  <div class="terminal-frame" id="terminalFrame" style="margin-bottom:40px; opacity:0; pointer-events:none; transition:opacity 0.5s;">
+    <div class="terminal-titlebar">
+      <span class="term-dot red"></span><span class="term-dot yellow"></span><span class="term-dot green"></span>
+      <span class="terminal-title">blaze-install terminal</span>
     </div>
-    <div class="features">
-      <div class="feature">
-        <span class="feature-icon">🚀</span>
-        <div class="feature-title">Blazing Fast</div>
-        <div class="feature-desc">Parallel downloads, global cache, and deduplication for instant installs.</div>
-      </div>
-      <div class="feature">
-        <span class="feature-icon">📦</span>
-        <div class="feature-title">Clean Lockfile</div>
-        <div class="feature-desc">Only what you need, always pruned. No stale dependencies.</div>
-      </div>
-      <div class="feature">
-        <span class="feature-icon">🎨</span>
-        <div class="feature-title">Beautiful CLI</div>
-        <div class="feature-desc">Progress bars, color, and clear feedback for a great developer experience.</div>
-      </div>
-      <div class="feature">
-        <span class="feature-icon">🏗️</span>
-        <div class="feature-title">Workspaces</div>
-        <div class="feature-desc">Fast, native support for monorepos and modern project structures.</div>
-      </div>
-      <div class="feature">
-        <span class="feature-icon">🔒</span>
-        <div class="feature-title">Security</div>
-        <div class="feature-desc">Built-in audit using the npm audit API. Stay safe by default.</div>
+    <div class="terminal-bg">
+      <canvas class="terminal-canvas" id="simCanvas"></canvas>
+      <div class="terminal-overlay">
+        <div class="terminal-lines" id="termLines"></div>
       </div>
     </div>
-    <h2 style="text-align:center; margin-top:60px; color:#ff9800;">How does blaze-install compare?</h2>
-    <table class="compare-table">
-      <tr>
-        <th>Feature</th>
-        <th>blaze-install</th>
-        <th>npm install</th>
-      </tr>
-      <tr>
-        <td>Speed</td>
-        <td>🚀 Blazing fast: parallel downloads, global cache, deduplication</td>
-        <td>Slower, sequential, no global cache</td>
-      </tr>
-      <tr>
-        <td>Lockfile</td>
-        <td>Always pruned, only what you need</td>
-        <td>Can become bloated, stale deps remain</td>
-      </tr>
-      <tr>
-        <td>UX</td>
-        <td>Beautiful CLI, progress bars, colored output</td>
-        <td>Basic CLI, minimal feedback</td>
-      </tr>
-      <tr>
-        <td>Workspaces</td>
-        <td>Native support, fast monorepo installs</td>
-        <td>Supported, but slower and more complex</td>
-      </tr>
-      <tr>
-        <td>Peer/Optional Deps</td>
-        <td>Clear warnings, robust handling</td>
-        <td>Sometimes cryptic or missing warnings</td>
-      </tr>
-      <tr>
-        <td>Audit</td>
-        <td>Built-in, fast, npm audit API</td>
-        <td>Built-in</td>
-      </tr>
-      <tr>
-        <td>Lifecycle Scripts</td>
-        <td>Full support (preinstall, install, postinstall)</td>
-        <td>Supported</td>
-      </tr>
-      <tr>
-        <td>Global Store</td>
-        <td>Yes, dedupes across projects</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>Error Handling</td>
-        <td>Clear, actionable, modern</td>
-        <td>Sometimes cryptic</td>
-      </tr>
-      <tr>
-        <td>Modern Focus</td>
-        <td>No legacy cruft, focused on 90% use case</td>
-        <td>Lots of legacy baggage</td>
-      </tr>
-    </table>
-    <h2 style="text-align:center; color:#ff9800;">Usage</h2>
-    <pre style="background:#23272f; color:#ff9800; padding:18px 16px; border-radius:8px; font-size:1.1rem; overflow-x:auto;">blaze install                # Install all dependencies from package.json
+  </div>
+  <h1 style="text-align:center;">blaze-install</h1>
+  <div class="tagline" style="text-align:center;">The blazing fast, modern alternative to <code>npm install</code> for Node.js projects.</div>
+  <div class="badges" style="text-align:center;">
+    <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/v/blaze-install?color=orange&label=npm" alt="npm version"></a>
+    <a href="https://github.com/TrialLord/Blazed-install"><img src="https://img.shields.io/github/stars/TrialLord/Blazed-install?style=social" alt="GitHub stars"></a>
+  </div>
+  <div class="cta">
+    <div style="font-size:1.3rem; margin-bottom:14px; color:#eaf6fb; text-shadow:0 0 8px #00eaff;">Get started in seconds:</div>
+    <code>npm install -g blaze-install</code>
+    <a class="fire-btn" href="https://www.npmjs.com/package/blaze-install">🔥 Try blaze-install now</a>
+  </div>
+  <div class="main-layout">
+    <div class="left-col">
+      <!-- cta moved above -->
+    </div>
+    <div class="right-col">
+      <div class="features">
+        <div class="feature">
+          <span class="feature-icon">🔥</span>
+          <div class="feature-title">Blazing Fast</div>
+          <div class="feature-desc">Parallel downloads, global cache, and deduplication for instant installs.</div>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">📦</span>
+          <div class="feature-title">Clean Lockfile</div>
+          <div class="feature-desc">Only what you need, always pruned. No stale dependencies.</div>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">🎨</span>
+          <div class="feature-title">Beautiful CLI</div>
+          <div class="feature-desc">Progress bars, color, and clear feedback for a great developer experience.</div>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">🏗️</span>
+          <div class="feature-title">Workspaces</div>
+          <div class="feature-desc">Fast, native support for monorepos and modern project structures.</div>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">🔒</span>
+          <div class="feature-title">Security</div>
+          <div class="feature-desc">Built-in audit using the npm audit API. Stay safe by default.</div>
+        </div>
+      </div>
+      <section class="compare-section">
+        <div class="compare-title">How does blaze-install compare?</div>
+        <table class="compare-table">
+          <tr>
+            <th>Feature</th>
+            <th>blaze-install</th>
+            <th>npm install</th>
+          </tr>
+          <tr>
+            <td class="feature">Speed</td>
+            <td class="blaze">🔥 Blazing fast: parallel downloads, global cache, deduplication</td>
+            <td class="npm">Slower, sequential, no global cache</td>
+          </tr>
+          <tr>
+            <td class="feature">Lockfile</td>
+            <td class="blaze">Always pruned, only what you need</td>
+            <td class="npm">Can become bloated, stale deps remain</td>
+          </tr>
+          <tr>
+            <td class="feature">UX</td>
+            <td class="blaze">Beautiful CLI, progress bars, colored output</td>
+            <td class="npm">Basic CLI, minimal feedback</td>
+          </tr>
+          <tr>
+            <td class="feature">Workspaces</td>
+            <td class="blaze">Native support, fast monorepo installs</td>
+            <td class="npm">Supported, but slower and more complex</td>
+          </tr>
+          <tr>
+            <td class="feature">Peer/Optional Deps</td>
+            <td class="blaze">Clear warnings, robust handling</td>
+            <td class="npm">Sometimes cryptic or missing warnings</td>
+          </tr>
+          <tr>
+            <td class="feature">Audit</td>
+            <td class="blaze">Built-in, fast, npm audit API</td>
+            <td class="npm">Built-in</td>
+          </tr>
+          <tr>
+            <td class="feature">Lifecycle Scripts</td>
+            <td class="blaze">Full support (preinstall, install, postinstall)</td>
+            <td class="npm">Supported</td>
+          </tr>
+          <tr>
+            <td class="feature">Global Store</td>
+            <td class="blaze">Yes, dedupes across projects</td>
+            <td class="npm">No</td>
+          </tr>
+          <tr>
+            <td class="feature">Error Handling</td>
+            <td class="blaze">Clear, actionable, modern</td>
+            <td class="npm">Sometimes cryptic</td>
+          </tr>
+          <tr>
+            <td class="feature">Modern Focus</td>
+            <td class="blaze">No legacy cruft, focused on 90% use case</td>
+            <td class="npm">Lots of legacy baggage</td>
+          </tr>
+        </table>
+      </section>
+      <h2 style="text-align:center; color:#00eaff; text-shadow:0 0 8px #00eaff;">Usage</h2>
+      <pre style="background:#112233; color:#00eaff; padding:20px 18px; border-radius:10px; font-size:1.15rem; overflow-x:auto; box-shadow:0 0 16px #00eaff;">blaze install                # Install all dependencies from package.json
 blaze install &lt;package&gt;      # Add and install a package
 blaze uninstall &lt;package&gt;    # Remove a package and prune lockfile
 blaze update &lt;package&gt;       # Update a package to the latest version
 blaze audit                  # Run a security audit
 </pre>
-    <div style="text-align:center; margin: 32px 0 0 0;">
-      <a href="https://github.com/TrialLord/Blazed-install" style="color:#ff9800; font-weight:700; text-decoration:none; margin:0 12px;">GitHub</a>
-      <a href="https://www.npmjs.com/package/blaze-install" style="color:#ff9800; font-weight:700; text-decoration:none; margin:0 12px;">npm</a>
-      <a href="https://triallord.github.io/Blazed-install/" style="color:#ff9800; font-weight:700; text-decoration:none; margin:0 12px;">Docs</a>
-    </div>
-    <div class="footer">
-      <p>blaze-install is the future of Node.js dependency management. <br> <b>Join the revolution!</b></p>
-      <p>&copy; 2025 <a href="https://github.com/TrialLord/Blazed-install">TrialLord</a> &mdash; MIT License</p>
+      <div style="text-align:center; margin: 36px 0 0 0;">
+        <a href="https://github.com/TrialLord/Blazed-install" style="color:#00eaff; font-weight:700; text-decoration:none; margin:0 14px; text-shadow:0 0 8px #00eaff;">GitHub</a>
+        <a href="https://www.npmjs.com/package/blaze-install" style="color:#00eaff; font-weight:700; text-decoration:none; margin:0 14px; text-shadow:0 0 8px #00eaff;">npm</a>
+        <a href="https://triallord.github.io/Blazed-install/" style="color:#00eaff; font-weight:700; text-decoration:none; margin:0 14px; text-shadow:0 0 8px #00eaff;">Docs</a>
+      </div>
+      <div class="footer">
+        <p>blaze-install is the future of Node.js dependency management. <br> <b>Join the revolution!</b></p>
+        <p>&copy; 2025 <a href="https://github.com/TrialLord/Blazed-install">TrialLord</a> &mdash; MIT License</p>
+      </div>
     </div>
   </div>
+  <script>
+    // Terminal simulation output
+    const termLines = document.getElementById('termLines');
+    // Terminal simulation states
+    const TYPING = 0, INSTALLING = 1, POST = 2;
+    let termState = TYPING;
+    let typedCmd = '';
+    const fullCmd = 'blaze install';
+    let typingIdx = 0;
+    let typingDelay = 80;
+    let typingLast = Date.now();
+    let installPhase = 0;
+    let installPhaseTime = Date.now();
+    let pkgQueue = [
+      {name:'chalk', progress:0}, {name:'react', progress:0}, {name:'lodash', progress:0}, {name:'express', progress:0},
+      {name:'blaze-utils', progress:0}, {name:'blaze-core', progress:0}, {name:'blaze-logger', progress:0}
+    ];
+    let installedPkgs = [];
+    let lastPkgUpdate = Date.now();
+    let postLines = [
+      '<span class="term-comment">deduplication: 3 packages hoisted</span>',
+      '<span class="term-comment">lockfile pruned</span>',
+      '<span class="term-comment">audit: 0 vulnerabilities found</span>',
+      '<span class="term-progress">✨  Done in 1.23s</span>'
+    ];
+    let shownPost = 0;
+    function updateTerminal() {
+      let lines = [];
+      if (termState === TYPING) {
+        // Animate typing
+        if (Date.now() - typingLast > typingDelay && typingIdx < fullCmd.length) {
+          typedCmd += fullCmd[typingIdx];
+          typingIdx++;
+          typingLast = Date.now();
+        }
+        lines.push('<span class="term-prompt">$</span> <span class="term-cmd">'+typedCmd+'</span><span class="blinking-cursor"></span>');
+        if (typingIdx === fullCmd.length && Date.now() - typingLast > 500) {
+          termState = INSTALLING;
+          installPhaseTime = Date.now();
+        }
+      } else if (termState === INSTALLING) {
+        lines.push('<span class="term-prompt">$</span> <span class="term-cmd">'+fullCmd+'</span>');
+        // Simulate install phases
+        if (installPhase === 0) {
+          lines.push('<span class="term-comment">fetching registry metadata...</span>');
+          if (Date.now() - installPhaseTime > 600) { installPhase++; installPhaseTime = Date.now(); }
+        } else if (installPhase === 1) {
+          lines.push('<span class="term-comment">resolving dependencies...</span>');
+          if (Date.now() - installPhaseTime > 700) { installPhase++; installPhaseTime = Date.now(); }
+        } else if (installPhase === 2) {
+          lines.push('<span class="term-comment">downloading packages in parallel...</span>');
+          if (Date.now() - installPhaseTime > 700) { installPhase++; installPhaseTime = Date.now(); }
+        } else if (installPhase === 3) {
+          // Animate package install progress
+          for (const pkg of installedPkgs.slice(-3)) {
+            lines.push('<span class="term-progress">✔</span> <span class="term-pkg">'+pkg.name+'</span> <span class="term-check">installed</span>');
+          }
+          if (pkgQueue.length > 0) {
+            const p = pkgQueue[0];
+            if (Date.now() - lastPkgUpdate > 350) {
+              p.progress += Math.random()*0.4+0.2;
+              if (p.progress >= 1) {
+                installedPkgs.push(pkgQueue.shift());
+              }
+              lastPkgUpdate = Date.now();
+            }
+            const barLen = Math.floor(p.progress*16);
+            const bar = '[' + '='.repeat(barLen) + ' '.repeat(16-barLen) + ']';
+            lines.push('<span class="term-progress">→</span> <span class="term-pkg">'+p.name+'</span> <span class="term-progress">'+bar+'</span>');
+          }
+          if (pkgQueue.length === 0 && installedPkgs.length > 0) {
+            if (Date.now() - lastPkgUpdate > 700) {
+              installPhase++;
+              installPhaseTime = Date.now();
+            }
+          }
+        } else {
+          termState = POST;
+        }
+        lines.push('<span class="term-prompt">$</span><span class="blinking-cursor"></span>');
+      } else if (termState === POST) {
+        lines.push('<span class="term-prompt">$</span> <span class="term-cmd">'+fullCmd+'</span>');
+        for (const pkg of installedPkgs) {
+          lines.push('<span class="term-progress">✔</span> <span class="term-pkg">'+pkg.name+'</span> <span class="term-check">installed</span>');
+        }
+        for (let i=0; i<shownPost; ++i) {
+          lines.push(postLines[i]);
+        }
+        if (shownPost < postLines.length && Date.now() - installPhaseTime > 700) {
+          shownPost++;
+          installPhaseTime = Date.now();
+        }
+        lines.push('<span class="term-prompt">$</span><span class="blinking-cursor"></span>');
+      }
+      termLines.innerHTML = lines.slice(-10).join('<br>');
+    }
+    setInterval(updateTerminal, 90);
+
+    // Terminal boot logic
+    const terminalFrame = document.getElementById('terminalFrame');
+    let terminalInterval = null;
+    function resetTerminalSim() {
+      termState = TYPING;
+      typedCmd = '';
+      typingIdx = 0;
+      installPhase = 0;
+      installPhaseTime = Date.now();
+      pkgQueue = [
+        {name:'chalk', progress:0}, {name:'react', progress:0}, {name:'lodash', progress:0}, {name:'express', progress:0},
+        {name:'blaze-utils', progress:0}, {name:'blaze-core', progress:0}, {name:'blaze-logger', progress:0}
+      ];
+      installedPkgs = [];
+      lastPkgUpdate = Date.now();
+      shownPost = 0;
+    }
+    function setLiveMode(on) {
+      document.body.classList.toggle('live', on);
+      if (on) {
+        terminalFrame.style.opacity = 1;
+        terminalFrame.style.pointerEvents = 'auto';
+        resetTerminalSim();
+        if (!terminalInterval) terminalInterval = setInterval(updateTerminal, 90);
+      } else {
+        terminalFrame.style.opacity = 0;
+        terminalFrame.style.pointerEvents = 'none';
+        if (terminalInterval) { clearInterval(terminalInterval); terminalInterval = null; }
+        termLines.innerHTML = '';
+      }
+    }
+
+    // Electric live switch logic
+    const lightSwitch = document.getElementById('lightSwitch');
+    setLiveMode(false);
+    lightSwitch.addEventListener('click', () => {
+      setLiveMode(!document.body.classList.contains('live'));
+    });
+  </script>
 </body>
 </html> 
