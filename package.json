@@ -1,0 +1,16 @@
+{
+  "name": "blaze-install",
+  "version": "1.0.1",
+  "description": "A fast, modern alternative to npm install for Node.js projects.",
+  "main": "lib/index.js",
+  "bin": {
+    "blaze": "bin/blaze-install.js"
+  },
+  "scripts": {
+    "start": "node bin/blaze-install.js"
+  },
+  "dependencies": {
+    "install": "^0.13.0"
+  },
+  "devDependencies": {}
+}
