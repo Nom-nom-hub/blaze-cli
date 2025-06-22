@@ -2,27 +2,53 @@
   <img src="https://raw.githubusercontent.com/TrialLord/Blazed-install/main/logo.svg" alt="blaze-install logo" width="180"/>
 </p>
 
-# blaze-install
+<h1 align="center">blaze-install</h1>
 
-A blazing fast, modern alternative to `npm install` for Node.js projects.
-
----
-
-## Why blaze-install?
-
-- 🚀 **Speed:** Parallel downloads, global cache, and deduplication make installs much faster than npm.
-- 📦 **Clean lockfile:** Only what you need, always pruned—no stale dependencies.
-- 🎨 **Beautiful CLI:** Progress bars, colored output, and clear feedback.
-- 🏗️ **Workspaces/monorepo support:** Fast, native support for modern project structures.
-- 🔒 **Security:** Built-in audit using the npm audit API.
-- 🧩 **Peer/optional dependencies:** Robust handling and clear warnings.
-- 🔄 **Lifecycle scripts:** Full support for preinstall, install, and postinstall.
-- 🛠️ **Uninstall/update:** Easy, with automatic lockfile pruning.
-- 💥 **No legacy cruft:** Focused on the 90% use case for modern Node.js projects.
+<p align="center"><b>The blazing fast, modern alternative to <code>npm install</code> for Node.js projects.</b></p>
 
 ---
 
-## Feature Comparison
+<p align="center">
+  <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/v/blaze-install?color=orange&label=npm" alt="npm version"></a>
+  <a href="https://github.com/TrialLord/Blazed-install"><img src="https://img.shields.io/github/stars/TrialLord/Blazed-install?style=social" alt="GitHub stars"></a>
+</p>
+
+---
+
+## 🚀 Get Started
+
+```sh
+npm install -g blaze-install
+```
+
+Or add to your project:
+
+```sh
+npm install blaze-install --save-dev
+```
+
+---
+
+## 🌟 Why blaze-install?
+
+<div align="center">
+
+| 🚀 **Speed** | 📦 **Clean Lockfile** | 🎨 **Beautiful CLI** | 🏗️ **Workspaces** | 🔒 **Security** |
+|:---:|:---:|:---:|:---:|:---:|
+| Parallel downloads, global cache, deduplication | Always pruned, no stale deps | Progress bars, color, clear feedback | Fast, native monorepo support | Built-in audit, npm audit API |
+
+</div>
+
+- **Much faster installs** than npm thanks to parallelization and a global cache.
+- **Cleaner lockfile**: Only what you need, always pruned.
+- **Better developer experience**: Progress bars, color, and clear output.
+- **Automatic lockfile pruning** after uninstall/update.
+- **Modern workflows**: Workspaces, peer/optional deps, lifecycle scripts.
+- **No legacy code paths**: Focused on what modern Node.js projects need.
+
+---
+
+## 🔥 Feature Comparison
 
 | Feature                | blaze-install         | npm install         |
 |------------------------|----------------------|---------------------|
@@ -39,21 +65,7 @@ A blazing fast, modern alternative to `npm install` for Node.js projects.
 
 ---
 
-## Installation
-
-```sh
-npm install -g blaze-install
-```
-
-Or use in your project:
-
-```sh
-npm install blaze-install --save-dev
-```
-
----
-
-## Usage
+## 📖 Usage
 
 ```sh
 blaze install                # Install all dependencies from package.json
@@ -70,7 +82,7 @@ blaze audit                  # Run a security audit
 
 ---
 
-## Project Philosophy
+## 💡 Project Philosophy
 
 - **Speed and simplicity first**
 - **No legacy baggage**
@@ -79,12 +91,18 @@ blaze audit                  # Run a security audit
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
 Pull requests and issues are welcome! Please open an issue for bugs, feature requests, or questions.
 
 ---
 
-## License
+## 📫 Links & Resources
 
-MIT 
+- [GitHub Repository](https://github.com/TrialLord/Blazed-install)
+- [npm Package](https://www.npmjs.com/package/blaze-install)
+- [Documentation](https://triallord.github.io/Blazed-install/)
+
+---
+
+<p align="center"><b>blaze-install is the future of Node.js dependency management. Join the revolution!</b></p> 
