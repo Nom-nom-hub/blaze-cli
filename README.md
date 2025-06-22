@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/yourusername/blaze-install/main/logo.svg" alt="blaze-install logo" width="160"/>
+  <img src="https://raw.githubusercontent.com/TrialLord/Blazed-install/main/logo.svg" alt="blaze-install logo" width="160"/>
 </p>
 
 # blaze-install
