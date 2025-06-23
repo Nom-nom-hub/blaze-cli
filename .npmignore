@@ -3,6 +3,7 @@
 
 # Node modules
 node_modules/
+node_modules/.cache/
 
 # Logs
 npm-debug.log*

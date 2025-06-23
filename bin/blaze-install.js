@@ -1,14 +1,34 @@
 #!/usr/bin/env node
 
-const { main } = require('../lib/index');
+const { main, printHelp } = require('../lib/index');
 
 const args = process.argv.slice(2);
+const command = args[0];
 
-if (args[0] === 'install') {
-  main(args.slice(1));
-} else if (['uninstall', 'update', 'audit'].includes(args[0])) {
+if (!command || command === '--help' || command === 'help') {
+  printHelp();
+  process.exit(0);
+}
+
+// Supported commands (add more as you implement them)
+const supported = [
+  'install',
+  'uninstall',
+  'update',
+  'audit',
+  'list',
+  'clean',
+  'outdated',
+  'info',
+  '--interactive',
+  'publish',
+  'version'
+];
+
+if (supported.includes(command)) {
   main(args);
 } else {
-  console.log('Usage: blaze <install|uninstall|update|audit> [package] [--symlink] [--save-dev] [--production]');
+  console.log('Unknown command:', command);
+  printHelp();
   process.exit(1);
 } 

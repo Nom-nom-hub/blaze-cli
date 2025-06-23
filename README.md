@@ -41,15 +41,62 @@ blaze install <package>      # Add and install a package
 blaze uninstall <package>    # Remove a package and prune lockfile
 blaze update <package>       # Update a package to the latest version
 blaze audit                  # Run a security audit
+blaze audit --json           # Run audit and output JSON
+blaze list                   # List installed dependencies
+blaze clean                  # Remove node_modules and cache
+blaze outdated               # Show outdated dependencies
+blaze info <package>         # Show info about a package
+blaze --interactive          # Use interactive mode
 ```
 
 ### Options
 - `--save-dev`      Add to devDependencies
 - `--production`    Only install production dependencies
 - `--symlink`       Use symlinks instead of copying (for local development)
+- `--json`          Output JSON (for audit)
+
+### Interactive Mode
+Run `blaze --interactive` to use a guided, menu-driven workflow for common tasks (install, uninstall, update, audit, etc.).
+
+### Plugins
+You can extend blaze-install by adding plugins to the `plugins/` directory in your project root. Each plugin is a JS file exporting hooks:
+
+Example `plugins/examplePlugin.js`:
+```js
+module.exports = {
+  onCommand({ command, args, context }) {
+    console.log(`[plugin] Command executed: ${command} (cwd: ${context.cwd})`);
+  },
+  beforeInstall({ args, context }) {
+    console.log('[plugin] Before install hook');
+  },
+  afterInstall({ args, context }) {
+    console.log('[plugin] After install hook');
+  }
+};
+```
+Supported hooks: `onCommand`, `beforeInstall`, `afterInstall` (more coming soon!).
 
 ### Workspaces/Monorepo
 If your `package.json` includes a `workspaces` field, blaze-install will automatically resolve and install all workspace dependencies.
+
+## .blazerc Config File
+
+You can create a `.blazerc` file in your project root to set default options for blaze-install. CLI flags always override config file options.
+
+Example `.blazerc`:
+```json
+{
+  "symlink": true,
+  "production": false,
+  "saveDev": false
+}
+```
+
+Supported options:
+- `symlink`: Use symlinks instead of copying (default: false)
+- `production`: Only install production dependencies (default: false)
+- `saveDev`: Add new packages to devDependencies by default (default: false)
 
 ## Why Choose blaze-install?
 
