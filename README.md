@@ -46,6 +46,9 @@ blaze list                   # List installed dependencies
 blaze clean                  # Remove node_modules and cache
 blaze outdated               # Show outdated dependencies
 blaze info <package>         # Show info about a package
+blaze publish                # Publish the package to the npm registry
+blaze version <newversion>   # Bump version, commit, and tag
+blaze audit fix              # Auto-fix vulnerable dependencies
 blaze --interactive          # Use interactive mode
 ```
 
@@ -54,6 +57,9 @@ blaze --interactive          # Use interactive mode
 - `--production`    Only install production dependencies
 - `--symlink`       Use symlinks instead of copying (for local development)
 - `--json`          Output JSON (for audit)
+
+### .npmrc Support
+blaze-install reads registry and authentication settings from both project and user `.npmrc` files, just like npm. This is used for publishing, installing, and auditing packages. You can also use the `NPM_TOKEN` environment variable for authentication.
 
 ### Interactive Mode
 Run `blaze --interactive` to use a guided, menu-driven workflow for common tasks (install, uninstall, update, audit, etc.).

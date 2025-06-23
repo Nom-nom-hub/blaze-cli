@@ -22,7 +22,8 @@ const supported = [
   'info',
   '--interactive',
   'publish',
-  'version'
+  'version',
+  'audit fix'
 ];
 
 if (supported.includes(command)) {
