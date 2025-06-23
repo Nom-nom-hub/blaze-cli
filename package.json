@@ -7,7 +7,22 @@
     "blaze": "bin/blaze-install.js"
   },
   "scripts": {
-    "start": "node bin/blaze-install.js"
+    "start": "node bin/blaze-install.js",
+    "preinstall": "echo preinstall script",
+    "install": "echo install script",
+    "postinstall": "echo postinstall script",
+    "preuninstall": "echo preuninstall script",
+    "uninstall": "echo uninstall script",
+    "postuninstall": "echo postuninstall script",
+    "prepublish": "echo prepublish script",
+    "prepare": "echo prepare script",
+    "prepack": "echo prepack script",
+    "postpack": "echo postpack script",
+    "postpublish": "echo postpublish script",
+    "preversion": "echo preversion script",
+    "version": "echo version script",
+    "postversion": "echo postversion script",
+    "testscript": "echo testscript ran"
   },
   "dependencies": {
     "install": "^0.13.0",
@@ -18,7 +33,8 @@
     "tar": "^6.2.0",
     "cli-progress": "^3.12.0",
     "inquirer": "^9.2.16",
-    "ini": "^3.0.1"
+    "ini": "^3.0.1",
+    "my-local-pkg": "file:../my-local-pkg"
   },
   "devDependencies": {
     "axios": "^1.10.0"

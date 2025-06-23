@@ -142,3 +142,50 @@ Pull requests and issues are welcome! Please open an issue for bugs, feature req
 
 ## License
 MIT 
+
+## Side-by-Side: `npm install` vs `blaze install`
+
+| Task / Feature                | `npm` command(s)                        | `blaze` command(s)                | blaze advantage / unique feature         |
+|-------------------------------|-----------------------------------------|-----------------------------------|------------------------------------------|
+| Install all dependencies      | `npm install`                           | `blaze install`                   | 🚀 Much faster, pruned lockfile, global cache |
+| Add a dependency              | `npm install lodash`                    | `blaze install lodash`            | Lockfile always pruned, faster           |
+| Remove a dependency           | `npm uninstall lodash`                  | `blaze uninstall lodash`          | Lockfile auto-pruned, cleaner            |
+| Update a dependency           | `npm update lodash`                     | `blaze update lodash`             | Prunes lockfile, faster                  |
+| List installed packages       | `npm list`                              | `blaze list`                      | Modern, readable output                  |
+| Audit for vulnerabilities     | `npm audit`                             | `blaze audit`                     | Fast, clear output, built-in             |
+| Clean node_modules & cache    | `rm -rf node_modules`<br>`npm cache clean --force` | `blaze clean`            | One command, also prunes lockfile        |
+| Show outdated packages        | `npm outdated`                          | `blaze outdated`                  |                                          |
+| Show package info             | `npm info lodash`                       | `blaze info lodash`               |                                          |
+| Publish a package             | `npm publish`                           | `blaze publish`                   |                                          |
+| Bump version                  | `npm version patch`                     | `blaze version patch`             |                                          |
+| Fix vulnerabilities           | `npm audit fix`                         | `blaze audit fix`                 |                                          |
+| Interactive mode              | *(n/a)*                                 | `blaze --interactive`             | Guided, menu-driven UX                   |
+| Local/link dependencies       | `npm install ../my-local-pkg`           | `blaze install ../my-local-pkg`   | Symlink/copy fallback, robust            |
+| Plugin system                 | *(n/a)*                                 | Plugins in `plugins/` dir         | Extendable with hooks                    |
+| Lockfile pruning              | Manual, not automatic                   | Automatic after uninstall/update  | No stale dependencies                    |
+| Global cache/store            | No                                      | Yes                               | Dedupes across projects, faster installs |
+| Modern UX                     | Minimal feedback                        | Progress bars, color, clear errors| Beautiful CLI, actionable errors         |
+| .blazerc config               | *(n/a)*                                 | `.blazerc` file                   | Project-level defaults                   |
+| .npmrc support                | Yes                                     | Yes                               | Per-scope registry/auth, parity          |
+| Workspaces/monorepo           | Supported, but slower                   | Native, fast, simple              | Optimized for monorepos                  |
+| Peer/optional deps            | Sometimes cryptic/missing warnings      | Clear, robust handling            |                                          |
+| Lifecycle scripts             | Supported                               | Supported                         | Full parity                             |
+| Error handling                | Sometimes cryptic                       | Clear, actionable                  |                                          |
+| Legacy baggage                | Yes                                     | No                                | Modern, focused codebase                 |
+
+---
+
+**Why choose blaze?**  
+- 🚀 **Much faster installs** (parallel, global cache, deduplication)
+- 🧹 **Cleaner lockfile** (auto-pruned, no stale deps)
+- 🧩 **Extensible** (plugin system, interactive mode)
+- 🎨 **Modern UX** (progress bars, color, clear errors)
+- 🛡️ **Better defaults** (pruning, deduplication, error handling)
+- 🏗️ **Workspaces/monorepo optimized** (fast, simple)
+- 🔒 **Audit/security built-in** (fast, clear output)
+- ⚙️ **Config file support** (`.blazerc`, `.npmrc` parity)
+- 🧑‍💻 **No legacy code paths** (focused, modern codebase)
+- 🛠️ **Robust local/link dependency support** (symlink/copy fallback)
+- 📦 **Automatic lockfile pruning** after uninstall/update
+- 🧩 **Plugin system** for custom workflows and automation
+- 🧑‍🎨 **Beautiful CLI** with actionable errors and progress bars 

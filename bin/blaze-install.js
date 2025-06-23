@@ -23,7 +23,10 @@ const supported = [
   '--interactive',
   'publish',
   'version',
-  'audit fix'
+  'audit fix',
+  'run',
+  'link',
+  'unlink'
 ];
 
 if (supported.includes(command)) {
