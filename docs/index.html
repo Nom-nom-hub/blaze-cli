@@ -288,15 +288,20 @@
       justify-content: center;
     }
     .feature:hover {
-      transform: translateY(-8px) scale(1.045);
+      transform: translateY(-10px) scale(1.06);
       box-shadow: 0 0 48px 12px #00eaff, 0 0 64px 24px #00bfff;
       border-color: #00bfff;
+      z-index:2;
     }
     .feature-icon {
-      font-size: 2.7rem;
-      margin-bottom: 16px;
-      display: block;
-      text-shadow: 0 0 12px #00eaff, 0 0 24px #00bfff;
+      font-size:3.5rem !important;
+      margin-bottom:18px;
+      display:block;
+      text-shadow:0 0 18px #00eaff,0 0 32px #00bfff;
+      transition: text-shadow 0.2s;
+    }
+    .feature:hover .feature-icon {
+      text-shadow:0 0 32px #00eaff,0 0 64px #fffbe7;
     }
     .feature-title {
       font-size: 1.22rem;
@@ -637,33 +642,30 @@
       opacity: 0;
       filter: blur(2px);
     }
+    .compare-table tr:hover td {
+      background: #0a1020cc !important;
+      transition: background 0.2s;
+    }
   </style>
 </head>
 <body>
   <div class="fire-bg"></div>
-  <section class="hero">
-    <div class="hero-row">
+  <section class="whats-new-banner" style="background:linear-gradient(90deg,#00eaff 0%,#00bfff 100%);color:#0a1020;font-weight:700;font-size:1.18rem;text-align:center;padding:18px 0 14px 0;box-shadow:0 4px 24px #00eaff44;letter-spacing:1px;">
+    🚀 <b>What's New in v1.2.1:</b> Major docs update, local/link dependency support, bug fixes & polish! <a href="#release-notes" style="color:#0a1020;text-decoration:underline;font-weight:900;">See details</a>
+  </section>
+  <section class="hero" style="position:relative;overflow:hidden;">
+    <div class="animated-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;background:radial-gradient(ellipse at 50% 80%,rgba(0,255,255,0.10) 0%,rgba(0,212,255,0.08) 40%,transparent 80%);animation:firePulse 3s infinite alternate;"></div>
+    <div class="hero-row" style="z-index:2;position:relative;">
       <div class="logo-3d">
-        <img src="logo.svg" alt="blaze-install logo" />
+        <img src="logo.svg" alt="blaze-install logo" style="max-width:260px;filter:drop-shadow(0 0 32px #00eaff) drop-shadow(0 0 64px #fffbe7);"/>
       </div>
       <button class="light-switch" id="lightSwitch" title="Light it up!">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00eaff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="6" fill="#fffbe7"/>
-          <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-        </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00eaff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6" fill="#fffbe7"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
       </button>
-      <span id="switchHelper" class="switch-helper">
-        <span class="switch-helper-icon">
-          <svg viewBox="0 0 20 20" width="20" height="20" fill="none" style="vertical-align:middle;">
-            <circle cx="10" cy="10" r="8" stroke="#00eaff" stroke-width="2" fill="#181a20"/>
-            <rect x="9" y="4" width="2" height="7" rx="1" fill="#00eaff"/>
-          </svg>
-        </span>
-        Flip the Switch to Boot the Terminal!
-      </span>
     </div>
-    <div class="hero-title">blaze-install</div>
-    <div class="hero-tagline">The blazing fast, modern alternative to <code>npm install</code> for Node.js projects.</div>
+    <div class="hero-title" style="font-size:3.5rem;font-weight:900;letter-spacing:2.5px;color:#00eaff;text-shadow:0 0 24px #00eaff,0 0 48px #00bfff;">blaze-install</div>
+    <div class="hero-tagline" style="font-size:1.7rem;color:#eaf6fb;margin-bottom:36px;text-shadow:0 0 12px #00eaff;font-weight:500;">The blazing fast, modern alternative to <code>npm install</code> for Node.js projects.</div>
+    <a href="#usage" class="fire-btn" style="display:inline-block;margin-top:18px;background:linear-gradient(90deg,#00eaff 0%,#00bfff 100%);color:#0a1020;padding:18px 48px;border-radius:36px;font-size:1.35rem;font-weight:900;letter-spacing:1.2px;border:none;cursor:pointer;box-shadow:0 0 24px #00eaff,0 0 48px #00bfff;transition:background 0.2s,box-shadow 0.2s,transform 0.2s;text-decoration:none;animation:ctaGlow 2s infinite alternate;max-width:100%;white-space:normal;text-align:center;margin-left:0;margin-right:0;box-sizing:border-box;text-shadow:none;">Get Started</a>
   </section>
   <div class="terminal-frame" id="terminalFrame" style="margin-bottom:40px; opacity:0; pointer-events:none; transition:opacity 0.5s;">
     <div class="terminal-titlebar">
@@ -780,21 +782,55 @@
           </tr>
         </table>
       </section>
-      <h2 style="text-align:center; color:#00eaff; text-shadow:0 0 8px #00eaff;">Usage</h2>
-      <pre style="background:#112233; color:#00eaff; padding:20px 18px; border-radius:10px; font-size:1.15rem; overflow-x:auto; box-shadow:0 0 16px #00eaff;">blaze install                # Install all dependencies from package.json
-blaze install &lt;package&gt;      # Add and install a package
-blaze uninstall &lt;package&gt;    # Remove a package and prune lockfile
-blaze update &lt;package&gt;       # Update a package to the latest version
+      <h2 id="usage" style="text-align:center; color:#00eaff; text-shadow:0 0 8px #00eaff;">Usage</h2>
+      <pre id="usageBlock" style="background:#112233; color:#00eaff; padding:20px 18px; border-radius:10px; font-size:1.15rem; overflow-x:auto; box-shadow:0 0 16px #00eaff; position:relative;">
+blaze install                # Install all dependencies from package.json
+blaze install <package>      # Add and install a package
+blaze uninstall <package>    # Remove a package and prune lockfile
+blaze update <package>       # Update a package to the latest version
 blaze audit                  # Run a security audit
+blaze audit --json           # Run audit and output JSON
+blaze list                   # List installed dependencies
+blaze clean                  # Remove node_modules and cache
+blaze outdated               # Show outdated dependencies
+blaze info <package>         # Show info about a package
+blaze publish                # Publish the package to the npm registry
+blaze version <newversion>   # Bump version, commit, and tag
+blaze audit fix              # Auto-fix vulnerable dependencies
+blaze --interactive          # Use interactive mode
+
+# Options
+--save-dev      Add to devDependencies
+--production    Only install production dependencies
+--symlink       Use symlinks instead of copying (for local development)
+--json          Output JSON (for audit)
+<button onclick="navigator.clipboard.writeText(document.getElementById('usageBlock').innerText);this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" style="position:absolute;top:12px;right:18px;background:#00eaff;color:#0a1020;border:none;padding:6px 18px;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 0 8px #00eaff;">Copy</button>
 </pre>
       <div style="text-align:center; margin: 36px 0 0 0;">
         <a href="https://github.com/TrialLord/Blazed-install" style="color:#00eaff; font-weight:700; text-decoration:none; margin:0 14px; text-shadow:0 0 8px #00eaff;">GitHub</a>
         <a href="https://www.npmjs.com/package/blaze-install" style="color:#00eaff; font-weight:700; text-decoration:none; margin:0 14px; text-shadow:0 0 8px #00eaff;">npm</a>
         <a href="https://triallord.github.io/Blazed-install/" style="color:#00eaff; font-weight:700; text-decoration:none; margin:0 14px; text-shadow:0 0 8px #00eaff;">Docs</a>
       </div>
-      <div class="footer">
-        <p>blaze-install is the future of Node.js dependency management. <br> <b>Join the revolution!</b></p>
-        <p>&copy; 2025 <a href="https://github.com/TrialLord/Blazed-install">TrialLord</a> &mdash; MIT License</p>
+      <div class="footer" style="margin-top:48px;">
+        <h2 id="release-notes" style="text-align:center; color:#00eaff; text-shadow:0 0 8px #00eaff; margin-bottom:18px;">Release Notes</h2>
+        <div style="background:rgba(10,32,40,0.85); border-radius:14px; padding:22px 18px 18px 18px; margin:0 auto 32px auto; max-width:700px; box-shadow:0 0 16px #00eaff44; color:#b2eaff;">
+          <b>v1.2.1 – June 2025</b><br>
+          <ul style="margin:14px 0 0 18px;">
+            <li><b>Major README & Docs Update:</b> Side-by-side npm vs blaze comparison, all unique features listed, improved onboarding.</li>
+            <li><b>Local/Link Dependency Support:</b> Robust <code>file:</code> and <code>link:</code> dependency handling, with symlink/copy fallback for Windows.</li>
+            <li><b>Bug Fixes & Polish:</b> Improved debug output, error handling, and codebase cleanup.</li>
+          </ul>
+          <div style="margin-top:10px;">See the <a href="https://github.com/TrialLord/Blazed-install/releases" style="color:#00eaff;">GitHub Releases</a> for full details.</div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <a href="#top" style="color:#00eaff;font-size:1.3rem;text-decoration:none;font-weight:900;">⬆️ Back to top</a>
+        </div>
+        <div style="margin-bottom:18px;">
+          <a href="https://github.com/TrialLord/Blazed-install" target="_blank" style="margin:0 10px;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" style="width:28px;height:28px;vertical-align:middle;filter:invert(60%) sepia(100%) saturate(2000%) hue-rotate(160deg);"></a>
+          <a href="https://www.npmjs.com/package/blaze-install" target="_blank" style="margin:0 10px;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/npm.svg" alt="npm" style="width:28px;height:28px;vertical-align:middle;filter:invert(60%) sepia(100%) saturate(2000%) hue-rotate(160deg);"></a>
+        </div>
+        <p style="color:#b2eaff;font-size:1.12rem;text-shadow:0 0 8px #00eaff;">blaze-install is the future of Node.js dependency management. <br> <b>Join the revolution!</b></p>
+        <p style="color:#b2eaff;font-size:1.12rem;text-shadow:0 0 8px #00eaff;">&copy; 2025 <a href="https://github.com/TrialLord/Blazed-install" style="color:#00eaff;">TrialLord</a> &mdash; MIT License</p>
       </div>
     </div>
   </div>
