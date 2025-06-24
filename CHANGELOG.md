@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.1
+- Chore: Version bump for patch release.
+
+## v1.3.0
+- Feat: Enhanced plugin system with a comprehensive set of lifecycle hooks (`before`/`after` for `uninstall`, `update`, `audit`, and `clean`).
+- Fix: Resolved multiple dependency and scoping issues to improve stability.
+
 ## v1.0.0
 - Initial release of blaze-install
 - Full dependency tree resolution and lockfile support
