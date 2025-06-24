@@ -832,8 +832,28 @@ blaze --interactive          # Use interactive mode
         <p style="color:#b2eaff;font-size:1.12rem;text-shadow:0 0 8px #00eaff;">blaze-install is the future of Node.js dependency management. <br> <b>Join the revolution!</b></p>
         <p style="color:#b2eaff;font-size:1.12rem;text-shadow:0 0 8px #00eaff;">&copy; 2025 <a href="https://github.com/TrialLord/Blazed-install" style="color:#00eaff;">TrialLord</a> &mdash; MIT License</p>
       </div>
+      <h1>Plugin API</h1>
+      <p>Blaze-install has a powerful plugin system that allows you to hook into various parts of the installation lifecycle. To create a plugin, create a <code>.js</code> file in the <code>plugins</code> directory.</p>
+      <h2>Lifecycle Hooks</h2>
+      <p>The following lifecycle hooks are available:</p>
+      <ul>
+        <li><code>blaze doctor</code>: Check for common issues and attempt to repair them.</li>
+        <li><code>blaze graph</code>: Visualize the dependency graph in the terminal.</li>
+        <li><code>blaze upgrade</code>: Interactively upgrade outdated packages.</li>
+      </ul>
     </div>
   </div>
+  <footer class="footer">
+    <div style="margin-bottom:18px;">
+      <a href="#top" style="color:#00eaff;font-size:1.3rem;text-decoration:none;font-weight:900;">⬆️ Back to top</a>
+    </div>
+    <div style="margin-bottom:18px;">
+      <a href="https://github.com/TrialLord/Blazed-install" target="_blank" style="margin:0 10px;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" style="width:28px;height:28px;vertical-align:middle;filter:invert(60%) sepia(100%) saturate(2000%) hue-rotate(160deg);"></a>
+      <a href="https://www.npmjs.com/package/blaze-install" target="_blank" style="margin:0 10px;"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/npm.svg" alt="npm" style="width:28px;height:28px;vertical-align:middle;filter:invert(60%) sepia(100%) saturate(2000%) hue-rotate(160deg);"></a>
+    </div>
+    <p style="color:#b2eaff;font-size:1.12rem;text-shadow:0 0 8px #00eaff;">blaze-install is the future of Node.js dependency management. <br> <b>Join the revolution!</b></p>
+    <p style="color:#b2eaff;font-size:1.12rem;text-shadow:0 0 8px #00eaff;">&copy; 2025 <a href="https://github.com/TrialLord/Blazed-install" style="color:#00eaff;">TrialLord</a> &mdash; MIT License</p>
+  </footer>
   <script>
     // Terminal simulation output
     const termLines = document.getElementById('termLines');

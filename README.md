@@ -2,6 +2,12 @@
   <img src="https://raw.githubusercontent.com/TrialLord/Blazed-install/main/logo.svg" alt="blaze-install logo" width="160"/>
 </p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/v/blaze-install.svg?style=flat-square" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/dw/blaze-install.svg?style=flat-square" alt="npm downloads"></a>
+  <a href="https://github.com/TrialLord/Blazed-install/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/blaze-install.svg?style=flat-square" alt="license"></a>
+</p>
+
 # blaze-install
 
 A fast, modern alternative to `npm install` for Node.js projects.
