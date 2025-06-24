@@ -1,5 +1,6 @@
 # Exclude blaze global store and caches
 .blaze_store/
+package
 
 # Node modules
 node_modules/
