@@ -78,10 +78,43 @@ module.exports = {
   },
   afterInstall({ args, context }) {
     console.log('[plugin] After install hook');
-  }
+  },
+  beforeUninstall({ args, context }) {
+    console.log('[plugin] Before uninstall hook');
+  },
+  afterUninstall({ args, context }) {
+    console.log('[plugin] After uninstall hook');
+  },
+  beforeUpdate({ args, context }) {
+    console.log('[plugin] Before update hook');
+  },
+  afterUpdate({ args, context }) {
+    console.log('[plugin] After update hook');
+  },
+  beforeAudit({ context }) {
+    console.log('[plugin] Before audit hook');
+  },
+  afterAudit({ context }) {
+    console.log('[plugin] After audit hook');
+  },
+  beforeClean({ context }) {
+    console.log('[plugin] Before clean hook');
+  },
+  afterClean({ context }) {
+    console.log('[plugin] After clean hook');
+  },
 };
 ```
-Supported hooks: `onCommand`, `beforeInstall`, `afterInstall` (more coming soon!).
+
+**Supported hooks:**
+- `onCommand({ command, args, context })`: Called for every command.
+- `beforeInstall({ args, context })` / `afterInstall({ args, context })`
+- `beforeUninstall({ args, context })` / `afterUninstall({ args, context })`
+- `beforeUpdate({ args, context })` / `afterUpdate({ args, context })`
+- `beforeAudit({ context })` / `afterAudit({ context })`
+- `beforeClean({ context })` / `afterClean({ context })`
+
+These hooks allow you to extend and automate blaze-install's behavior at every major lifecycle stage.
 
 ### Workspaces/Monorepo
 If your `package.json` includes a `workspaces` field, blaze-install will automatically resolve and install all workspace dependencies.
