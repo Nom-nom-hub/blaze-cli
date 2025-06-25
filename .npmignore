@@ -32,3 +32,6 @@ Thumbs.db
 # Exclude lockfiles (optional, if you don't want to publish them)
 package-lock.json
 blaze-lock.json 
+
+# MD files
+changelog.md
