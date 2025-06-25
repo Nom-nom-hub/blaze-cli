@@ -6,6 +6,13 @@
   <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/v/blaze-install.svg?style=flat-square" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/dw/blaze-install.svg?style=flat-square" alt="npm downloads"></a>
   <a href="https://github.com/TrialLord/Blazed-install/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/blaze-install.svg?style=flat-square" alt="license"></a>
+  <a href="https://github.com/TrialLord/Blazed-install/actions"><img src="https://img.shields.io/github/actions/workflow/status/TrialLord/Blazed-install/ci.yml?branch=main&style=flat-square" alt="Build Status"></a>
+  <a href="https://github.com/TrialLord/Blazed-install/issues"><img src="https://img.shields.io/github/issues/TrialLord/Blazed-install?style=flat-square" alt="GitHub issues"></a>
+  <a href="https://github.com/TrialLord/Blazed-install/pulls"><img src="https://img.shields.io/github/issues-pr/TrialLord/Blazed-install?style=flat-square" alt="GitHub pull requests"></a>
+  <a href="https://github.com/TrialLord/Blazed-install/stargazers"><img src="https://img.shields.io/github/stars/TrialLord/Blazed-install?style=flat-square" alt="GitHub stars"></a>
+  <a href="https://github.com/TrialLord/Blazed-install/commits/main"><img src="https://img.shields.io/github/last-commit/TrialLord/Blazed-install?style=flat-square" alt="GitHub last commit"></a>
+  <img src="https://img.shields.io/node/v/blaze-install?style=flat-square" alt="node-current">
+  <img src="https://img.shields.io/badge/code_style-eslint-blue?style=flat-square" alt="ESLint">
 </p>
 
 # blaze-install
