@@ -35,3 +35,9 @@ blaze-lock.json
 
 # MD files
 changelog.md
+
+# SVG files
+logo-dark.svg
+logo-light.svg
+logo-dark-cover.svg
+blaze-install-devto-launch.md

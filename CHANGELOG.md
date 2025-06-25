@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.4.1
+- Chore: Removed `packages` folder and sample workspaces for a cleaner release.
+
 ## v1.4.0
 - Feat: `blaze graph` command for visual dependency graphs (Mermaid.js output).
 - Feat: `blaze upgrade` for interactive upgrades of outdated dependencies.
