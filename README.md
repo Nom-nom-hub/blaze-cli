@@ -11,7 +11,7 @@
   <a href="https://github.com/TrialLord/Blazed-install/pulls"><img src="https://img.shields.io/github/issues-pr/TrialLord/Blazed-install?style=flat-square" alt="GitHub pull requests"></a>
   <a href="https://github.com/TrialLord/Blazed-install/stargazers"><img src="https://img.shields.io/github/stars/TrialLord/Blazed-install?style=flat-square" alt="GitHub stars"></a>
   <a href="https://github.com/TrialLord/Blazed-install/commits/main"><img src="https://img.shields.io/github/last-commit/TrialLord/Blazed-install?style=flat-square" alt="GitHub last commit"></a>
-  <img src="https://img.shields.io/node/v/blaze-install?style=flat-square" alt="node-current">
+  <img src="https://img.shields.io/badge/node-%3E=18.0.0-brightgreen?style=flat-square" alt="node version">
   <img src="https://img.shields.io/badge/code_style-eslint-blue?style=flat-square" alt="ESLint">
 </p>
 
