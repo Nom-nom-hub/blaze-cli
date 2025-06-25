@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.4.0
+- Feat: `blaze graph` command for visual dependency graphs (Mermaid.js output).
+- Feat: `blaze upgrade` for interactive upgrades of outdated dependencies.
+- Feat: Monorepo/workspaces support with `--workspaces` flag for running scripts across all workspaces.
+- Feat: `blaze doctor` for diagnostics and interactive fixes (lockfile, cache, etc.).
+- Feat: Plugin system now supports before/after hooks for all major commands (install, uninstall, update, audit, clean).
+- Perf: Parallelized network requests for package metadata and added metadata caching for faster installs.
+- Fix: Various bug fixes and stability improvements.
+
 ## v1.3.1
 - Chore: Version bump for patch release.
 
