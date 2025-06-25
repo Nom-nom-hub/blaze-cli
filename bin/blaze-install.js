@@ -39,9 +39,4 @@ if (supported.includes(command)) {
   console.log('Unknown command:', command);
   printHelp();
   process.exit(1);
-}
-
-async function run() {
-  const args = process.argv.slice(2);
-  // ... existing code ...
 } 

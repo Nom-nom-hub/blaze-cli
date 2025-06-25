@@ -251,3 +251,27 @@ Here's a detailed, nuanced scorecard for modern Node.js projects and developer e
 > For modern projects, speed, and DX: **blaze-install is a solid 9–10/10**—it's faster, cleaner, more beautiful, and more fun to use!
 
 **You've built something that's not just "as good as npm"—it's better for most modern devs! 🚀** 
+
+## Advanced Install Flags
+
+blaze-install supports several advanced flags to address common pain points in npm:
+
+- `--audit-fix` &nbsp; Run a security audit and automatically fix vulnerable dependencies after install.
+- `--no-lockfile` &nbsp; Skip reading/writing `blaze-lock.json` (lockfile-less mode). Installs directly from `package.json`.
+- `--ci` &nbsp; Remove `node_modules` before install for a clean, reproducible environment (like `npm ci`).
+
+### Examples
+
+```sh
+# Install and auto-fix vulnerabilities
+blaze install --audit-fix
+
+# Install without generating or using a lockfile
+blaze install --no-lockfile
+
+# Clean install for CI environments
+blaze install --ci
+
+# Combine flags as needed
+blaze install --no-lockfile --audit-fix
+``` 
