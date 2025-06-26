@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 
 const { main, printHelp } = require('../lib/index');
-const chalk = require('chalk');
+let chalk;
+async function getChalk() {
+  if (!chalk) {
+    chalk = (await import('chalk')).default;
+  }
+  return chalk;
+}
 
 const args = process.argv.slice(2);
 const command = args[0];
