@@ -63,6 +63,7 @@ blaze publish                # Publish the package to the npm registry
 blaze version <newversion>   # Bump version, commit, and tag
 blaze audit fix              # Auto-fix vulnerable dependencies
 blaze --interactive          # Use interactive mode
+blaze prefetch               # Prefetch/cache all dependencies for offline use
 ```
 
 ### Options
@@ -70,6 +71,42 @@ blaze --interactive          # Use interactive mode
 - `--production`    Only install production dependencies
 - `--symlink`       Use symlinks instead of copying (for local development)
 - `--json`          Output JSON (for audit)
+- `--offline`       **Offline mode:** Only use local cache and lockfile; no network requests. Fails if a required package or metadata is missing from the cache.
+- `--fix`           (doctor) Attempt to automatically repair common issues.
+
+### Prefetch/Cache Warming
+Use `blaze prefetch` to download and cache all dependencies and their tarballs for offline use:
+
+```sh
+blaze prefetch
+```
+- Resolves all dependencies (including workspaces).
+- Fetches and caches all required metadata and tarballs.
+- Does not install anything, just prepares the cache for offline mode.
+- Prints a summary of what was prefetched.
+
+### Self-Healing & Diagnostics: `blaze doctor`
+blaze-install includes a built-in diagnostics and self-healing command:
+
+```sh
+blaze doctor [--fix]
+```
+- Checks for missing or corrupt `node_modules`.
+- Detects lockfile/package.json mismatches.
+- Warns about broken symlinks.
+- Provides actionable suggestions for common issues.
+- With `--fix`, will attempt to automatically repair issues (recreate node_modules, regenerate lockfile, remove broken symlinks).
+
+### Peer Dependency Handling
+- After installing or adding dependencies, blaze-install will print clear warnings for missing or incompatible peer dependencies.
+- If not in offline mode, you will be prompted to auto-install missing peer dependencies with a single confirmation.
+- This helps keep your project healthy and avoids common peer dependency issues.
+
+### Local Diagnostics/AI System
+blaze-install uses a local, rule-based diagnostics system (no cloud/LLM dependencies) to:
+- Detect and suggest fixes for common install and project errors.
+- Provide context-aware CLI help and troubleshooting.
+- All logic runs locally and is extensible for future rules and checks.
 
 ### .npmrc Support
 blaze-install reads registry and authentication settings from both project and user `.npmrc` files, just like npm. This is used for publishing, installing, and auditing packages. You can also use the `NPM_TOKEN` environment variable for authentication.
@@ -131,6 +168,35 @@ These hooks allow you to extend and automate blaze-install's behavior at every m
 
 ### Workspaces/Monorepo
 If your `package.json` includes a `workspaces` field, blaze-install will automatically resolve and install all workspace dependencies.
+
+**How workspaces are recognized:**
+- blaze-install looks for a `workspaces` array in your root `package.json`.
+- Each entry in the array should be a glob pattern (e.g., `"packages/*"`) pointing to directories containing a `package.json` file.
+- blaze-install will discover and manage all workspace packages matching these patterns.
+
+**Example root package.json:**
+```json
+{
+  "name": "my-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
+```
+
+**Example structure:**
+```
+my-monorepo/
+  package.json  # contains "workspaces" field
+  packages/
+    pkg-a/
+      package.json
+    pkg-b/
+      package.json
+```
+
+When you add or install dependencies, blaze-install will prompt you to select the target workspace (or root), and will update the correct `package.json` file. All workspace dependencies are resolved and installed together, ensuring consistency across your monorepo.
 
 ## .blazerc Config File
 

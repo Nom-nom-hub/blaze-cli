@@ -31,6 +31,7 @@ const supported = [
   'graph',
   'upgrade',
   'doctor',
+  'prefetch',
 ];
 
 if (supported.includes(command)) {

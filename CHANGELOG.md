@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.0
+- Feat: Offline mode (`--offline`) for fully local, cache-only installs.
+- Feat: `blaze prefetch` command to prefetch/cache all dependencies and tarballs for offline use.
+- Feat: Self-healing and diagnostics improvements: `blaze doctor --fix` auto-repairs common issues (missing node_modules, lockfile, broken symlinks).
+- Feat: Enhanced peer dependency handling with clear warnings and auto-install prompt for missing peers.
+- Docs: Updated README with all new features, usage, and examples.
+- Fix: CLI now robustly handles all commands and flags, including new features.
+
 ## v1.4.1
 - Chore: Removed `packages` folder and sample workspaces for a cleaner release.
 
