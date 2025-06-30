@@ -1,0 +1,30 @@
+{
+  "..\\..\\lib\\registryService.js": {
+    "8": 1
+  },
+  "..\\..\\lib\\registryMirror.js": {
+    "7": 1
+  },
+  "..\\..\\lib\\packageSigning.js": {
+    "10": 1
+  },
+  "..\\..\\lib\\migrationTools.js": {
+    "6": 1
+  },
+  "..\\..\\lib\\performanceProfiler.js": {
+    "6": 1
+  },
+  "..\\..\\lib\\index.js": {
+    "31": 1,
+    "32": 1,
+    "233": 1,
+    "244": 1,
+    "261": 1,
+    "267": 2,
+    "649": 1,
+    "1222": 1
+  },
+  "..\\..\\lib\\readPackageJson.js": {
+    "4": 1
+  }
+}

@@ -1,0 +1,58 @@
+const fs = require('fs');
+const path = require('path');
+
+async function runDoctor(fix = false) {console.log('Running blaze doctor...');
+  // Check for missing node_modules
+  if (!fs.existsSync('node_modules')) {
+    console.warn('Warning: node_modules directory is missing.');
+    if (fix) {console.log('Recreating node_modules...');
+      require('child_process').execSync('npm install --package-lock-only', { stdio: 'inherit' });
+    } else {
+      console.log('Run `blaze install` to recreate it.');
+    }
+  }
+  // Check for lockfile/package.json mismatch
+  if (!fs.existsSync('blaze-lock.json')) {
+    console.warn('Warning: blaze-lock.json is missing.');
+    if (fix) {console.log('Regenerating blaze-lock.json...');
+      require('child_process').execSync('node ./bin/blaze-install.js install', { stdio: 'inherit' });
+    } else {
+      console.log('Run `blaze install` to generate it.');
+    }
+  } else {
+    try {
+      const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+      const lock = JSON.parse(fs.readFileSync('blaze-lock.json', 'utf-8'));
+      const pkgDeps = Object.keys(pkg.dependencies || {});
+      const lockDeps = Object.keys(lock || {});
+      const missingInLock = pkgDeps.filter(dep => !lockDeps.includes(dep));
+      if (missingInLock.length > 0) {console.warn('Warning: Some dependencies in package.json are missing from the lockfile:', missingInLock);
+        if (fix) {console.log('Regenerating blaze-lock.json...');
+          require('child_process').execSync('node ./bin/blaze-install.js install', { stdio: 'inherit' });
+        }
+      }
+    } catch (e) {
+      console.log('Error reading package.json or lockfile:', e.message);
+    }
+  }
+  // Check for broken symlinks in node_modules
+  if (fs.existsSync('node_modules')) {
+    const modules = fs.readdirSync('node_modules');
+    for (const mod of modules) {const modPath = path.join('node_modules', mod);
+      if (fs.lstatSync(modPath).isSymbolicLink()) {
+        try {
+          fs.readlinkSync(modPath);
+        } catch {
+          console.warn(`Warning: Broken symlink detected: ${modPath}`);
+          if (fix) {console.warn(`Removing broken symlink: ${modPath}`);
+            fs.unlinkSync(modPath);
+          }
+        }
+      }
+    }
+  }
+  // Add more rule-based checks and suggestions here as needed
+  console.log('blaze doctor completed.');
+}
+
+module.exports = { runDoctor }; 

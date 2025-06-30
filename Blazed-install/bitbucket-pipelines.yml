@@ -1,0 +1,100 @@
+image: node:22
+
+definitions:
+  caches:
+    blaze-store: .blaze_store
+
+pipelines:
+  branches:
+    main:
+      - step:
+          name: Test (Node 18, 20, 22)
+          caches:
+            - node
+            - blaze-store
+          script:
+            - for v in 18 20 22; do nvm install $v && nvm use $v && npm ci && npm test && node bin/blaze-install.js --version; done
+            - mkdir test-project
+            - cd test-project
+            - echo '{"name":"test","version":"1.0.0","dependencies":{"lodash":"^4.17.21"}}' > package.json
+            - cd ..
+            - npm pack ./
+            - mv blaze-install-*.tgz test-project/
+            - cd test-project
+            - npm install ./blaze-install-*.tgz
+            - npx blaze-install install
+            - ls -la node_modules/
+      - step:
+          name: Lint & Format
+          caches:
+            - node
+            - blaze-store
+          script:
+            - npm cache clean --force
+            - npm config set registry https://registry.npmjs.org/
+            - npm ci
+            - npm run lint || echo "No lint script found"
+            - |
+              if command -v prettier >/dev/null 2>&1; then
+                npx prettier --check .
+              else
+                echo "Prettier not available"
+              fi
+      - step:
+          name: Generate Changelog
+          script:
+            - npx auto-changelog -p
+            - cat CHANGELOG.md
+      - step:
+          name: Upload Artifact
+          script:
+            - tar --ignore-failed-read -czf blaze-install-build.tgz lib/ bin/ plugins/ package.json README.md blaze-lock.json CHANGELOG.md
+            - curl -X POST -u "$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD" "https://api.bitbucket.org/2.0/repositories/$BITBUCKET_REPO_OWNER/$BITBUCKET_REPO_SLUG/downloads" --form files=@blaze-install-build.tgz
+      - step:
+          name: Deploy to npm
+          caches:
+            - node
+            - blaze-store
+          script:
+            - npm cache clean --force
+            - npm config set registry https://registry.npmjs.org/
+            - npm ci
+            - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+            - npm publish
+          deployment: production
+          trigger: manual
+  pull-requests:
+    '**':
+      - step:
+          name: Test (Node 18, 20, 22)
+          caches:
+            - node
+            - blaze-store
+          script:
+            - for v in 18 20 22; do nvm install $v && nvm use $v && npm ci && npm test && node bin/blaze-install.js --version; done
+            - mkdir test-project
+            - cd test-project
+            - echo '{"name":"test","version":"1.0.0","dependencies":{"lodash":"^4.17.21"}}' > package.json
+            - cd ..
+            - npm pack ./
+            - mv blaze-install-*.tgz test-project/
+            - cd test-project
+            - npm install ./blaze-install-*.tgz
+            - npx blaze-install install
+            - ls -la node_modules/
+      - step:
+          name: Lint & Format
+          caches:
+            - node
+            - blaze-store
+          script:
+            - npm cache clean --force
+            - npm config set registry https://registry.npmjs.org/
+            - npm ci
+            - npm run lint || echo "No lint script found"
+            - |
+              if command -v prettier >/dev/null 2>&1; then
+                npx prettier --check .
+              else
+                echo "Prettier not available"
+              fi 

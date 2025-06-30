@@ -1,0 +1,43 @@
+# Exclude blaze global store and caches
+.blaze_store/
+package
+
+# Node modules
+node_modules/
+node_modules/.cache/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+*.tmp
+
+# Exclude local/test files
+*.local.js
+*.test.js
+*.spec.js
+
+# Exclude editor/project files
+.vscode/
+.idea/
+*.swp
+
+# Exclude lockfiles (optional, if you don't want to publish them)
+package-lock.json
+blaze-lock.json 
+
+# MD files
+changelog.md
+
+# SVG files
+logo-dark.svg
+logo-light.svg
+logo-dark-cover.svg
+blaze-install-devto-launch.md

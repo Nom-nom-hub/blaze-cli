@@ -1,0 +1,75 @@
+{
+  "name": "blaze-install",
+  "version": "1.10.4",
+  "description": "A fast, modern alternative to npm install for Node.js projects",
+  "main": "lib/index.js",
+  "bin": {
+    "blaze": "bin/blaze-install.js",
+    "blaze-install": "bin/blaze-install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blazeinstall/Blaze.git"
+  },
+  "homepage": "https://github.com/blazeinstall/Blaze#readme",
+  "bugs": {
+    "url": "https://github.com/blazeinstall/Blaze/issues"
+  },
+  "keywords": [
+    "package-manager",
+    "npm",
+    "install",
+    "node",
+    "javascript",
+    "dependency-management",
+    "lockfile",
+    "workspaces",
+    "monorepo"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "preinstall": "echo preinstall script",
+    "install": "echo install script",
+    "postinstall": "echo \"🚀 Thanks for installing Blaze! If you find it helpful, consider starring the repo: https://github.com/blazeinstall/Blaze\"",
+    "preuninstall": "echo preuninstall script",
+    "uninstall": "echo uninstall script",
+    "postuninstall": "echo postuninstall script",
+    "prepublish": "echo prepublish script",
+    "prepare": "echo prepare script",
+    "prepack": "echo prepack script",
+    "postpack": "echo postpack script",
+    "postpublish": "echo postpublish script",
+    "preversion": "echo preversion script",
+    "version": "echo version script",
+    "postversion": "echo postversion script",
+    "testscript": "echo testscript ran"
+  },
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "packages/pkg-b"
+  ],
+  "dependencies": {
+    "axios": "^1.10.0",
+    "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
+    "glob": "latest",
+    "ini": "latest",
+    "inquirer": "latest",
+    "lodash": "^4.17.21",
+    "playwright": "^1.53.1",
+    "semver": "latest",
+    "string-width": "^4.2.3",
+    "tar": "latest",
+    "yallist": "latest"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "execa": "^5.1.1",
+    "jest": "^29.7.0"
+  },
+  "peerDependencies": {
+    "@types/node": ">=18"
+  }
+}
