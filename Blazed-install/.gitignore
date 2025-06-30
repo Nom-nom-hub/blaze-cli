@@ -1,7 +1,0 @@
-node_modules/
-.cache/ 
-packages/
-blaze-install-devto-launch.md
-logo-dark.svg
-blaze-lock.json
-package-lock.json
