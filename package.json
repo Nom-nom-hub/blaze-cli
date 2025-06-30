@@ -24,7 +24,17 @@
     "postversion": "echo postversion script",
     "testscript": "echo testscript ran"
   },
-  "keywords": [],
+  "keywords": [
+    "package-manager",
+    "npm",
+    "install",
+    "node",
+    "javascript",
+    "dependency-management",
+    "lockfile",
+    "workspaces",
+    "monorepo"
+  ],
   "author": "",
   "license": "ISC",
   "workspaces": [
@@ -47,5 +57,13 @@
   },
   "peerDependencies": {
     "@types/node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blazeinstall/Blaze.git"
+  },
+  "homepage": "https://github.com/blazeinstall/Blaze#readme",
+  "bugs": {
+    "url": "https://github.com/blazeinstall/Blaze/issues"
   }
 }
