@@ -21,7 +21,7 @@ Have an idea for a new feature? Open an issue with the `feature request` label. 
 
 ### 🔧 Pull Requests
 We welcome pull requests for bug fixes, features, and documentation!
-- To contribute, fork the repository on Bitbucket and create a branch for your feature or bugfix.
+- To contribute, fork the repository on GitHub and create a branch for your feature or bugfix.
 - Submit a pull request (PR) via GitHub: https://github.com/blazeinstall/Blaze/pulls
 - For issues, use: https://github.com/blazeinstall/Blaze/issues
 
