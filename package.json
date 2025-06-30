@@ -1,6 +1,6 @@
 {
   "name": "blaze-install",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A new package manager",
   "main": "lib/index.js",
   "bin": {
