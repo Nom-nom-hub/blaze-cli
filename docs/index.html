@@ -360,6 +360,40 @@
       <div class="feature"><div class="feature-icon">🛡️</div><div class="feature-title">Advanced Flags</div><div class="feature-desc"><code>--audit-fix</code>, <code>--no-lockfile</code>, <code>--ci</code>, <code>--offline</code>, <code>--json</code>, <code>--symlink</code>, and more.</div></div>
       <div class="feature"><div class="feature-icon">📚</div><div class="feature-title">Comprehensive Documentation</div><div class="feature-desc">Full usage, advanced flags, and migration guides.</div></div>
     </div>
+    <section id="official-plugins" style="margin-top:2em; background:#22263a; color:#fff; border-radius:8px; padding:2em 1.5em; box-shadow:0 2px 8px #0002;">
+      <h2 style="font-size:1.7em; margin-bottom:0.7em;">🧩 Official Example Plugins</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:1.5em;">
+        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
+          <b>License Checker</b><br>
+          <span style="color:#aaa;">Warns if any installed packages have non-allowed licenses after install/update.<br><b>Hooks:</b> afterInstall, afterUpdate</span>
+        </div>
+        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
+          <b>Notify On Install</b><br>
+          <span style="color:#aaa;">Prints a terminal notification when an install finishes.<br><b>Hook:</b> afterInstall</span>
+        </div>
+        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
+          <b>Security Audit Reporter</b><br>
+          <span style="color:#aaa;">Prints a summary after <code>blaze audit</code> (with a placeholder for sending results to a webhook).<br><b>Hook:</b> afterAudit</span>
+        </div>
+        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
+          <b>Dependency Size Reporter</b><br>
+          <span style="color:#aaa;">Reports the largest dependencies (by size) after install/update.<br><b>Hooks:</b> afterInstall, afterUpdate</span>
+        </div>
+        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
+          <b>Custom Script Runner</b><br>
+          <span style="color:#aaa;">Runs custom shell scripts before/after install/uninstall, reading from a <code>.blazepluginrc</code> config file.<br><b>Hooks:</b> beforeInstall, afterInstall, beforeUninstall, afterUninstall</span>
+        </div>
+        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
+          <b>Changelog Notifier</b><br>
+          <span style="color:#aaa;">After updating a package, prints a placeholder for changelog/release notes (can be extended to fetch from npm or GitHub).<br><b>Hook:</b> afterUpdate</span>
+        </div>
+        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
+          <b>Outdated Dependency Notifier</b><br>
+          <span style="color:#aaa;">Warns if any dependencies are outdated after install/update (placeholder for real version check).<br><b>Hooks:</b> afterInstall, afterUpdate</span>
+        </div>
+      </div>
+      <div style="color:#aaa; font-size:1em; margin-top:1em;">You can write your own plugins using the same hooks and drop them into the <code>plugins/</code> directory.</div>
+    </section>
     <div class="usage-section" id="get-started">
       <div class="usage-title">Quick Start</div>
       <div class="usage-block"><code>npm install -g blaze-install</code><button class="copy-btn" onclick="copyToClipboard('npm install -g blaze-install', this)">Copy</button></div>

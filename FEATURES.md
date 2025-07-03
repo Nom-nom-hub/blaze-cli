@@ -133,4 +133,34 @@ These hooks allow you to extend and automate blaze-install's behavior at every m
 
 ---
 
-For more details, see the README or run `blaze --help` in your project. 
+For more details, see the README or run `blaze --help` in your project.
+
+---
+
+## 🧩 Official Example Plugins
+
+Blaze comes with a set of example plugins to showcase the power and flexibility of its plugin system. These plugins can be found in the `plugins/` directory and are ready to use or customize:
+
+- **License Checker**
+  - Warns if any installed packages have non-allowed licenses after install/update.
+  - Hooks: `afterInstall`, `afterUpdate`
+- **Notify On Install**
+  - Prints a terminal notification when an install finishes.
+  - Hook: `afterInstall`
+- **Security Audit Reporter**
+  - Prints a summary after `blaze audit` (with a placeholder for sending results to a webhook).
+  - Hook: `afterAudit`
+- **Dependency Size Reporter**
+  - Reports the largest dependencies (by size) after install/update.
+  - Hooks: `afterInstall`, `afterUpdate`
+- **Custom Script Runner**
+  - Runs custom shell scripts before/after install/uninstall, reading from a `.blazepluginrc` config file.
+  - Hooks: `beforeInstall`, `afterInstall`, `beforeUninstall`, `afterUninstall`
+- **Changelog Notifier**
+  - After updating a package, prints a placeholder for changelog/release notes (can be extended to fetch from npm or GitHub).
+  - Hook: `afterUpdate`
+- **Outdated Dependency Notifier**
+  - Warns if any dependencies are outdated after install/update (placeholder for real version check).
+  - Hooks: `afterInstall`, `afterUpdate`
+
+These plugins demonstrate how easy it is to extend Blaze for real-world needs. You can write your own plugins using the same hooks and drop them into the `plugins/` directory. 
