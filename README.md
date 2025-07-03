@@ -368,3 +368,50 @@ blaze install --ci
 # Combine flags as needed
 blaze install --no-lockfile --audit-fix
 ``` 
+
+# Blaze Plugins
+
+Blaze supports a rich plugin ecosystem. Below are the official plugins included or available for Blaze:
+
+| Plugin Name                  | Description                                                                 | Lifecycle Hooks         |
+|------------------------------|-----------------------------------------------------------------------------|------------------------|
+| licenseChecker               | Reports non-allowed licenses for installed packages.                        | afterInstall, afterUpdate |
+| notifyOnInstall              | Notifies when install finishes.                                             | afterInstall           |
+| securityAuditReporter        | Reports security issues after install/update.                                | afterInstall, afterUpdate |
+| dependencySizeReporter       | Reports largest dependencies by size.                                        | afterInstall, afterUpdate |
+| customScriptRunner           | Runs user-defined scripts before/after install/uninstall.                   | beforeInstall, afterInstall, afterUninstall |
+| changelogNotifier            | Notifies about changelog after update.                                       | afterUpdate            |
+| outdatedDependencyNotifier   | Warns if dependencies are outdated.                                         | afterInstall, afterUpdate |
+| postInstallScriptRunner      | Runs a user-defined script after every install.                              | afterInstall           |
+| preCommitDepChecker          | Blocks commit if dependencies are outdated/missing.                          | afterInstall, afterUpdate |
+| duplicatePackageDetector     | Warns if multiple versions of the same package are installed.                | afterInstall, afterUpdate |
+| unusedDependencyLinter       | Scans for unused dependencies and suggests removal.                          | afterInstall, afterUpdate |
+| tscTypeChecker               | Runs TypeScript type check after install/update.                             | afterInstall, afterUpdate |
+| eslintPrettierRunner         | Runs ESLint/Prettier after install/update.                                   | afterInstall, afterUpdate |
+| githubIssueNotifier          | Notifies if any installed package has open security issues on GitHub.        | afterInstall, afterUpdate |
+| changelogFetcher             | Fetches and displays changelogs for updated packages.                        | afterUpdate            |
+| depAgeReporter               | Warns if any dependency hasn't been updated in X months.                     | afterInstall, afterUpdate |
+| nodeVersionChecker           | Warns if any package is incompatible with current Node.js version.           | afterInstall, afterUpdate |
+| installProfiler              | Reports how long each package took to install.                               | afterInstall           |
+| socialNotifier               | Sends notification to Twitter/Discord/Slack after install/update.            | afterInstall, afterUpdate |
+| banner                       | Prints custom banner/ASCII art after install/update.                         | afterInstall, afterUpdate |
+| healthScore                  | Scores all dependencies based on maintenance, popularity, security.          | afterInstall, afterUpdate |
+| peerAutoInstaller            | Auto-installs all missing peer dependencies after install/update.            | afterInstall, afterUpdate |
+| sizeAnalyzer                 | Reports install size of each package, flags large ones.                      | afterInstall, afterUpdate |
+| historyLogger                | Logs every install/uninstall event to a file.                                | afterInstall, afterUninstall |
+| mirrorSwitcher               | Auto-switches to faster/closer npm registry mirror if default is slow.       | beforeInstall, beforeUpdate |
+| openDocs                     | Opens docs page for any newly installed package in browser.                  | afterInstall           |
+| vulnAutoReporter             | Auto-files GitHub issue or sends email if critical vuln found.               | afterInstall, afterUpdate |
+| monorepoCrossLinkChecker     | Ensures all workspace packages are properly linked and up to date.           | afterInstall, afterUpdate |
+
+## Plugin Testing
+
+You can test all plugins and their hooks using the provided test script:
+
+```sh
+node test-blaze-plugins.js
+```
+
+This script will load every plugin and run all lifecycle hooks, printing their output and reporting any errors.
+
+For more details on writing your own plugins, see the [Plugin Development Guide](docs/index.html#plugins). 

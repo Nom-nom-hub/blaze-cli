@@ -248,6 +248,80 @@
       .container { padding: 0 6px; }
       .usage-section, .compare-section, .changelog-section { padding: 18px 4px; }
     }
+    #plugins {
+      background: var(--color-card);
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      padding: 40px 24px;
+      margin: 56px 0;
+      border: 1px solid var(--color-border);
+    }
+    #plugins h2 {
+      color: var(--color-accent);
+      font-size: 2rem;
+      margin-bottom: 0.5em;
+      text-align: center;
+    }
+    #plugins p {
+      color: var(--color-muted);
+      font-size: 1.15em;
+      text-align: center;
+      margin-bottom: 2em;
+    }
+    .plugin-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--color-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      margin-bottom: 1.5em;
+    }
+    .plugin-table tr:nth-child(even) {
+      background: #22242a;
+    }
+    [data-theme="dark"] .plugin-table tr:nth-child(even) {
+      background: #181c24;
+    }
+    .plugin-table th, .plugin-table td {
+      padding: 16px 12px;
+      text-align: left;
+      font-size: 1.05em;
+    }
+    .plugin-table th {
+      background: var(--color-bg);
+      color: var(--color-accent);
+      font-weight: 700;
+      border-bottom: 2px solid var(--color-accent);
+    }
+    .plugin-table tr:hover {
+      background: var(--color-accent-dark);
+      transition: background 0.2s, color 0.2s;
+    }
+    .plugin-table tr:hover td {
+      color: #fff !important;
+    }
+    .plugin-table td {
+      border-bottom: 1px solid var(--color-border);
+      color: #222;
+      transition: color 0.2s;
+    }
+    [data-theme="dark"] .plugin-table td {
+      color: #f3f3f3;
+    }
+    .plugin-table td:first-child {
+      font-weight: 600;
+      color: var(--color-accent);
+      transition: color 0.2s;
+    }
+    .plugin-table tr:hover td:first-child {
+      color: #fff !important;
+    }
+    @media (max-width: 700px) {
+      #plugins { padding: 18px 4px; }
+      .plugin-table th, .plugin-table td { padding: 10px 6px; font-size: 0.98em; }
+    }
   </style>
 </head>
 <body>
@@ -360,39 +434,46 @@
       <div class="feature"><div class="feature-icon">🛡️</div><div class="feature-title">Advanced Flags</div><div class="feature-desc"><code>--audit-fix</code>, <code>--no-lockfile</code>, <code>--ci</code>, <code>--offline</code>, <code>--json</code>, <code>--symlink</code>, and more.</div></div>
       <div class="feature"><div class="feature-icon">📚</div><div class="feature-title">Comprehensive Documentation</div><div class="feature-desc">Full usage, advanced flags, and migration guides.</div></div>
     </div>
-    <section id="official-plugins" style="margin-top:2em; background:#22263a; color:#fff; border-radius:8px; padding:2em 1.5em; box-shadow:0 2px 8px #0002;">
-      <h2 style="font-size:1.7em; margin-bottom:0.7em;">🧩 Official Example Plugins</h2>
-      <div style="display:flex; flex-wrap:wrap; gap:1.5em;">
-        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
-          <b>License Checker</b><br>
-          <span style="color:#aaa;">Warns if any installed packages have non-allowed licenses after install/update.<br><b>Hooks:</b> afterInstall, afterUpdate</span>
-        </div>
-        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
-          <b>Notify On Install</b><br>
-          <span style="color:#aaa;">Prints a terminal notification when an install finishes.<br><b>Hook:</b> afterInstall</span>
-        </div>
-        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
-          <b>Security Audit Reporter</b><br>
-          <span style="color:#aaa;">Prints a summary after <code>blaze audit</code> (with a placeholder for sending results to a webhook).<br><b>Hook:</b> afterAudit</span>
-        </div>
-        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
-          <b>Dependency Size Reporter</b><br>
-          <span style="color:#aaa;">Reports the largest dependencies (by size) after install/update.<br><b>Hooks:</b> afterInstall, afterUpdate</span>
-        </div>
-        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
-          <b>Custom Script Runner</b><br>
-          <span style="color:#aaa;">Runs custom shell scripts before/after install/uninstall, reading from a <code>.blazepluginrc</code> config file.<br><b>Hooks:</b> beforeInstall, afterInstall, beforeUninstall, afterUninstall</span>
-        </div>
-        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
-          <b>Changelog Notifier</b><br>
-          <span style="color:#aaa;">After updating a package, prints a placeholder for changelog/release notes (can be extended to fetch from npm or GitHub).<br><b>Hook:</b> afterUpdate</span>
-        </div>
-        <div style="flex:1 1 250px; min-width:220px; background:#23283a; border-radius:6px; padding:1em 1em 0.5em 1em; margin-bottom:1em;">
-          <b>Outdated Dependency Notifier</b><br>
-          <span style="color:#aaa;">Warns if any dependencies are outdated after install/update (placeholder for real version check).<br><b>Hooks:</b> afterInstall, afterUpdate</span>
-        </div>
-      </div>
-      <div style="color:#aaa; font-size:1em; margin-top:1em;">You can write your own plugins using the same hooks and drop them into the <code>plugins/</code> directory.</div>
+    <section id="plugins">
+      <h2>Official Blaze Plugins</h2>
+      <p>Blaze supports a powerful plugin system. Here are the official plugins you can use or extend:</p>
+      <table class="plugin-table">
+        <thead>
+          <tr><th>Plugin Name</th><th>Description</th><th>Lifecycle Hooks</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>licenseChecker</td><td>Reports non-allowed licenses for installed packages.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>notifyOnInstall</td><td>Notifies when install finishes.</td><td>afterInstall</td></tr>
+          <tr><td>securityAuditReporter</td><td>Reports security issues after install/update.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>dependencySizeReporter</td><td>Reports largest dependencies by size.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>customScriptRunner</td><td>Runs user-defined scripts before/after install/uninstall.</td><td>beforeInstall, afterInstall, afterUninstall</td></tr>
+          <tr><td>changelogNotifier</td><td>Notifies about changelog after update.</td><td>afterUpdate</td></tr>
+          <tr><td>outdatedDependencyNotifier</td><td>Warns if dependencies are outdated.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>postInstallScriptRunner</td><td>Runs a user-defined script after every install.</td><td>afterInstall</td></tr>
+          <tr><td>preCommitDepChecker</td><td>Blocks commit if dependencies are outdated/missing.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>duplicatePackageDetector</td><td>Warns if multiple versions of the same package are installed.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>unusedDependencyLinter</td><td>Scans for unused dependencies and suggests removal.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>tscTypeChecker</td><td>Runs TypeScript type check after install/update.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>eslintPrettierRunner</td><td>Runs ESLint/Prettier after install/update.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>githubIssueNotifier</td><td>Notifies if any installed package has open security issues on GitHub.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>changelogFetcher</td><td>Fetches and displays changelogs for updated packages.</td><td>afterUpdate</td></tr>
+          <tr><td>depAgeReporter</td><td>Warns if any dependency hasn't been updated in X months.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>nodeVersionChecker</td><td>Warns if any package is incompatible with current Node.js version.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>installProfiler</td><td>Reports how long each package took to install.</td><td>afterInstall</td></tr>
+          <tr><td>socialNotifier</td><td>Sends notification to Twitter/Discord/Slack after install/update.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>banner</td><td>Prints custom banner/ASCII art after install/update.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>healthScore</td><td>Scores all dependencies based on maintenance, popularity, security.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>peerAutoInstaller</td><td>Auto-installs all missing peer dependencies after install/update.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>sizeAnalyzer</td><td>Reports install size of each package, flags large ones.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>historyLogger</td><td>Logs every install/uninstall event to a file.</td><td>afterInstall, afterUninstall</td></tr>
+          <tr><td>mirrorSwitcher</td><td>Auto-switches to faster/closer npm registry mirror if default is slow.</td><td>beforeInstall, beforeUpdate</td></tr>
+          <tr><td>openDocs</td><td>Opens docs page for any newly installed package in browser.</td><td>afterInstall</td></tr>
+          <tr><td>vulnAutoReporter</td><td>Auto-files GitHub issue or sends email if critical vuln found.</td><td>afterInstall, afterUpdate</td></tr>
+          <tr><td>monorepoCrossLinkChecker</td><td>Ensures all workspace packages are properly linked and up to date.</td><td>afterInstall, afterUpdate</td></tr>
+        </tbody>
+      </table>
+      <p style="text-align:center; margin-top:2em; color:var(--color-muted); font-size:1.1em;">To test all plugins and their hooks, run:<br><code>node test-blaze-plugins.js</code></p>
+      <p style="text-align:center; color:var(--color-muted); font-size:1em;">For more details on writing your own plugins, see the Plugin Development Guide.</p>
     </section>
     <div class="usage-section" id="get-started">
       <div class="usage-title">Quick Start</div>

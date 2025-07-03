@@ -19,3 +19,8 @@
 [2025-07-03T21:33:33.028Z] onCommand: install (cwd: C:\Users\Kaiden\Desktop\Blazed-install-1)
 [2025-07-03T21:33:33.033Z] beforeInstall
 [2025-07-03T21:33:40.833Z] afterInstall
+[2025-07-03T22:09:35.346Z] beforeInstall
+[2025-07-03T22:09:35.360Z] afterInstall
+[2025-07-03T22:09:35.365Z] beforeUpdate
+[2025-07-03T22:09:35.367Z] afterUpdate
+[2025-07-03T22:09:35.370Z] afterUninstall
