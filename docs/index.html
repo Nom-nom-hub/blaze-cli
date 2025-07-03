@@ -6,12 +6,34 @@
   <title>blaze-install – The Fastest Node.js Installer</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
   <style>
-    body {
-      background: #181a1b;
-      color: #e5e7eb;
+    :root {
+      --color-bg: #000;
+      --color-bg-light: #fff;
+      --color-fg: #fff;
+      --color-fg-light: #222;
+      --color-accent: #ff6a00;
+      --color-accent-dark: #c43e00;
+      --color-muted: #bdbdbd;
+      --color-border: #222;
+      --color-card: #181818;
+      --color-card-light: #fff;
+    }
+    [data-theme="light"] {
+      --color-bg: #fff;
+      --color-fg: #222;
+      --color-accent: #ff6a00;
+      --color-accent-dark: #c43e00;
+      --color-muted: #757575;
+      --color-border: #e0e0e0;
+      --color-card: #fff;
+    }
+    html, body {
+      background: var(--color-bg);
+      color: var(--color-fg);
       font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
       margin: 0;
       padding: 0;
+      transition: background 0.3s, color 0.3s;
     }
     .container {
       max-width: 900px;
@@ -21,8 +43,9 @@
     .hero {
       text-align: center;
       padding: 64px 0 32px 0;
-      background: #23272f;
-      border-bottom: 1px solid #2d3748;
+      background: var(--color-card);
+      border-bottom: 1px solid var(--color-border);
+      position: relative;
     }
     .logo {
       width: 120px;
@@ -32,30 +55,42 @@
       font-size: 2.8rem;
       font-weight: 700;
       margin: 0 0 12px 0;
-      color: #3b82f6;
+      color: var(--color-accent);
       letter-spacing: 1px;
     }
     .subtitle {
       font-size: 1.3rem;
-      color: #cbd5e1;
+      color: var(--color-muted);
       margin-bottom: 32px;
       font-weight: 400;
     }
     .cta-btn {
-      background: #3b82f6;
+      background: var(--color-accent);
       color: #fff;
       padding: 14px 36px;
       border-radius: 8px;
       font-size: 1.2rem;
       text-decoration: none;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+      box-shadow: 0 2px 8px rgba(255,106,0,0.10);
       transition: background 0.2s;
       display: inline-block;
       margin-top: 8px;
+      border: none;
     }
     .cta-btn:hover {
-      background: #2563eb;
+      background: var(--color-accent-dark);
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: var(--color-accent);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.2s;
     }
     .features {
       display: grid;
@@ -64,40 +99,81 @@
       margin: 48px 0;
     }
     .feature {
-      background: #23272f;
+      background: var(--color-card);
       border-radius: 12px;
       padding: 32px 18px 24px 18px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
       text-align: center;
-      border: 1px solid #2d3748;
+      border: 1px solid var(--color-border);
     }
     .feature-icon {
       font-size: 2.2rem;
       margin-bottom: 14px;
-      color: #3b82f6;
+      color: var(--color-accent);
     }
     .feature-title {
       font-size: 1.15rem;
       font-weight: 700;
       margin-bottom: 8px;
-      color: #3b82f6;
+      color: var(--color-accent);
     }
     .feature-desc {
       font-size: 1rem;
-      color: #cbd5e1;
+      color: var(--color-muted);
     }
-    .compare-section {
-      margin: 48px 0;
-      background: #23272f;
+    .usage-section {
+      background: var(--color-card);
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
       padding: 32px 18px;
-      border: 1px solid #2d3748;
+      border: 1px solid var(--color-border);
+      margin: 48px 0;
+    }
+    .usage-title {
+      font-size: 1.3rem;
+      color: var(--color-accent);
+      font-weight: 700;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .usage-block {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      padding: 18px 12px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      overflow-x: auto;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .copy-btn:hover { opacity: 1; }
+    .compare-section {
+      margin: 48px 0;
+      background: var(--color-card);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      padding: 32px 18px;
+      border: 1px solid var(--color-border);
     }
     .compare-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #3b82f6;
+      color: var(--color-accent);
       margin-bottom: 18px;
       text-align: center;
     }
@@ -109,60 +185,56 @@
     }
     .compare-table th, .compare-table td {
       padding: 14px 10px;
-      border-bottom: 1px solid #2d3748;
+      border-bottom: 1px solid var(--color-border);
       text-align: left;
     }
     .compare-table th {
-      background: #181a1b;
-      color: #3b82f6;
+      background: var(--color-bg);
+      color: var(--color-accent);
       font-weight: 700;
     }
     .compare-table td.blaze {
-      color: #3b82f6;
+      color: var(--color-accent);
       font-weight: 600;
     }
     .compare-table td.npm {
-      color: #94a3b8;
+      color: var(--color-muted);
     }
     .compare-table td.feature {
-      color: #e5e7eb;
+      color: var(--color-fg);
       font-weight: 600;
     }
-    .usage-section {
-      background: #23272f;
+    .changelog-section {
+      background: var(--color-card);
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
       padding: 32px 18px;
-      border: 1px solid #2d3748;
+      border: 1px solid var(--color-border);
       margin: 48px 0;
     }
-    .usage-title {
+    .changelog-title {
       font-size: 1.3rem;
-      color: #3b82f6;
+      color: var(--color-accent);
       font-weight: 700;
       margin-bottom: 18px;
       text-align: center;
     }
-    .usage-block {
-      background: #181a1b;
-      color: #e5e7eb;
-      padding: 18px 12px;
-      border-radius: 8px;
+    .changelog-list {
+      color: var(--color-fg);
       font-size: 1rem;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      overflow-x: auto;
-      margin-bottom: 12px;
+      margin: 0 0 0 18px;
+      padding: 0;
     }
     .footer {
       text-align: center;
-      color: #94a3b8;
+      color: var(--color-muted);
       font-size: 1rem;
       margin: 48px 0 18px 0;
-      border-top: 1px solid #2d3748;
+      border-top: 1px solid var(--color-border);
       padding-top: 18px;
     }
     .footer a {
-      color: #3b82f6;
+      color: var(--color-accent);
       text-decoration: none;
       font-weight: 600;
       margin: 0 8px;
@@ -170,155 +242,276 @@
     @media (max-width: 700px) {
       .features { grid-template-columns: 1fr; gap: 18px; }
       .container { padding: 0 6px; }
-      .usage-section, .compare-section { padding: 18px 4px; }
+      .usage-section, .compare-section, .changelog-section { padding: 18px 4px; }
     }
   </style>
 </head>
 <body>
   <div class="hero">
+    <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
     <div class="container">
-      <img src="logo.svg" alt="blaze-install logo" class="logo" />
+      <img src="../blaze-dark.png" alt="blaze-install logo" class="logo" style="background:transparent;max-width:220px;width:100%;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.18);margin-bottom:24px;" />
       <h1 class="hero-title">blaze-install</h1>
-      <p class="subtitle">A blazing fast, modern alternative to npm for Node.js projects.</p>
+      <p class="subtitle">A blazing fast, modern alternative to npm for Node.js projects.<br>Now with advanced features, interactive upgrades, and a beautiful CLI.</p>
+      <div class="usage-block" style="display:inline-block; margin-bottom:18px;">
+        <code>npm install -g blaze-install</code>
+        <button class="copy-btn" onclick="copyToClipboard('npm install -g blaze-install', this)">Copy</button>
+      </div>
+      <br>
       <a href="#get-started" class="cta-btn">Get Started</a>
+      <a href="https://github.com/Nom-nom-hub/blaze-cli" class="cta-btn" style="background:#23272f;color:#3b82f6;border:1px solid #3b82f6;margin-left:12px;">GitHub</a>
+      <a href="https://www.npmjs.com/package/blaze-install" class="cta-btn" style="background:#23272f;color:#3b82f6;border:1px solid #3b82f6;margin-left:12px;">npm</a>
     </div>
   </div>
   <div class="container">
     <div class="features">
-      <div class="feature">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">Blazing Fast</div>
-        <div class="feature-desc">Parallel downloads, global cache, metadata caching, and deduplication for instant installs.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🧩</div>
-        <div class="feature-title">Plugin System</div>
-        <div class="feature-desc">Powerful plugin API with before/after hooks for all major commands. Extend and customize with ease.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🕸️</div>
-        <div class="feature-title">Dependency Graph</div>
-        <div class="feature-desc">Visualize your dependencies with <code>blaze graph</code> (outputs Mermaid.js diagrams).</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🩺</div>
-        <div class="feature-title">Doctor Diagnostics</div>
-        <div class="feature-desc">Run <code>blaze doctor</code> to diagnose and fix lockfile, cache, and workspace issues.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🏗️</div>
-        <div class="feature-title">Workspaces</div>
-        <div class="feature-desc">Best-in-class monorepo support. Run scripts across all workspaces with <code>blaze run --workspaces</code>.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">⬆️</div>
-        <div class="feature-title">Interactive Upgrades</div>
-        <div class="feature-desc">Upgrade outdated dependencies interactively with <code>blaze upgrade</code>.</div>
-      </div>
+      <div class="feature"><div class="feature-icon">⚡</div><div class="feature-title">Blazing Fast Installs</div><div class="feature-desc">Parallel downloads, global cache, metadata caching, and deduplication for instant installs.</div></div>
+      <div class="feature"><div class="feature-icon">📦</div><div class="feature-title">Full Dependency Tree Resolution</div><div class="feature-desc">Handles all dependencies and lockfile support.</div></div>
+      <div class="feature"><div class="feature-icon">🏗️</div><div class="feature-title">Workspaces/Monorepo Support</div><div class="feature-desc">Native, fast, and simple workspace management.</div></div>
+      <div class="feature"><div class="feature-icon">🎨</div><div class="feature-title">Beautiful CLI</div><div class="feature-desc">Colored output, progress bars, and interactive upgrades.</div></div>
+      <div class="feature"><div class="feature-icon">🔒</div><div class="feature-title">Audit/Security Checks</div><div class="feature-desc">Built-in <code>blaze audit</code> using the npm audit API.</div></div>
+      <div class="feature"><div class="feature-icon">🧩</div><div class="feature-title">Peer & Optional Dependency Support</div><div class="feature-desc">Clear warnings and auto-install prompts for missing/incompatible peers.</div></div>
+      <div class="feature"><div class="feature-icon">🔄</div><div class="feature-title">Lifecycle Scripts</div><div class="feature-desc">Full support for preinstall, install, postinstall, and more.</div></div>
+      <div class="feature"><div class="feature-icon">🛠️</div><div class="feature-title">Uninstall & Update</div><div class="feature-desc"><code>blaze uninstall &lt;package&gt;</code>, <code>blaze update &lt;package&gt;</code>, and lockfile auto-pruning.</div></div>
+      <div class="feature"><div class="feature-icon">🧹</div><div class="feature-title">Lockfile Pruning</div><div class="feature-desc">Only keeps what's needed—no stale dependencies.</div></div>
+      <div class="feature"><div class="feature-icon">💥</div><div class="feature-title">Robust Error Handling</div><div class="feature-desc">Clear, actionable error messages and reporting.</div></div>
+      <div class="feature"><div class="feature-icon">🌍</div><div class="feature-title">Global Cache/Store</div><div class="feature-desc">Dedupes across projects for cross-project speed.</div></div>
+      <div class="feature"><div class="feature-icon">🩺</div><div class="feature-title">Self-Healing & Diagnostics</div><div class="feature-desc"><code>blaze doctor</code> checks and auto-fixes common issues.</div></div>
+      <div class="feature"><div class="feature-icon">📴</div><div class="feature-title">Offline Mode</div><div class="feature-desc">Install from local cache only, no network required.</div></div>
+      <div class="feature"><div class="feature-icon">🚚</div><div class="feature-title">Prefetch/Cache Warming</div><div class="feature-desc"><code>blaze prefetch</code> downloads and caches all dependencies for offline use.</div></div>
+      <div class="feature"><div class="feature-icon">🧑‍💻</div><div class="feature-title">Interactive Mode</div><div class="feature-desc">Guided, menu-driven workflow for all major commands.</div></div>
+      <div class="feature"><div class="feature-icon">🔌</div><div class="feature-title">Plugin System</div><div class="feature-desc">Extend and automate with before/after hooks for all major commands.</div></div>
+      <div class="feature"><div class="feature-icon">🕸️</div><div class="feature-title">Dependency Graph</div><div class="feature-desc">Visualize dependencies with <code>blaze graph</code> (Mermaid.js output).</div></div>
+      <div class="feature"><div class="feature-icon">⚙️</div><div class="feature-title">.blazerc Config</div><div class="feature-desc">Project-level defaults for CLI options.</div></div>
+      <div class="feature"><div class="feature-icon">🔑</div><div class="feature-title">.npmrc Support</div><div class="feature-desc">Reads registry/auth settings from both project and user <code>.npmrc</code>.</div></div>
+      <div class="feature"><div class="feature-icon">✨</div><div class="feature-title">Modern UX</div><div class="feature-desc">Progress bars, color, and clear output make every install or update a pleasure.</div></div>
+      <div class="feature"><div class="feature-icon">🛡️</div><div class="feature-title">Advanced Flags</div><div class="feature-desc"><code>--audit-fix</code>, <code>--no-lockfile</code>, <code>--ci</code>, <code>--offline</code>, <code>--json</code>, <code>--symlink</code>, and more.</div></div>
+      <div class="feature"><div class="feature-icon">📚</div><div class="feature-title">Comprehensive Documentation</div><div class="feature-desc">Full usage, advanced flags, and migration guides.</div></div>
+    </div>
+    <div class="usage-section" id="get-started">
+      <div class="usage-title">Quick Start</div>
+      <div class="usage-block"><code>npm install -g blaze-install</code><button class="copy-btn" onclick="copyToClipboard('npm install -g blaze-install', this)">Copy</button></div>
+      <div class="usage-block"><code>blaze install</code><button class="copy-btn" onclick="copyToClipboard('blaze install', this)">Copy</button></div>
+      <div class="usage-block"><code>blaze upgrade</code><button class="copy-btn" onclick="copyToClipboard('blaze upgrade', this)">Copy</button></div>
+      <div class="usage-block"><code>blaze doctor</code><button class="copy-btn" onclick="copyToClipboard('blaze doctor', this)">Copy</button></div>
+      <div class="usage-block"><code>blaze graph</code><button class="copy-btn" onclick="copyToClipboard('blaze graph', this)">Copy</button></div>
+      <div style="color:var(--color-muted);margin-top:12px;">See <a href="https://github.com/Nom-nom-hub/blaze-cli#readme" style="color:var(--color-accent);">README</a> for full usage & advanced flags.</div>
+    </div>
+    <div class="usage-section" id="why-blaze">
+      <div class="usage-title">Why blaze-install?</div>
+      <ul style="color:var(--color-fg);font-size:1.1rem;line-height:1.7;margin:0 0 0 18px;padding:0;">
+        <li><b>King of Node.js Installers:</b> Unmatched speed, reliability, and developer experience.</li>
+        <li><b>All-in-one:</b> Handles installs, upgrades, diagnostics, security, and more—no extra tools needed.</li>
+        <li><b>Modern, beautiful CLI:</b> Progress bars, color, and actionable errors make every install a pleasure.</li>
+        <li><b>Monorepo ready:</b> Native workspace support, blazing fast even in huge projects.</li>
+        <li><b>Extensible:</b> Plugin system and config files for deep customization.</li>
+        <li><b>Offline & CI friendly:</b> Cache warming, offline mode, and reproducible installs for any workflow.</li>
+        <li><b>Open source & community-driven:</b> MIT licensed, transparent, and always improving.</li>
+      </ul>
+    </div>
+    <div class="usage-section" id="all-features">
+      <div class="usage-title">All Features</div>
+      <ul style="color:var(--color-fg);font-size:1.08rem;line-height:1.7;margin:0 0 0 18px;padding:0;">
+        <li><b>📴 Offline Mode:</b> Install fully from local cache with <code>--offline</code>.</li>
+        <li><b>🚚 Prefetch/Cache Warming:</b> <code>blaze prefetch</code> downloads and caches all dependencies and tarballs for offline use.</li>
+        <li><b>🩺 Self-Healing & Diagnostics:</b> <code>blaze doctor --fix</code> auto-repairs common issues (missing node_modules, lockfile, broken symlinks).</li>
+        <li><b>🧩 Enhanced Peer Dependency Handling:</b> Clear warnings and auto-install prompt for missing/incompatible peers.</li>
+        <li><b>🕸️ Visual Dependency Graphs:</b> <code>blaze graph</code> outputs Mermaid.js diagrams of your dependency tree.</li>
+        <li><b>⬆️ Interactive Upgrades:</b> <code>blaze upgrade</code> for interactive, guided upgrades of outdated dependencies.</li>
+        <li><b>🏗️ Monorepo/Workspaces Support:</b> Native, fast, and simple workspace management with <code>--workspaces</code> flag.</li>
+        <li><b>🔌 Plugin System:</b> Before/after hooks for all major commands (install, uninstall, update, audit, clean). Deep extensibility.</li>
+        <li><b>⚡ Parallelized Installs:</b> Parallel downloads, metadata caching, and deduplication for maximum speed.</li>
+        <li><b>📦 Full Dependency Tree Resolution:</b> Handles all dependencies and lockfile support.</li>
+        <li><b>🛠️ Uninstall & Update:</b> <code>blaze uninstall &lt;package&gt;</code>, <code>blaze update &lt;package&gt;</code>, and lockfile auto-pruning.</li>
+        <li><b>🔒 Audit/Security Checks:</b> Built-in <code>blaze audit</code> using the npm audit API.</li>
+        <li><b>🔄 Lifecycle Script Support:</b> Full support for preinstall, install, postinstall, and more.</li>
+        <li><b>💥 Robust Error Handling:</b> Clear, actionable error messages and reporting.</li>
+        <li><b>🎨 Beautiful CLI:</b> Colored output, progress bars, and interactive upgrades.</li>
+        <li><b>🧹 Lockfile Pruning:</b> Only keeps what's needed—no stale dependencies.</li>
+        <li><b>🌍 Global Cache/Store:</b> Dedupes across projects for cross-project speed.</li>
+        <li><b>⚙️ Modern Config:</b> <code>.blazerc</code> for project-level defaults, <code>.npmrc</code> for registry/auth.</li>
+        <li><b>📚 Comprehensive Documentation:</b> Full usage, advanced flags, and migration guides.</li>
+        <li><b>👑 Open Source & Community-Driven:</b> MIT licensed, transparent, and always improving.</li>
+      </ul>
     </div>
     <div class="compare-section">
-      <div class="compare-title">How does blaze-install compare?</div>
+      <div class="compare-title">How does blaze-install compare to all major package managers?</div>
       <table class="compare-table">
         <tr>
-          <th>Feature</th>
+          <th>Feature / Task</th>
           <th>blaze-install</th>
-          <th>npm install</th>
+          <th>npm</th>
+          <th>yarn</th>
+          <th>pnpm</th>
+          <th>bun</th>
         </tr>
         <tr>
           <td class="feature">Speed</td>
-          <td class="blaze">⚡ Blazing fast: parallel downloads, global cache, metadata caching, deduplication</td>
-          <td class="npm">Slower, sequential, no global cache</td>
+          <td class="blaze">🚀 Blazing fast: parallel downloads, global cache, deduplication</td>
+          <td class="npm">Slower, sequential</td>
+          <td>Fast, but less aggressive cache</td>
+          <td>Very fast, unique symlinked store</td>
+          <td>Extremely fast, native engine</td>
         </tr>
         <tr>
-          <td class="feature">Lockfile</td>
-          <td class="blaze">Always pruned, only what you need</td>
-          <td class="npm">Can become bloated, stale deps remain</td>
+          <td class="feature">Lockfile Cleanliness</td>
+          <td class="blaze">Always pruned, no stale deps</td>
+          <td class="npm">Can become bloated</td>
+          <td>Can become bloated</td>
+          <td>Pruned, but can be complex</td>
+          <td>Pruned, but less mature</td>
         </tr>
         <tr>
-          <td class="feature">UX</td>
-          <td class="blaze">Beautiful CLI, progress bars, colored output, interactive upgrades</td>
-          <td class="npm">Basic CLI, minimal feedback</td>
+          <td class="feature">Workspaces/Monorepo</td>
+          <td class="blaze">Native, fast, simple</td>
+          <td class="npm">Supported, but slower</td>
+          <td>Native, good UX</td>
+          <td>Native, very fast</td>
+          <td>Basic support</td>
         </tr>
         <tr>
-          <td class="feature">Workspaces</td>
-          <td class="blaze">Best-in-class monorepo/workspace support</td>
-          <td class="npm">Supported, but slower and more complex</td>
+          <td class="feature">Beautiful CLI/UX</td>
+          <td class="blaze">Progress bars, color, interactive upgrades</td>
+          <td class="npm">Minimal feedback</td>
+          <td>Progress bars, color</td>
+          <td>Progress bars, color</td>
+          <td>Minimal, but fast</td>
         </tr>
         <tr>
-          <td class="feature">Dependency Graph</td>
-          <td class="blaze">Visual graph (<code>blaze graph</code>)</td>
-          <td class="npm">No</td>
+          <td class="feature">Audit/Security</td>
+          <td class="blaze">Built-in, fast, clear</td>
+          <td class="npm">Built-in, mature</td>
+          <td>Built-in</td>
+          <td>Built-in</td>
+          <td>Basic, still evolving</td>
         </tr>
         <tr>
           <td class="feature">Plugin System</td>
-          <td class="blaze">Extensible, before/after hooks for all major commands</td>
+          <td class="blaze">Yes, with hooks</td>
           <td class="npm">No</td>
+          <td>No</td>
+          <td>Yes (via hooks)</td>
+          <td>No</td>
         </tr>
         <tr>
-          <td class="feature">Doctor Diagnostics</td>
-          <td class="blaze"><code>blaze doctor</code> diagnoses and fixes issues</td>
+          <td class="feature">Self-Healing/Doctor</td>
+          <td class="blaze">Yes (<code>blaze doctor</code>)</td>
           <td class="npm">No</td>
+          <td>No</td>
+          <td>No</td>
+          <td>No</td>
         </tr>
         <tr>
-          <td class="feature">Audit</td>
-          <td class="blaze">Built-in, fast, npm audit API</td>
-          <td class="npm">Built-in</td>
+          <td class="feature">Offline Mode</td>
+          <td class="blaze">Yes, with prefetch</td>
+          <td class="npm">Limited</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td class="feature">Global Cache/Store</td>
+          <td class="blaze">Yes, dedupes across projects</td>
+          <td class="npm">No</td>
+          <td>Yes</td>
+          <td>Yes, unique store</td>
+          <td>Yes, but less mature</td>
+        </tr>
+        <tr>
+          <td class="feature">Peer/Optional Deps</td>
+          <td class="blaze">Clear, robust handling</td>
+          <td class="npm">Sometimes cryptic</td>
+          <td>Sometimes cryptic</td>
+          <td>Clear, robust</td>
+          <td>Basic, improving</td>
         </tr>
         <tr>
           <td class="feature">Lifecycle Scripts</td>
-          <td class="blaze">Full support (preinstall, install, postinstall)</td>
+          <td class="blaze">Full parity</td>
           <td class="npm">Supported</td>
+          <td>Supported</td>
+          <td>Supported</td>
+          <td>Supported</td>
         </tr>
         <tr>
-          <td class="feature">Global Store</td>
-          <td class="blaze">Yes, dedupes across projects</td>
+          <td class="feature">Dependency Graph</td>
+          <td class="blaze">Yes (<code>blaze graph</code>)</td>
           <td class="npm">No</td>
+          <td>No</td>
+          <td>No</td>
+          <td>No</td>
         </tr>
         <tr>
-          <td class="feature">Error Handling</td>
-          <td class="blaze">Clear, actionable, modern</td>
-          <td class="npm">Sometimes cryptic</td>
+          <td class="feature">Advanced Flags</td>
+          <td class="blaze">Many (<code>--audit-fix</code>, <code>--no-lockfile</code>, <code>--ci</code>, etc.)</td>
+          <td class="npm">Some</td>
+          <td>Some</td>
+          <td>Many</td>
+          <td>Some</td>
         </tr>
         <tr>
-          <td class="feature">Modern Focus</td>
-          <td class="blaze">No legacy cruft, focused on 90% use case</td>
-          <td class="npm">Lots of legacy baggage</td>
+          <td class="feature">Modern Config</td>
+          <td class="blaze"><code>.blazerc</code>, <code>.npmrc</code></td>
+          <td class="npm"><code>.npmrc</code></td>
+          <td><code>.yarnrc</code></td>
+          <td><code>.npmrc</code>, <code>.pnpmfile.cjs</code></td>
+          <td><code>bunfig.toml</code></td>
+        </tr>
+        <tr>
+          <td class="feature">Open Source</td>
+          <td class="blaze">MIT, community-driven</td>
+          <td class="npm">Yes</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Yes</td>
         </tr>
       </table>
     </div>
-    <div class="usage-section" id="get-started">
-      <div class="usage-title">Usage</div>
-      <table style="width:100%;border-collapse:separate;border-spacing:0 8px;">
-        <tr><th style="text-align:left;color:#3b82f6;font-size:1.08rem;font-weight:700;">Command</th><th style="text-align:left;color:#3b82f6;font-size:1.08rem;font-weight:700;">Description</th><th></th></tr>
-        <tr><td><code>blaze install</code></td><td>Install all dependencies from package.json</td><td><button onclick="navigator.clipboard.writeText('blaze install');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze install &lt;package&gt;</code></td><td>Add and install a package</td><td><button onclick="navigator.clipboard.writeText('blaze install ');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze uninstall &lt;package&gt;</code></td><td>Remove a package and prune lockfile</td><td><button onclick="navigator.clipboard.writeText('blaze uninstall ');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze update &lt;package&gt;</code></td><td>Update a package to the latest version</td><td><button onclick="navigator.clipboard.writeText('blaze update ');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze upgrade</code></td><td>Interactively upgrade outdated dependencies</td><td><button onclick="navigator.clipboard.writeText('blaze upgrade');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze graph</code></td><td>Output a visual dependency graph (Mermaid.js)</td><td><button onclick="navigator.clipboard.writeText('blaze graph');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze doctor</code></td><td>Diagnose and fix common issues</td><td><button onclick="navigator.clipboard.writeText('blaze doctor');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze audit</code></td><td>Run a security audit</td><td><button onclick="navigator.clipboard.writeText('blaze audit');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze audit --json</code></td><td>Run audit and output JSON</td><td><button onclick="navigator.clipboard.writeText('blaze audit --json');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze list</code></td><td>List installed dependencies</td><td><button onclick="navigator.clipboard.writeText('blaze list');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze clean</code></td><td>Remove node_modules and cache</td><td><button onclick="navigator.clipboard.writeText('blaze clean');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze outdated</code></td><td>Show outdated dependencies</td><td><button onclick="navigator.clipboard.writeText('blaze outdated');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze info &lt;package&gt;</code></td><td>Show info about a package</td><td><button onclick="navigator.clipboard.writeText('blaze info ');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze publish</code></td><td>Publish the package to the npm registry</td><td><button onclick="navigator.clipboard.writeText('blaze publish');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze version &lt;newversion&gt;</code></td><td>Bump version, commit, and tag</td><td><button onclick="navigator.clipboard.writeText('blaze version ');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze audit fix</code></td><td>Auto-fix vulnerable dependencies</td><td><button onclick="navigator.clipboard.writeText('blaze audit fix');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze run &lt;script&gt; --workspaces</code></td><td>Run a script across all workspaces</td><td><button onclick="navigator.clipboard.writeText('blaze run ');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-        <tr><td><code>blaze --interactive</code></td><td>Use interactive mode</td><td><button onclick="navigator.clipboard.writeText('blaze --interactive');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);" class="cta-btn" style="padding:4px 18px;font-size:1rem;margin:0;">Copy</button></td></tr>
-      </table>
-      <div style="margin-top:18px;font-size:1.08rem;color:#cbd5e1;"><b>Options:</b> <code>--save-dev</code> <code>--production</code> <code>--symlink</code> <code>--json</code></div>
+    <div class="changelog-section">
+      <div class="changelog-title">What's New</div>
+      <ul class="changelog-list">
+        <li>✨ <b>Interactive upgrades</b> with <code>blaze upgrade</code></li>
+        <li>🩺 <b>Doctor diagnostics</b> with <code>blaze doctor</code></li>
+        <li>🕸️ <b>Dependency graph</b> with <code>blaze graph</code></li>
+        <li>🧩 <b>Plugin system</b> for deep customization</li>
+        <li>🏗️ <b>Workspaces</b> and monorepo support</li>
+        <li>⚡ <b>Faster installs</b> and improved lockfile handling</li>
+        <li>🎨 <b>Beautiful CLI</b> with themes and progress bars</li>
+      </ul>
     </div>
     <div class="footer">
       <div style="margin-bottom:12px;">
-        <a href="https://github.com/blazeinstall/Blaze">GitHub</a>
+        <a href="https://github.com/Nom-nom-hub/blaze-cli">GitHub</a>
         <a href="https://www.npmjs.com/package/blaze-install">npm</a>
-        <a href="https://triallord.github.io/Blazed-install/">Docs</a>
+        <a href="https://blazeinstall.github.io/">Docs</a>
       </div>
-      <div>&copy; 2025 <a href="https://github.com/blazeinstall/Blaze">blazeinstall</a> &mdash; MIT License</div>
+      <div>&copy; 2025 <a href="https://github.com/Nom-nom-hub/blaze-cli">blazeinstall</a> &mdash; MIT License</div>
     </div>
   </div>
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+    }
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || (prefersDark ? 'dark' : 'light');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+    // On load
+    const savedTheme = localStorage.getItem('theme');
+    setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+    // Copy to clipboard
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text);
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+    }
+    window.copyToClipboard = copyToClipboard;
+  </script>
 </body>
 </html> 

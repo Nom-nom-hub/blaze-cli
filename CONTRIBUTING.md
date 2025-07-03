@@ -5,7 +5,7 @@ First off, thank you for taking the time to contribute! blaze-install is a commu
 ## How to Contribute
 
 ### 🐞 Bug Reports
-If you find a bug, please open a [GitHub Issue](https://github.com/blazeinstall/Blaze/issues) and include:
+If you find a bug, please open a [GitHub Issue](https://github.com/Nom-nom-hub/blaze-cli/issues) and include:
 - Your operating system and version
 - Node.js version (`node -v`)
 - The exact command you ran

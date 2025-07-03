@@ -60,10 +60,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/blazeinstall/Blaze.git"
+    "url": "https://github.com/Nom-nom-hub/blaze-cli.git"
   },
-  "homepage": "https://github.com/blazeinstall/Blaze#readme",
+  "homepage": "https://github.com/Nom-nom-hub/blaze-cli#readme",
   "bugs": {
-    "url": "https://github.com/blazeinstall/Blaze/issues"
+    "url": "https://github.com/Nom-nom-hub/blaze-cli/issues"
   }
 }
