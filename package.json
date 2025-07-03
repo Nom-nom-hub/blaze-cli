@@ -58,6 +58,9 @@
   "peerDependencies": {
     "@types/node": ">=18"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Nom-nom-hub/blaze-cli.git"

@@ -4,15 +4,15 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/v/blaze-install.svg?style=flat-square" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/dw/blaze-install.svg?style=flat-square" alt="npm downloads"></a>
-  <a href="https://github.com/Nom-nom-hub/blaze-cli/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/blaze-install.svg?style=flat-square" alt="license"></a>
-  <a href="https://github.com/Nom-nom-hub/blaze-cli/actions"><img src="https://img.shields.io/github/actions/workflow/status/Nom-nom-hub/blaze-cli/ci.yml?branch=main&style=flat-square" alt="Build Status"></a>
+  <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/dw/blaze-install?style=flat-square" alt="npm downloads"></a>
+  <a href="https://github.com/Nom-nom-hub/blaze-cli/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/blaze-install?style=flat-square" alt="license"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/blaze-install?style=flat-square" alt="node version"></a>
+  <a href="https://github.com/Nom-nom-hub/blaze-cli/actions/workflows/ci.yml"><img src="https://github.com/Nom-nom-hub/blaze-cli/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="https://github.com/Nom-nom-hub/blaze-cli/issues"><img src="https://img.shields.io/github/issues/Nom-nom-hub/blaze-cli?style=flat-square" alt="GitHub issues"></a>
   <a href="https://github.com/Nom-nom-hub/blaze-cli/pulls"><img src="https://img.shields.io/github/issues-pr/Nom-nom-hub/blaze-cli?style=flat-square" alt="GitHub pull requests"></a>
   <a href="https://github.com/Nom-nom-hub/blaze-cli/stargazers"><img src="https://img.shields.io/github/stars/Nom-nom-hub/blaze-cli?style=flat-square" alt="GitHub stars"></a>
   <a href="https://github.com/Nom-nom-hub/blaze-cli/commits/main"><img src="https://img.shields.io/github/last-commit/Nom-nom-hub/blaze-cli?style=flat-square" alt="GitHub last commit"></a>
-  <img src="https://img.shields.io/badge/node-%3E=18.0.0-brightgreen?style=flat-square" alt="node version">
-  <img src="https://img.shields.io/badge/code_style-eslint-blue?style=flat-square" alt="ESLint">
+  <img src="https://img.shields.io/badge/Open%20Source-MIT-brightgreen?style=flat-square" alt="Open Source"/>
 </p>
 
 # blaze-install
