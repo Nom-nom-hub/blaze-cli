@@ -1,0 +1,21 @@
+[onCommand] install (cwd: C:\Users\Kaiden\Desktop\Blazed-install-1)
+[beforeInstall]
+[afterInstall]
+[2025-07-03T21:21:19.163Z] onCommand: uninstall (cwd: C:\Users\Kaiden\Desktop\Blazed-install-1)
+[2025-07-03T21:21:19.185Z] beforeUninstall
+[2025-07-03T21:21:20.073Z] afterUninstall
+[2025-07-03T21:21:20.090Z] onCommand: install (cwd: C:\Users\Kaiden\Desktop\Blazed-install-1)
+[2025-07-03T21:21:20.097Z] beforeInstall
+[2025-07-03T21:21:20.388Z] afterInstall
+[2025-07-03T21:27:00.034Z] onCommand: install (cwd: C:\Users\Kaiden\Desktop\Blazed-install-1)
+[2025-07-03T21:27:00.039Z] beforeInstall
+[2025-07-03T21:27:26.749Z] afterInstall
+[2025-07-03T21:27:28.162Z] onCommand: install (cwd: C:\Users\Kaiden\Desktop\Blazed-install-1)
+[2025-07-03T21:27:28.167Z] beforeInstall
+[2025-07-03T21:27:34.345Z] afterInstall
+[2025-07-03T21:31:40.216Z] onCommand: install (cwd: C:\Users\Kaiden\Desktop\Blazed-install-1)
+[2025-07-03T21:31:40.222Z] beforeInstall
+[2025-07-03T21:31:44.584Z] afterInstall
+[2025-07-03T21:33:33.028Z] onCommand: install (cwd: C:\Users\Kaiden\Desktop\Blazed-install-1)
+[2025-07-03T21:33:33.033Z] beforeInstall
+[2025-07-03T21:33:40.833Z] afterInstall

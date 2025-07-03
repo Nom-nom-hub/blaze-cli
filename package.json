@@ -43,14 +43,15 @@
   "dependencies": {
     "axios": "latest",
     "chalk": "latest",
+    "chokidar": "^4.0.3",
     "cli-progress": "latest",
     "glob": "latest",
     "ini": "latest",
     "inquirer": "latest",
+    "lodash": "^4.17.21",
     "semver": "latest",
     "tar": "latest",
-    "yallist": "latest",
-    "lodash": "^4.17.21"
+    "yallist": "latest"
   },
   "devDependencies": {
     "eslint": "latest"

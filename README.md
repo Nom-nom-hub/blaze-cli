@@ -32,6 +32,26 @@ A fast, modern alternative to `npm install` for Node.js projects.
 - 💥 **Robust error handling** and reporting.
 - 🏗️ **Global cache/store** in your home directory for cross-project speed.
 
+## 🔄 Auto-Install with `blaze watch`
+
+`blaze watch` is a powerful developer tool that keeps your dependencies in sync with your code as you work.
+
+- **Automatic install:** Scans your project for `require()` and `import` statements and auto-installs any missing npm packages.
+- **Batch install:** Installs all missing packages in a single command for speed and convenience.
+- **Node.js core module filtering:** Never tries to install built-in Node.js modules (like `fs`, `path`, `os`, etc.)—only real npm packages are installed.
+- **Works before and after:** Detects missing packages both before you start the watcher (on startup) and as you add new imports/requires while coding.
+
+### Usage
+
+```sh
+blaze watch
+```
+
+- Start the watcher in your project root.
+- Add any `require('some-pkg')` or `import ... from 'some-pkg'` to your code.
+- `blaze` will detect and install missing npm packages automatically.
+- No more manual installs or missing dependency errors!
+
 ## Installation
 
 ```

@@ -483,6 +483,18 @@
         <li>🎨 <b>Beautiful CLI</b> with themes and progress bars</li>
       </ul>
     </div>
+    <div class="usage-section" id="blaze-watch" style="margin-top:2em;">
+      <h2>🔄 Auto-Install with <code>blaze watch</code></h2>
+      <p><b>blaze watch</b> keeps your dependencies in sync with your code as you work.</p>
+      <ul>
+        <li><b>Automatic install:</b> Scans your project for <code>require()</code> and <code>import</code> statements and auto-installs any missing npm packages.</li>
+        <li><b>Batch install:</b> Installs all missing packages in a single command for speed and convenience.</li>
+        <li><b>Node.js core module filtering:</b> Never tries to install built-in Node.js modules (like <code>fs</code>, <code>path</code>, <code>os</code>, etc.)—only real npm packages are installed.</li>
+        <li><b>Works before and after:</b> Detects missing packages both before you start the watcher (on startup) and as you add new imports/requires while coding.</li>
+      </ul>
+      <pre><code>blaze watch</code></pre>
+      <p>Start the watcher in your project root, add any <code>require('some-pkg')</code> or <code>import ... from 'some-pkg'</code> to your code, and blaze will detect and install missing npm packages automatically. No more manual installs or missing dependency errors!</p>
+    </div>
     <div class="footer">
       <div style="margin-bottom:12px;">
         <a href="https://github.com/Nom-nom-hub/blaze-cli">GitHub</a>
