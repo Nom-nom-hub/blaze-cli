@@ -268,6 +268,74 @@
     </div>
   </div>
   <div class="container">
+    <section id="why-blaze" style="margin-top:2em; background:#181c24; color:#fff; border-radius:8px; padding:2em 1.5em; box-shadow:0 2px 8px #0002;">
+      <h2 style="font-size:2em; margin-bottom:0.5em;">👑 Why Blaze is Better Than the Competition</h2>
+      <ul style="font-size:1.15em; line-height:1.7;">
+        <li><b>Auto-install as you code:</b> <code>blaze watch</code> detects new <code>require()</code>/<code>import</code> statements and installs missing packages instantly. No more manual installs or broken builds.</li>
+        <li><b>Batch install:</b> All missing packages are installed in one go for a smooth, fast workflow.</li>
+        <li><b>Plugin system:</b> Add features like license checks, security audits, and more—no waiting for core updates.</li>
+        <li><b>Node.js core module filtering:</b> Never installs fake or placeholder packages for built-in modules (<code>fs</code>, <code>path</code>, etc.).</li>
+        <li><b>Monorepo native:</b> Handles workspaces and multi-package projects out of the box.</li>
+        <li><b>Modern CLI UX:</b> Fast, clear output, progress bars, and actionable diagnostics.</li>
+        <li><b>Open, hackable, and community-driven:</b> Easy to extend, transparent, and responsive to real developer needs.</li>
+      </ul>
+      <div style="overflow-x:auto; margin-top:1.5em;">
+        <table style="width:100%; border-collapse:collapse; background:#23283a; color:#fff;">
+          <thead>
+            <tr style="background:#23283a;">
+              <th style="padding:0.5em 1em;">Feature</th>
+              <th style="padding:0.5em 1em;">Blaze</th>
+              <th style="padding:0.5em 1em;">npm</th>
+              <th style="padding:0.5em 1em;">pnpm</th>
+              <th style="padding:0.5em 1em;">yarn</th>
+              <th style="padding:0.5em 1em;">bun</th>
+            </tr>
+          </thead>
+          <tbody style="text-align:center;">
+            <tr><td>Install dependencies</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Add a package</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Uninstall a package</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Update a package</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>List installed packages</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Show outdated packages</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Show package info</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Publish a package</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Bump version</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Clean node_modules & cache</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Prune lockfile</td><td>✅</td><td>⚠️</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Full dependency tree resolution</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Blazing fast installs</td><td>✅</td><td>⚠️</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Global cache/store</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Offline mode</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Prefetch/cache warming</td><td>✅</td><td>❌</td><td>⚠️</td><td>⚠️</td><td>❌</td></tr>
+            <tr><td>Audit/security checks</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Audit fix</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Self-healing & diagnostics</td><td>✅</td><td>⚠️</td><td>⚠️</td><td>⚠️</td><td>❌</td></tr>
+            <tr><td>Robust error handling</td><td>✅</td><td>⚠️</td><td>⚠️</td><td>⚠️</td><td>❌</td></tr>
+            <tr><td>Peer/optional dep support</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Lifecycle scripts</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Beautiful CLI</td><td>✅</td><td>⚠️</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Interactive mode</td><td>✅</td><td>❌</td><td>⚠️</td><td>⚠️</td><td>❌</td></tr>
+            <tr><td>Modern UX</td><td>✅</td><td>⚠️</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Workspaces/monorepo support</td><td>✅</td><td>⚠️</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Dependency graph</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+            <tr><td>Plugin system</td><td>✅</td><td>❌</td><td>⚠️</td><td>⚠️</td><td>❌</td></tr>
+            <tr><td>.blazerc config</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+            <tr><td>.npmrc support</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Advanced flags</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Comprehensive CLI help/docs</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Website documentation</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Extensible plugin hooks</td><td>✅</td><td>❌</td><td>⚠️</td><td>⚠️</td><td>❌</td></tr>
+            <tr><td>Workspace/monorepo details</td><td>✅</td><td>⚠️</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+            <tr><td>Config files: .blazerc, .npmrc</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:0.95em; color:#aaa; margin-top:0.5em;">✅ = Best-in-class &nbsp; ⚠️ = Partial/complex/needs config &nbsp; ❌ = Not available</div>
+      </div>
+      <div style="margin-top:1.5em; font-size:1.2em; background:#23283a; padding:1em; border-radius:6px;">
+        <b>Blaze is the only package manager that truly keeps up with how you code—auto-installing, protecting, and empowering you as you work.<br>No more "missing module" errors, no more manual busywork, and a plugin system that adapts to your needs.</b>
+      </div>
+    </section>
     <div class="features">
       <div class="feature"><div class="feature-icon">⚡</div><div class="feature-title">Blazing Fast Installs</div><div class="feature-desc">Parallel downloads, global cache, metadata caching, and deduplication for instant installs.</div></div>
       <div class="feature"><div class="feature-icon">📦</div><div class="feature-title">Full Dependency Tree Resolution</div><div class="feature-desc">Handles all dependencies and lockfile support.</div></div>
