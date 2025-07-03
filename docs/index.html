@@ -279,7 +279,7 @@
       margin-bottom: 1.5em;
     }
     .plugin-table tr:nth-child(even) {
-      background: #22242a;
+      background: var(--color-bg-light);
     }
     [data-theme="dark"] .plugin-table tr:nth-child(even) {
       background: #181c24;
@@ -322,13 +322,16 @@
       #plugins { padding: 18px 4px; }
       .plugin-table th, .plugin-table td { padding: 10px 6px; font-size: 0.98em; }
     }
+    [data-theme="light"] .plugin-table tr:nth-child(even) {
+      background: var(--color-bg-light);
+    }
   </style>
 </head>
 <body>
   <div class="hero">
     <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
     <div class="container">
-      <img src="blaze-dark.png" alt="blaze-install logo" class="logo" style="background:transparent;max-width:220px;width:100%;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.18);margin-bottom:24px;" />
+      <img id="blazeLogo" src="blaze-dark.png" alt="blaze-install logo" class="logo" style="background:transparent;max-width:220px;width:100%;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.18);margin-bottom:24px;" />
       <h1 class="hero-title">blaze-install</h1>
       <p class="subtitle">A blazing fast, modern alternative to npm for Node.js projects.<br>Now with advanced features, interactive upgrades, and a beautiful CLI.</p>
       <div class="usage-block" style="display:inline-block; margin-bottom:18px;">
@@ -342,7 +345,7 @@
     </div>
   </div>
   <div class="container">
-    <section id="why-blaze" style="margin-top:2em; background:#181c24; color:#fff; border-radius:8px; padding:2em 1.5em; box-shadow:0 2px 8px #0002;">
+    <section id="why-blaze" style="margin-top:2em; background:var(--color-card); color:var(--color-fg); border-radius:8px; padding:2em 1.5em; box-shadow:0 2px 8px #0002;">
       <h2 style="font-size:2em; margin-bottom:0.5em;">👑 Why Blaze is Better Than the Competition</h2>
       <ul style="font-size:1.15em; line-height:1.7;">
         <li><b>Auto-install as you code:</b> <code>blaze watch</code> detects new <code>require()</code>/<code>import</code> statements and installs missing packages instantly. No more manual installs or broken builds.</li>
@@ -354,9 +357,9 @@
         <li><b>Open, hackable, and community-driven:</b> Easy to extend, transparent, and responsive to real developer needs.</li>
       </ul>
       <div style="overflow-x:auto; margin-top:1.5em;">
-        <table style="width:100%; border-collapse:collapse; background:#23283a; color:#fff;">
+        <table style="width:100%; border-collapse:collapse; background:var(--color-card); color:var(--color-fg);">
           <thead>
-            <tr style="background:#23283a;">
+            <tr style="background:var(--color-card);">
               <th style="padding:0.5em 1em;">Feature</th>
               <th style="padding:0.5em 1em;">Blaze</th>
               <th style="padding:0.5em 1em;">npm</th>
@@ -406,7 +409,7 @@
         </table>
         <div style="font-size:0.95em; color:#aaa; margin-top:0.5em;">✅ = Best-in-class &nbsp; ⚠️ = Partial/complex/needs config &nbsp; ❌ = Not available</div>
       </div>
-      <div style="margin-top:1.5em; font-size:1.2em; background:#23283a; padding:1em; border-radius:6px;">
+      <div style="margin-top:1.5em; font-size:1.2em; background:var(--color-card); padding:1em; border-radius:6px; color:var(--color-fg);">
         <b>Blaze is the only package manager that truly keeps up with how you code—auto-installing, protecting, and empowering you as you work.<br>No more "missing module" errors, no more manual busywork, and a plugin system that adapts to your needs.</b>
       </div>
     </section>
@@ -691,10 +694,28 @@
     // Theme toggle
     const themeToggle = document.getElementById('themeToggle');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const blazeLogo = document.getElementById('blazeLogo');
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+      if (blazeLogo) {
+        // Try docs/ first, fallback to root
+        if (theme === 'dark') {
+          blazeLogo.src = 'blaze-dark.png';
+        } else {
+          // Prefer docs/blaze-light.png, fallback to ../blaze-light.png
+          fetch('blaze-light.png', {method: 'HEAD'}).then(r => {
+            if (r.ok) {
+              blazeLogo.src = 'blaze-light.png';
+            } else {
+              blazeLogo.src = '../blaze-light.png';
+            }
+          }).catch(() => {
+            blazeLogo.src = '../blaze-light.png';
+          });
+        }
+      }
     }
     themeToggle.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme') || (prefersDark ? 'dark' : 'light');
