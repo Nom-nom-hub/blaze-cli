@@ -1,5 +1,40 @@
+# Node
 node_modules/
-.cache/ 
-packages/
+blaze-lock.json
+package-lock.json
+npm-debug.log*
+yarn.lock
+.pnpm-debug.log*
+.DS_Store
+*.log
+*.tmp
+*.swp
+
+# Blaze/plugin logs
+custom-plugin.log
+blaze-history.log
+
+# Build/output
+/dist/
+/build/
+coverage/
+
+# OS
+Thumbs.db
+
+# Misc
+.env
+.env.*
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Ignore test output
+*.test-output
+
+# Ignore local scripts
+*.local.js
+
+# .md files
 blaze-install-devto-launch.md
-logo-dark.svg

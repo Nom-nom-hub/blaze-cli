@@ -1,3 +1,31 @@
+# Exclude everything by default
+*
+
+# Include only essential files
+!bin/
+!lib/
+!package.json
+!README.md
+!LICENSE
+!logo.svg
+!logo-dark-cover.svg
+!blaze-dark.png
+!blaze-light.png
+
+# Exclude logs, tests, docs, configs, and dev files
+custom-plugin.log
+blaze-history.log
+*.log
+*.test.js
+test*
+docs/
+.idea/
+.vscode/
+*.md
+!README.md
+*.local.js
+*.test-output
+
 # Exclude blaze global store and caches
 .blaze_store/
 package
@@ -16,7 +44,6 @@ yarn-error.log*
 Thumbs.db
 
 # Misc
-*.log
 *.tmp
 
 # Exclude local/test files

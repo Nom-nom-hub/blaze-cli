@@ -1,0 +1,32 @@
+<svg width="260" height="80" viewBox="0 0 260 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="candleBlue" x1="0" y1="1" x2="0.5" y2="0">
+      <stop offset="0%" stop-color="#00bfff"/>
+      <stop offset="100%" stop-color="#00eaff"/>
+    </linearGradient>
+    <linearGradient id="boltGrad" x1="0" y1="1" x2="0.5" y2="0">
+      <stop offset="0%" stop-color="#00eaff"/>
+      <stop offset="60%" stop-color="#ffe066"/>
+      <stop offset="100%" stop-color="#fffbe7"/>
+    </linearGradient>
+  </defs>
+  <!-- Dark background -->
+  <rect width="260" height="80" fill="#181c24"/>
+  <!-- 'b' -->
+  <text x="20" y="58" font-family="Montserrat, Arial, Helvetica, sans-serif" font-size="56" font-weight="900" fill="#eaf6fb" letter-spacing="2">b</text>
+  <!-- 'l' as a candle with lightning bolt flame -->
+  <g>
+    <!-- Candle stem -->
+    <rect x="70" y="22" width="10" height="34" rx="5" fill="url(#candleBlue)"/>
+    <!-- Candle top (rounded) -->
+    <ellipse cx="75" cy="22" rx="5" ry="4" fill="url(#candleBlue)"/>
+    <!-- Lightning bolt flame with flashing animation -->
+    <polygon points="75,8 78,16 73,16 77,26 70,16 75,16" fill="url(#boltGrad)">
+      <animate attributeName="opacity" values="1;0.2;1" dur="0.5s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+  <!-- 'aze' with adjusted position -->
+  <text x="92" y="58" font-family="Montserrat, Arial, Helvetica, sans-serif" font-size="56" font-weight="900" fill="#eaf6fb" letter-spacing="2">aze</text>
+  <!-- Diagonal slash for speed effect -->
+  <line x1="130" y1="18" x2="200" y2="72" stroke="#00eaff" stroke-width="5" stroke-linecap="round"/>
+</svg> 
