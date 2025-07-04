@@ -558,6 +558,43 @@ async function generateDependencyGraph() {
   console.log(graph);
 }
 
+async function cleanGithubSpecs() {
+  const glob = require('glob');
+  const fs = require('fs/promises');
+  const path = require('path');
+  const chalk = await getChalk();
+  const pkgs = glob.sync('**/package.json', { ignore: 'node_modules/**' });
+  let cleaned = 0;
+  for (const pkgPath of pkgs) {
+    const absPath = path.resolve(pkgPath);
+    let changed = false;
+    let pkg;
+    try {
+      pkg = JSON.parse(await fs.readFile(absPath, 'utf-8'));
+    } catch { continue; }
+    for (const depType of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
+      if (!pkg[depType]) continue;
+      for (const dep of Object.keys(pkg[depType])) {
+        if (/^(github:|[\w-]+\/[\w-]+(#.+)?$|https?:\/\/)/.test(dep)) {
+          delete pkg[depType][dep];
+          changed = true;
+        }
+      }
+      if (Object.keys(pkg[depType]).length === 0) delete pkg[depType];
+    }
+    if (changed) {
+      await fs.writeFile(absPath, JSON.stringify(pkg, null, 2) + '\n', 'utf-8');
+      console.log(chalk.yellow(`Cleaned non-npm specs from ${pkgPath}`));
+      cleaned++;
+    }
+  }
+  if (cleaned === 0) {
+    console.log(chalk.green('No non-npm specs found in any package.json.'));
+  } else {
+    console.log(chalk.green(`Cleaned ${cleaned} package.json file(s).`));
+  }
+}
+
 async function main(args) {
   try {
     const blazerc = await loadBlazerc();
@@ -1057,6 +1094,10 @@ async function main(args) {
       const diagnostics = require("./diagnostics");
       await diagnostics.runDoctor(fix);
       return;
+    }
+    if (command === "clean-github-specs") {
+      await cleanGithubSpecs();
+      process.exit(0);
     }
     console.log("Welcome to blaze-install!");
     console.log("Arguments:", args);

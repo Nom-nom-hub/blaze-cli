@@ -509,3 +509,13 @@ This will automatically format your code, clean up dependencies, update packages
   - Use formats like `user/repo`, `user/repo#branch`, `github:user/repo#sha`, or a direct tarball URL.
 - **Extraction errors:**
   - Check that the tarball is a valid npm package tarball.
+
+## Note for Contributors: GitHub/Tarball Dependencies and npm
+
+If you use Blaze to install packages from GitHub or tarball URLs, these specs are not supported by npm and will cause `npm install` or `npm ci` to fail. Before running npm commands, always run:
+
+```sh
+node bin/blaze-install.js clean-github-specs
+```
+
+This will automatically remove any non-npm specs from all `package.json` files. This step is automated in CI, but you should do it locally if you see npm errors about invalid package names.

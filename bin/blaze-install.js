@@ -40,6 +40,7 @@ const supported = [
   "prefetch",
   "watch",
   "fix",
+  "clean-github-specs",
 ];
 
 if (supported.includes(command)) {
