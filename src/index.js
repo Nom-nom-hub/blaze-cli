@@ -14,7 +14,7 @@ const { version } = require('../package.json');
 const chalk = require('chalk');
 let boxen = require('boxen');
 if (boxen && boxen.default) boxen = boxen.default;
-const Spinner = require('./lib/spinner');
+const Spinner = require('./spinner');
 
 let plugins = [];
 
