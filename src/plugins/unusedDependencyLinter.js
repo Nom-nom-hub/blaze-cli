@@ -1,5 +1,7 @@
 const fs = require("fs");
 const path = require("path");
+const isVerbose = process.argv.includes('--verbose');
+const chalk = require('chalk');
 
 function getAllFiles(dir, exts, fileList = []) {
   const files = fs.readdirSync(dir);
@@ -35,11 +37,13 @@ function scanForUnusedDeps() {
     }
   }
   const unused = deps.filter((dep) => !used.has(dep));
-  if (unused.length) {
-    console.warn("[unusedDependencyLinter] Unused dependencies found:");
-    unused.forEach((dep) => console.warn(`  - ${dep}`));
-  } else {
-    console.log("[unusedDependencyLinter] No unused dependencies found.");
+  if (isVerbose) {
+    if (unused.length) {
+      console.warn(chalk.yellow.bold('[unusedDependencyLinter] Unused dependencies found:'));
+      unused.forEach((dep) => console.warn(chalk.yellow('  - ' + dep)));
+    } else {
+      console.log(chalk.green('[unusedDependencyLinter] No unused dependencies found.'));
+    }
   }
   return unused;
 }
@@ -52,6 +56,7 @@ function removeUnusedDeps() {
   }
   const pkgPath = path.join(process.cwd(), "package.json");
   const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+  const removed = [];
   for (const dep of unused) {
     delete pkg.dependencies[dep];
     try {
@@ -59,11 +64,17 @@ function removeUnusedDeps() {
       if (fs.existsSync(modPath)) {
         fs.rmSync(modPath, { recursive: true, force: true });
       }
-      console.log(`[unusedDependencyLinter] Removed unused dependency: ${dep}`);
+      removed.push(dep);
+      console.log(chalk.green(`[unusedDependencyLinter] Removed unused dependency: ${dep}`));
     } catch {}
   }
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), "utf8");
-  console.log("[unusedDependencyLinter] package.json updated.");
+  if (isVerbose) {
+    if (removed.length) {
+      removed.forEach((dep) => console.log(chalk.green(`[unusedDependencyLinter] Removed unused dependency: ${dep}`)));
+      console.log(chalk.green('[unusedDependencyLinter] package.json updated.'));
+    }
+  }
 }
 
 module.exports = {

@@ -519,3 +519,34 @@ node bin/blaze-install.js clean-github-specs
 ```
 
 This will automatically remove any non-npm specs from all `package.json` files. This step is automated in CI, but you should do it locally if you see npm errors about invalid package names.
+
+## Blaze Cache
+
+Blaze automatically caches all downloaded package tarballs in your home directory at `~/.blaze_cache`. This makes repeated installs much faster and enables offline installs when packages are already cached.
+
+### Cache Management Commands
+
+You can manage the cache using the following CLI commands:
+
+- `blaze cache list`  
+  List all cached tarballs and their sizes.
+
+- `blaze cache stats`  
+  Show the total number of cached tarballs and the total cache size.
+
+- `blaze cache clean`  
+  Remove tarballs not referenced in any `blaze-lock.json` in your project (safe cleanup).
+
+- `blaze cache clear`  
+  Delete **all** cached tarballs (force clear).
+
+#### Examples
+
+```sh
+blaze cache list
+blaze cache stats
+blaze cache clean
+blaze cache clear
+```
+
+> **Note:** The cache is used automatically for all installs. You do not need to manage it manually unless you want to free up disk space or troubleshoot issues.

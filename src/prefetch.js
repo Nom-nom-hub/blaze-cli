@@ -4,11 +4,13 @@ const path = require("path");
 const os = require("os");
 const axios = require("axios");
 const cliProgress = require("cli-progress");
+const chalk = require('chalk');
 
 const CACHE_DIR = path.join(os.homedir(), ".blaze_cache");
+const isVerbose = process.argv.includes('--verbose');
 
 async function prefetchAll(deps) {
-  console.log("Prefetching all dependencies and tarballs for offline use...");
+  console.log(chalk.cyan('✨ Prefetching all dependencies and tarballs for offline use... ✨'));
   const tree = await resolveDependencies(deps);
   let count = 0;
   const pkgs = Object.entries(tree);
@@ -50,6 +52,10 @@ async function prefetchAll(deps) {
     }
     i++;
     bar.update(i, { package: name });
+    // Only show per-package, cache, and internal logs if isVerbose
+    if (isVerbose) {
+      // e.g. console.log(`[blaze] Prefetched ${name}`);
+    }
   }
   bar.stop();
   console.log(

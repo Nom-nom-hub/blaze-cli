@@ -3,8 +3,11 @@ const fs = require("fs/promises");
 const path = require("path");
 const os = require("os");
 const semver = require("semver");
+const chalk = require('chalk');
 
 const CACHE_DIR = path.join(os.homedir(), ".blaze_cache");
+
+const isVerbose = process.argv.includes('--verbose');
 
 async function ensureCacheDir() {
   await fs.mkdir(CACHE_DIR, { recursive: true });
@@ -130,13 +133,15 @@ async function resolveDependencies(
   await runBatch();
   // Print peer/optional warnings at the end (only at the top level)
   if (parent === null) {
-    if (peerWarnings.length > 0) {
-      console.warn("\nPeer dependency warnings:");
-      for (const w of peerWarnings) console.warn("  - " + w);
-    }
-    if (optionalWarnings.length > 0) {
-      console.warn("\nOptional dependency warnings:");
-      for (const w of optionalWarnings) console.warn("  - " + w);
+    if (isVerbose) {
+      if (peerWarnings.length > 0) {
+        console.warn(chalk.yellow.bold('⚠️ Peer dependency warnings:'));
+        for (const w of peerWarnings) console.warn(chalk.yellow('  - ' + w));
+      }
+      if (optionalWarnings.length > 0) {
+        console.warn(chalk.yellow.bold('⚠️ Optional dependency warnings:'));
+        for (const w of optionalWarnings) console.warn(chalk.yellow('  - ' + w));
+      }
     }
   }
   return resolved;

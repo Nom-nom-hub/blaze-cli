@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const allowedLicenses = ["MIT", "ISC", "Apache-2.0"];
+const isVerbose = process.argv.includes('--verbose');
+const chalk = require('chalk');
 
 function checkLicenses() {
   const nodeModules = path.join(process.cwd(), "node_modules");
@@ -16,11 +18,13 @@ function checkLicenses() {
       }
     }
   }
-  if (found.length) {
-    console.warn("[licenseChecker] Non-allowed licenses found:");
-    found.forEach((f) => console.warn(`  - ${f.name}: ${f.license}`));
-  } else {
-    console.log("[licenseChecker] All licenses allowed.");
+  if (isVerbose) {
+    if (found.length) {
+      console.warn(chalk.yellow.bold('[licenseChecker] Non-allowed licenses found:'));
+      found.forEach((f) => console.warn(chalk.yellow(`  - ${f.name}: ${f.license}`)));
+    } else {
+      console.log(chalk.green('[licenseChecker] All licenses allowed.'));
+    }
   }
 }
 

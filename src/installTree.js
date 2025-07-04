@@ -5,14 +5,9 @@ const os = require("os");
 const { ensureInStore } = require("./downloadAndExtract");
 const cliProgress = require("cli-progress");
 const { spawn } = require("child_process");
-
-let chalk;
-async function getChalk() {
-  if (!chalk) {
-    chalk = (await import("chalk")).default;
-  }
-  return chalk;
-}
+const chalk = require('chalk');
+let boxen = require('boxen');
+if (boxen && boxen.default) boxen = boxen.default;
 
 async function runLifecycleScript(pkgDir, scriptName, pkgName) {
   const pkgJsonPath = path.join(pkgDir, "package.json");
@@ -21,7 +16,7 @@ async function runLifecycleScript(pkgDir, scriptName, pkgName) {
     const pkg = JSON.parse(data);
     if (pkg.scripts && pkg.scripts[scriptName]) {
       console.log(
-        (await getChalk()).cyan(`[${pkgName}] Running ${scriptName} script...`),
+        chalk.cyan(`[${pkgName}] Running ${scriptName} script...`),
       );
       await new Promise((resolve) => {
         const child = spawn(
@@ -36,7 +31,7 @@ async function runLifecycleScript(pkgDir, scriptName, pkgName) {
         child.on("close", async (code) => {
           if (code !== 0) {
             console.warn(
-              (await getChalk()).yellow(
+              chalk.yellow(
                 `[${pkgName}] ${scriptName} script failed with code ${code}`,
               ),
             );
@@ -66,7 +61,7 @@ async function getTarballUrl(name, version) {
   } catch (err) {
     if (err.code !== "ENOENT") {
       console.warn(
-        (await getChalk()).yellow(
+        chalk.yellow(
           `Could not read metadata cache for ${name}@${version}: ${err.message}`,
         ),
       );
@@ -78,7 +73,7 @@ async function getTarballUrl(name, version) {
       await fs.writeFile(cacheFile, JSON.stringify(data), "utf-8");
     } catch (err) {
       console.warn(
-        (await getChalk()).yellow(
+        chalk.yellow(
           `Could not write to metadata cache for ${name}@${version}: ${err.message}`,
         ),
       );
@@ -127,13 +122,13 @@ async function handleLocalDep(depName, depSpec, nodeModulesDir) {
   if (depSpec.startsWith("file:")) {
     await fs.cp(src, dest, { recursive: true });
     console.log(
-      (await getChalk()).cyan(`Copied local dependency ${depName} from ${src}`),
+      chalk.cyan(`Copied local dependency ${depName} from ${src}`),
     );
   } else if (depSpec.startsWith("link:")) {
     try {
       await fs.symlink(src, dest, "dir");
       console.log(
-        (await getChalk()).cyan(
+        chalk.cyan(
           `Symlinked local dependency ${depName} from ${src}`,
         ),
       );
@@ -141,7 +136,7 @@ async function handleLocalDep(depName, depSpec, nodeModulesDir) {
       if (err.code === "EPERM" || err.code === "EEXIST") {
         await fs.cp(src, dest, { recursive: true });
         console.log(
-          (await getChalk()).cyan(
+          chalk.cyan(
             `Copied local dependency ${depName} from ${src} (symlink not permitted)`,
           ),
         );
@@ -185,7 +180,7 @@ async function downloadWithRetry(url, dest, headers = {}, maxRetries = 3) {
     } catch (err) {
       lastErr = err;
       if (attempt < maxRetries) {
-        console.warn((await getChalk()).yellow(`Download failed (attempt ${attempt}): ${err.message}. Retrying...`));
+        console.warn(chalk.yellow(`Download failed (attempt ${attempt}): ${err.message}. Retrying...`));
         await new Promise(r => setTimeout(r, 1000 * attempt));
       }
     }
@@ -204,17 +199,21 @@ function sanitizePackageDirName(name) {
   return name.replace(/[^a-zA-Z0-9._-]/g, "-");
 }
 
+const isVerbose = process.argv.includes('--verbose');
+
 async function installTree(tree, destDir, options = {}) {
   const nodeModulesDir = path.join(destDir, "node_modules");
   await fs.mkdir(nodeModulesDir, { recursive: true });
   const pkgs = Object.entries(tree);
-  const bar = new cliProgress.SingleBar(
-    {
-      format: `Installing {bar} {percentage}% | {value}/{total} | {pkg}`,
-      hideCursor: true,
-    },
-    cliProgress.Presets.shades_classic,
-  );
+  const bar = new cliProgress.SingleBar({
+    format: '{bar} {percentage}% | {value}/{total} 📦',
+    barCompleteChar: '█',
+    barIncompleteChar: '░',
+    hideCursor: true,
+    linewrap: false,
+    clearOnComplete: false,
+    barsize: 30,
+  }, cliProgress.Presets.shades_classic);
   bar.start(pkgs.length, 0, { pkg: "" });
 
   const concurrency = 8;
@@ -252,12 +251,12 @@ async function installTree(tree, destDir, options = {}) {
   );
 
   async function worker({ name, info, tarballMeta }) {
-    bar.update(i, { pkg: (await getChalk()).yellow(name) });
+    bar.update(i, { pkg: chalk.yellow(name) });
     // Handle file: and link: dependencies
     if (!tarballMeta.tarballUrl) {
       await handleLocalDep(name, info.version, nodeModulesDir);
       i++;
-      bar.update(i, { pkg: (await getChalk()).yellow(name) });
+      bar.update(i, { pkg: chalk.yellow(name) });
       return;
     }
     // Only handle GitHub/tarball install if info.version is a GitHub/tarball spec
@@ -265,7 +264,7 @@ async function installTree(tree, destDir, options = {}) {
     if (isGithubOrTarball && (isTarballUrl(tarballMeta.tarballUrl) || tarballMeta.tarballUrl.includes('codeload.github.com'))) {
       // Validate spec
       if (!validateGithubOrTarballSpec(info.version)) {
-        console.error((await getChalk()).red(`Invalid GitHub/tarball spec: '${info.version}'.\nExamples: user/repo, user/repo#branch, github:user/repo#sha, https://example.com/pkg.tgz`));
+        console.error(chalk.red(`Invalid GitHub/tarball spec: '${info.version}'.\nExamples: user/repo, user/repo#branch, github:user/repo#sha, https://example.com/pkg.tgz`));
         throw new Error(`Invalid GitHub/tarball spec: ${info.version}`);
       }
       const safeName = sanitizePackageDirName(name);
@@ -291,10 +290,10 @@ async function installTree(tree, destDir, options = {}) {
           await downloadWithRetry(tarballMeta.tarballUrl, tarballPath, headers, 3);
         } catch (err) {
           if (tarballMeta.tarballUrl.includes('codeload.github.com') && (!process.env.GITHUB_TOKEN)) {
-            console.error((await getChalk()).red(`Failed to download from GitHub. If this is a private repo, set GITHUB_TOKEN env var with a personal access token.`));
+            console.error(chalk.red(`Failed to download from GitHub. If this is a private repo, set GITHUB_TOKEN env var with a personal access token.`));
           }
           if (err.response && (err.response.status === 403 || err.response.status === 404)) {
-            console.error((await getChalk()).red(`HTTP ${err.response.status} for ${tarballMeta.tarballUrl}. Check repo access or token.`));
+            console.error(chalk.red(`HTTP ${err.response.status} for ${tarballMeta.tarballUrl}. Check repo access or token.`));
           }
           throw err;
         }
@@ -304,12 +303,14 @@ async function installTree(tree, destDir, options = {}) {
       try {
         await tar.x({ file: tarballPath, C: dest, strip: 1 });
       } catch (err) {
-        console.error((await getChalk()).red(`Failed to extract tarball: ${tarballPath}\n${err.message}`));
+        console.error(chalk.red(`Failed to extract tarball: ${tarballPath}\n${err.message}`));
         throw err;
       }
-      console.log((await getChalk()).cyan(`Installed ${name} from ${tarballMeta.tarballUrl}${usedCache ? " (from cache)" : ""}`));
+      if (isVerbose) {
+        console.log(chalk.cyan(`Installed ${name} from ${tarballMeta.tarballUrl}${usedCache ? " (from cache)" : ""}`));
+      }
       i++;
-      bar.update(i, { pkg: (await getChalk()).yellow(name) });
+      bar.update(i, { pkg: chalk.yellow(name) });
       return;
     }
     const storePath = await ensureInStore(name, info.version, tarballMeta);
@@ -327,7 +328,7 @@ async function installTree(tree, destDir, options = {}) {
     if (skip) {
       // Already installed and up-to-date
       i++;
-      bar.update(i, { pkg: (await getChalk()).yellow(name) });
+      bar.update(i, { pkg: chalk.yellow(name) });
       return;
     }
     await safeRemove(linkPath);
@@ -348,7 +349,7 @@ async function installTree(tree, destDir, options = {}) {
     await runLifecycleScript(linkPath, "install", name);
     await runLifecycleScript(linkPath, "postinstall", name);
     i++;
-    bar.update(i, { pkg: (await getChalk()).yellow(name) });
+    bar.update(i, { pkg: chalk.yellow(name) });
   }
 
   // Run workers in parallel with concurrency limit
@@ -367,10 +368,30 @@ async function installTree(tree, destDir, options = {}) {
       await runBatch();
     }
   }
-  await runBatch();
+  try {
+    await runBatch();
+  } catch (err) {
+    bar && bar.stop();
+    console.log(boxen(chalk.red.bold('❌ Install failed!') + '\n' + chalk.gray(err.message), {
+      padding: 1,
+      margin: 1,
+      borderStyle: 'round',
+      borderColor: 'red',
+      backgroundColor: 'black',
+      align: 'center',
+    }));
+    process.exit(1);
+  }
 
   bar.stop();
-  console.log((await getChalk()).bold.green("✔ All packages installed!"));
+  console.log(boxen(chalk.bold.green('✔ All packages installed!'), {
+    padding: 1,
+    margin: 1,
+    borderStyle: 'round',
+    borderColor: 'green',
+    backgroundColor: 'black',
+    align: 'center',
+  }));
 }
 
 module.exports = { installTree, runLifecycleScript };

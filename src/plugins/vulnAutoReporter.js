@@ -1,4 +1,6 @@
 require("dotenv").config();
+const isVerbose = process.argv.includes('--verbose');
+const chalk = require('chalk');
 
 // Feature not yet implemented: auto-file GitHub issue or send email if critical vuln found.
 module.exports = {};
@@ -17,8 +19,10 @@ function reportVulns(vulns) {
       "[vulnAutoReporter] Critical vulnerability found! Please address immediately.",
     );
     // TODO: Integrate with GitHub/email for auto-reporting
-    if (github) console.log("[vulnAutoReporter] Would file GitHub issue.");
-    if (email) console.log("[vulnAutoReporter] Would send email.");
+    if (isVerbose) {
+      if (github) console.log(chalk.cyan('[vulnAutoReporter] Would file GitHub issue.'));
+      if (email) console.log(chalk.cyan('[vulnAutoReporter] Would send email.'));
+    }
   }
 }
 

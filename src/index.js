@@ -11,16 +11,12 @@ const glob = require("glob");
 const { spawn } = require("child_process");
 const os = require("os");
 const { version } = require('../package.json');
+const chalk = require('chalk');
+let boxen = require('boxen');
+if (boxen && boxen.default) boxen = boxen.default;
+const Spinner = require('./lib/spinner');
 
 let plugins = [];
-let chalk;
-
-async function getChalk() {
-  if (!chalk) {
-    chalk = (await import("chalk")).default;
-  }
-  return chalk;
-}
 
 function parsePackageArg(arg) {
   // e.g. lodash@4.17.21 or lodash@^4.17.0 or lodash@next
@@ -177,7 +173,8 @@ async function auditPackages() {
   }
   const lock = await readLockfile();
   if (!lock) {
-    console.log("No blaze-lock.json found. Run blaze install first.");
+    console.log(boxen(chalk.bold.cyan('Usage: blaze <command> [options]'), { padding: 1, borderColor: 'cyan', borderStyle: 'round' }));
+    console.log(chalk.cyan('ℹ️'), chalk.gray('No blaze-lock.json found. Run blaze install first.'));
     return;
   }
   // Build dependencies object in npm audit format
@@ -190,6 +187,8 @@ async function auditPackages() {
     version: "0.0.0",
     dependencies,
   };
+  const spinner = new Spinner("Running security audit");
+  spinner.start();
   try {
     const { data } = await axios.post(
       "https://registry.npmjs.org/-/npm/v1/security/audits",
@@ -203,21 +202,18 @@ async function auditPackages() {
       data.metadata.vulnerabilities &&
       data.metadata.vulnerabilities.total === 0
     ) {
-      const chalk = await getChalk();
-      console.log(chalk.green("No known vulnerabilities found!"));
-      console.log("Audit complete: No known vulnerabilities found!");
+      spinner.stop(chalk.green('No known vulnerabilities found!'));
       await new Promise((r) => setTimeout(r, 10));
       return;
     }
     if (data.advisories) {
       let found = 0;
-      const chalk = await getChalk();
       for (const key in data.advisories) {
         const advisory = data.advisories[key];
         found++;
         console.log(
           chalk.red.bold(
-            `VULNERABILITY: ${advisory.module_name}@${advisory.findings[0].version}`,
+            `\nVULNERABILITY: ${advisory.module_name}@${advisory.findings[0].version}`,
           ),
         );
         console.log(chalk.red(`  Severity: ${advisory.severity}`));
@@ -228,17 +224,14 @@ async function auditPackages() {
         );
         console.log();
       }
-      console.log(chalk.red.bold(`Found ${found} vulnerable packages!`));
-      console.log(`Audit complete: Found ${found} vulnerable packages!`);
+      spinner.stop(chalk.red.bold(`Found ${found} vulnerable packages!`), false);
       await new Promise((r) => setTimeout(r, 10));
     } else {
-      const chalk = await getChalk();
-      console.log(chalk.green("Found 0 vulnerable packages!"));
-      console.log("Audit complete: No known vulnerabilities found!");
+      spinner.stop(chalk.green('Found 0 vulnerable packages!'));
       await new Promise((r) => setTimeout(r, 10));
     }
   } catch (err) {
-    console.warn(`Could not audit: ${err.message}`);
+    spinner.stop(`Could not audit: ${err.message}`, false);
   }
   // Plugin hook
 }
@@ -260,9 +253,55 @@ async function pruneLockfile() {
 }
 
 function printHelp() {
-  console.log(
-    `\nblaze-install: A fast, modern alternative to npm install\n\nUsage:\n  blaze <command> [options]\n\nCommands:\n  install [package]      Install all or a specific package\n  uninstall <package>    Remove a package and prune lockfile\n  update <package>       Update a package to the latest version\n  run <script>           Run a script defined in package.json\n  audit                  Run a security audit\n  list                   List installed packages\n  clean                  Remove node_modules and cache\n  outdated               Show outdated dependencies\n  info <package>         Show info about a package\n  graph                  Generate a dependency graph\n  help, --help           Show this help message\n  prefetch               Prefetch/cache all dependencies for offline use\n  fix                    Run all available auto-fixers (lint, deps, doctor, audit)\n\nOptions:\n  --save-dev             Add to devDependencies\n  --production           Only install production dependencies\n  --symlink              Use symlinks instead of copying\n  --audit-fix            Run a security audit and fix after install\n  --no-lockfile          Do not use or write blaze-lock.json (lockfile-less mode)\n  --ci                   Remove node_modules before install (like npm ci)\n  --offline              Use only local cache for installs\n  --doctor               Diagnose and fix common project issues\n\nExamples:\n  blaze install\n  blaze install lodash\n  blaze install --audit-fix\n  blaze install --no-lockfile\n  blaze install --ci\n  blaze uninstall lodash\n  blaze update lodash\n  blaze run build\n  blaze run test\n  blaze audit\n  blaze list\n  blaze clean\n  blaze outdated\n  blaze info lodash\n  blaze graph\n  blaze install [pkg] [--offline]\n  blaze doctor\n  blaze prefetch\n`,
-  );
+  console.log(chalk.bold.cyan("\n🚀 blaze-install: A fast, modern alternative to npm install\n"));
+
+  console.log(chalk.bold.white("Usage:"));
+  console.log(chalk.gray("  blaze <command> [options]\n"));
+
+  console.log(chalk.bold.white("Commands:"));
+  console.log(chalk.green("  install [package]") + "      Install all or a specific package");
+  console.log(chalk.green("  uninstall <package>") + "    Remove a package and prune lockfile");
+  console.log(chalk.green("  update <package>") + "       Update a package to the latest version");
+  console.log(chalk.green("  run <script>") + "           Run a script defined in package.json");
+  console.log(chalk.green("  audit") + "                  Run a security audit");
+  console.log(chalk.green("  list") + "                   List installed packages");
+  console.log(chalk.green("  clean") + "                  Remove node_modules and cache");
+  console.log(chalk.green("  outdated") + "               Show outdated dependencies");
+  console.log(chalk.green("  info <package>") + "         Show info about a package");
+  console.log(chalk.green("  graph") + "                  Generate a dependency graph");
+  console.log(chalk.green("  help, --help") + "           Show this help message");
+  console.log(chalk.green("  prefetch") + "               Prefetch/cache all dependencies for offline use");
+  console.log(chalk.green("  fix") + "                    Run all available auto-fixers (lint, deps, doctor, audit)\n");
+
+  console.log(chalk.bold.white("Options:"));
+  console.log(chalk.yellow("  --save-dev") + "             Add to devDependencies");
+  console.log(chalk.yellow("  --production") + "           Only install production dependencies");
+  console.log(chalk.yellow("  --symlink") + "              Use symlinks instead of copying");
+  console.log(chalk.yellow("  --audit-fix") + "            Run a security audit and fix after install");
+  console.log(chalk.yellow("  --no-lockfile") + "          Do not use or write blaze-lock.json (lockfile-less mode)");
+  console.log(chalk.yellow("  --ci") + "                   Remove node_modules before install (like npm ci)");
+  console.log(chalk.yellow("  --offline") + "              Use only local cache for installs");
+  console.log(chalk.yellow("  --doctor") + "               Diagnose and fix common project issues\n");
+
+  console.log(chalk.bold.white("Examples:"));
+  console.log(chalk.gray("  blaze install"));
+  console.log(chalk.gray("  blaze install lodash"));
+  console.log(chalk.gray("  blaze install --audit-fix"));
+  console.log(chalk.gray("  blaze install --no-lockfile"));
+  console.log(chalk.gray("  blaze install --ci"));
+  console.log(chalk.gray("  blaze uninstall lodash"));
+  console.log(chalk.gray("  blaze update lodash"));
+  console.log(chalk.gray("  blaze run build"));
+  console.log(chalk.gray("  blaze run test"));
+  console.log(chalk.gray("  blaze audit"));
+  console.log(chalk.gray("  blaze list"));
+  console.log(chalk.gray("  blaze clean"));
+  console.log(chalk.gray("  blaze outdated"));
+  console.log(chalk.gray("  blaze info lodash"));
+  console.log(chalk.gray("  blaze graph"));
+  console.log(chalk.gray("  blaze install [pkg] [--offline]"));
+  console.log(chalk.gray("  blaze doctor"));
+  console.log(chalk.gray("  blaze prefetch\n"));
 }
 
 async function loadBlazerc() {
@@ -395,7 +434,8 @@ async function bumpVersion(newVersion) {
 async function auditAndFix() {
   const lock = await readLockfile();
   if (!lock) {
-    console.log("No blaze-lock.json found. Run blaze install first.");
+    console.log(boxen(chalk.bold.cyan('Usage: blaze <command> [options]'), { padding: 1, borderColor: 'cyan', borderStyle: 'round' }));
+    console.log(chalk.cyan('ℹ️'), chalk.gray('No blaze-lock.json found. Run blaze install first.'));
     return;
   }
   const dependencies = {};
@@ -562,7 +602,6 @@ async function cleanGithubSpecs() {
   const glob = require('glob');
   const fs = require('fs/promises');
   const path = require('path');
-  const chalk = await getChalk();
   const pkgs = glob.sync('**/package.json', { ignore: 'node_modules/**' });
   let cleaned = 0;
   for (const pkgPath of pkgs) {
@@ -596,6 +635,25 @@ async function cleanGithubSpecs() {
 }
 
 async function main(args) {
+  // Welcome banner
+  console.log(boxen(
+    `${chalk.bold.cyan('🚀 blaze-install')} ${chalk.gray(`v${version}`)}`,
+    { padding: 1, margin: 1, borderStyle: 'round', borderColor: 'cyan', align: 'center' }
+  ));
+
+  // Arguments (only if debug mode is on)
+  if (args.includes('--debug')) {
+    console.log(chalk.gray('Arguments:'), chalk.magenta(JSON.stringify(args)));
+  }
+
+  // Lockfile status (more subtle)
+  const lockfileExists = await fs.access('blaze-lock.json').then(() => true, () => false);
+  if (lockfileExists) {
+    console.log(chalk.green('🔒 Using blaze-lock.json for installation.'));
+  } else {
+    console.log(chalk.yellow('⚠️ No blaze-lock.json found. A new one will be generated after install.'));
+  }
+  console.log(); // Add a newline for spacing
   try {
     const blazerc = await loadBlazerc();
     plugins = await loadPlugins();
@@ -816,40 +874,40 @@ async function main(args) {
         }
       }
       console.log(
-        (await getChalk()).yellow(
+        chalk.yellow(
           "(Note: This list is based on package.json and checks node_modules for actual installs.)",
         ),
       );
-      console.log((await getChalk()).bold("\nInstalled dependencies:"));
+      console.log(chalk.bold("\nInstalled dependencies:"));
       if (Object.keys(deps).length === 0) {
-        console.log((await getChalk()).gray("  (none)"));
+        console.log(chalk.gray("  (none)"));
       } else {
         for (const [name, version] of Object.entries(deps)) {
           if (isInstalled(name)) {
             console.log(
-              (await getChalk()).green(`  ${name}@${version} (installed)`),
+              chalk.green(`  ${name}@${version} (installed)`),
             );
           } else {
             console.log(
-              (await getChalk()).red(
+              chalk.red(
                 `  ${name}@${version} (missing in node_modules)`,
               ),
             );
           }
         }
       }
-      console.log((await getChalk()).bold("\nInstalled devDependencies:"));
+      console.log(chalk.bold("\nInstalled devDependencies:"));
       if (Object.keys(devDeps).length === 0) {
-        console.log((await getChalk()).gray("  (none)"));
+        console.log(chalk.gray("  (none)"));
       } else {
         for (const [name, version] of Object.entries(devDeps)) {
           if (isInstalled(name)) {
             console.log(
-              (await getChalk()).cyan(`  ${name}@${version} (installed)`),
+              chalk.cyan(`  ${name}@${version} (installed)`),
             );
           } else {
             console.log(
-              (await getChalk()).red(
+              chalk.red(
                 `  ${name}@${version} (missing in node_modules)`,
               ),
             );
@@ -868,12 +926,12 @@ async function main(args) {
         );
         if (orphaned.length > 0) {
           console.log(
-            (await getChalk()).yellow(
+            chalk.yellow(
               "\nOrphaned packages in node_modules (not listed in package.json):",
             ),
           );
           for (const name of orphaned) {
-            console.log((await getChalk()).yellow(`  ${name}`));
+            console.log(chalk.yellow(`  ${name}`));
           }
         }
       }
@@ -891,13 +949,13 @@ async function main(args) {
       async function tryRemove(target) {
         try {
           await fs.rm(target, { recursive: true, force: true });
-          console.log((await getChalk()).green(`Removed ${target}`));
+          console.log(chalk.green(`Removed ${target}`));
           removed = true;
         } catch (err) {
           // Only print if not ENOENT
           if (err.code !== "ENOENT") {
             console.log(
-              (await getChalk()).red(
+              chalk.red(
                 `Failed to remove ${target}: ${err.message}`,
               ),
             );
@@ -908,7 +966,7 @@ async function main(args) {
       await tryRemove(path.join(process.cwd(), ".cache"));
       await tryRemove(path.join(process.cwd(), "node_modules", ".cache"));
       if (!removed) {
-        console.log((await getChalk()).yellow("Nothing to clean."));
+        console.log(chalk.yellow("Nothing to clean."));
       }
       // Plugin hook
       for (const plugin of plugins) {
@@ -929,10 +987,10 @@ async function main(args) {
       const { readLockfile } = require("./readLockfile");
       const lock = await readLockfile();
       if (Object.keys(all).length === 0) {
-        console.log((await getChalk()).yellow("No dependencies found."));
+        console.log(chalk.yellow("No dependencies found."));
         return;
       }
-      console.log((await getChalk()).bold("\nOutdated dependencies:"));
+      console.log(chalk.bold("\nOutdated dependencies:"));
       console.log(
         pad("Package", 25) + pad("Current", 15) + pad("Latest", 15) + "Status",
       );
@@ -948,11 +1006,11 @@ async function main(args) {
           }
           if (current === "latest" && installed) {
             if (semver.eq(installed, latest)) {
-              status = (await getChalk()).green("Up to date");
+              status = chalk.green("Up to date");
             } else if (semver.lt(installed, latest)) {
-              status = (await getChalk()).red("Outdated");
+              status = chalk.red("Outdated");
             } else {
-              status = (await getChalk()).yellow("Unknown");
+              status = chalk.yellow("Unknown");
             }
             console.log(
               pad(name, 25) + pad(installed, 15) + pad(latest, 15) + status,
@@ -963,9 +1021,9 @@ async function main(args) {
             semver.validRange(current) &&
             semver.lt(semver.minVersion(current), latest)
           ) {
-            status = (await getChalk()).red("Outdated");
+            status = chalk.red("Outdated");
           } else {
-            status = (await getChalk()).green("Up to date");
+            status = chalk.green("Up to date");
           }
           console.log(
             pad(name, 25) + pad(current, 15) + pad(latest, 15) + status,
@@ -975,7 +1033,7 @@ async function main(args) {
             pad(name, 25) +
               pad(current, 15) +
               pad("-", 15) +
-              (await getChalk()).yellow("Error fetching latest"),
+              chalk.yellow("Error fetching latest"),
           );
         }
       }
@@ -994,32 +1052,32 @@ async function main(args) {
         const { data } = await axios.get(url);
         const latest = data["dist-tags"].latest;
         const info = data.versions[latest];
-        console.log((await getChalk()).bold(`\n${pkgName}`));
-        console.log((await getChalk()).green("Latest version:"), latest);
+        console.log(chalk.bold(`\n${pkgName}`));
+        console.log(chalk.green("Latest version:"), latest);
         if (info.description)
           console.log(
-            (await getChalk()).green("Description:"),
+            chalk.green("Description:"),
             info.description,
           );
         if (info.homepage)
-          console.log((await getChalk()).green("Homepage:"), info.homepage);
+          console.log(chalk.green("Homepage:"), info.homepage);
         if (info.repository && info.repository.url)
           console.log(
-            (await getChalk()).green("Repository:"),
+            chalk.green("Repository:"),
             info.repository.url.replace(/^git\+/, ""),
           );
         if (info.license)
-          console.log((await getChalk()).green("License:"), info.license);
+          console.log(chalk.green("License:"), info.license);
         if (info.maintainers) {
           const maintainers = Array.isArray(info.maintainers)
             ? info.maintainers.map((m) => m.name).join(", ")
             : info.maintainers;
-          console.log((await getChalk()).green("Maintainers:"), maintainers);
+          console.log(chalk.green("Maintainers:"), maintainers);
         }
         console.log();
       } catch (err) {
         console.log(
-          (await getChalk()).red("Error fetching info for"),
+          chalk.red("Error fetching info for"),
           pkgName,
           "-",
           err.message,
@@ -1265,10 +1323,10 @@ async function main(args) {
       }
       if (addingPackage) {
         // Always resolve and update lockfile when adding a package
-        console.log(
-          "Adding new package. Resolving dependencies and updating lockfile...",
-        );
+        console.log(chalk.blue("✨ Adding new package. Resolving dependencies and updating lockfile..."));
         if (Object.keys(depsToInstall).length > 0) {
+          const spinner = new Spinner("Resolving dependencies");
+          spinner.start();
           const tree = await resolveDependencies(
             depsToInstall,
             {},
@@ -1277,10 +1335,12 @@ async function main(args) {
             [],
             { offline },
           );
+          spinner.stop("Dependencies resolved.");
+
           // Peer dependency handling
           if (tree.peerWarnings && tree.peerWarnings.length > 0 && !offline) {
-            console.log("\nPeer dependency warnings:");
-            for (const w of tree.peerWarnings) console.log("  - " + w);
+            console.log(chalk.yellow("\n⚠️ Peer dependency warnings:"));
+            for (const w of tree.peerWarnings) console.log(chalk.yellow(`  - ${w}`));
             // Collect all missing and mismatched peers
             const missingPeers = tree.peerWarnings
               .filter((w) => w.startsWith("Peer dependency missing:"))
@@ -1297,7 +1357,7 @@ async function main(args) {
                 {
                   type: "confirm",
                   name: "autoInstall",
-                  message: `Auto-install missing or mismatched peer dependencies (${allPeers.join(", ")})?`,
+                  message: chalk.blue(`Auto-install missing or mismatched peer dependencies (${allPeers.join(", ")})?`),
                   default: false,
                 },
               ]);
@@ -1308,6 +1368,8 @@ async function main(args) {
                   depsToInstall[peer] = "latest";
                 }
                 // Re-run install with updated deps
+                const spinner2 = new Spinner("Resolving peer dependencies");
+                spinner2.start();
                 const tree2 = await resolveDependencies(
                   depsToInstall,
                   {},
@@ -1316,45 +1378,48 @@ async function main(args) {
                   [],
                   { offline },
                 );
+                spinner2.stop("Peer dependencies resolved.");
                 await installTree(tree2, process.cwd(), { useSymlinks });
                 if (!noLockfile) {
                   await writeLockfile(tree2);
-                  console.log("blaze-lock.json written!");
+                  console.log(chalk.green("blaze-lock.json written!"));
                 }
               }
             }
           }
           if (args.includes("--debug")) {
-            console.log("[DEBUG] Full resolved dependency tree:", tree);
+            console.log(chalk.gray("[DEBUG] Full resolved dependency tree:"), tree);
           } else {
             console.log(
-              `[DEBUG] Dependency tree resolved. Top-level packages: ${Object.keys(tree).join(", ")}`,
+              chalk.gray(`[DEBUG] Dependency tree resolved. Top-level packages: ${Object.keys(tree).join(", ")}`),
             );
           }
-          console.log("Installing packages...");
+          console.log(chalk.blue("📦 Installing packages..."));
           await installTree(tree, process.cwd(), { useSymlinks });
-          console.log("All packages installed!");
+          console.log(chalk.green("✔ All packages installed!"));
           if (!noLockfile) {
             await writeLockfile(tree);
-            console.log("blaze-lock.json written!");
+            console.log(chalk.green("blaze-lock.json written!"));
           }
         } else {
-          console.log("No dependencies found in package.json.");
+          console.log(chalk.yellow("No dependencies found in package.json."));
         }
       } else if (lock && !noLockfile) {
         if (Object.keys(lock).length === 0) {
-          console.log("No dependencies to install. Skipping install.");
+          console.log(chalk.yellow("No dependencies to install. Skipping install."));
           return;
         }
-        console.log("blaze-lock.json found. Installing from lockfile...");
+        console.log(chalk.blue("🔒 blaze-lock.json found. Installing from lockfile..."));
         await installTree(lock, process.cwd(), { useSymlinks });
-        console.log("All packages installed from lockfile!");
+        console.log(chalk.green("✔ All packages installed from lockfile!"));
       } else {
         // No lockfile or lockfile skipped, resolve and install
         console.log(
-          "No blaze-lock.json found or lockfile skipped. Resolving dependencies...",
+          chalk.blue("✨ No blaze-lock.json found or lockfile skipped. Resolving dependencies..."),
         );
         if (Object.keys(depsToInstall).length > 0) {
+          const spinner = new Spinner("Resolving dependencies");
+          spinner.start();
           const tree = await resolveDependencies(
             depsToInstall,
             {},
@@ -1363,16 +1428,17 @@ async function main(args) {
             [],
             { offline },
           );
-          console.log("Resolved dependency tree:", tree);
-          console.log("Installing packages...");
+          spinner.stop("Dependencies resolved.");
+          console.log(chalk.gray("[DEBUG] Resolved dependency tree:"), tree);
+          console.log(chalk.blue("📦 Installing packages..."));
           await installTree(tree, process.cwd(), { useSymlinks });
-          console.log("All packages installed!");
+          console.log(chalk.green("✔ All packages installed!"));
           if (!noLockfile) {
             await writeLockfile(tree);
-            console.log("blaze-lock.json written!");
+            console.log(chalk.green("blaze-lock.json written!"));
           }
         } else {
-          console.log("No dependencies found in package.json.");
+          console.log(chalk.yellow("No dependencies found in package.json."));
         }
       }
       for (const plugin of plugins) {
@@ -1383,21 +1449,44 @@ async function main(args) {
       // console.log("DEBUG: auditFix:", auditFix, "noLockfile:", noLockfile);
       if (auditFix && noLockfile) {
         console.error(
-          "Error: --audit-fix cannot be used with --no-lockfile. The audit requires a lockfile.",
+          chalk.red("Error: --audit-fix cannot be used with --no-lockfile. The audit requires a lockfile."),
         );
         process.exit(1);
       }
       if (offline) {
-        console.log("Offline mode enabled: will only use local cache.");
+        console.log(chalk.blue("Offline mode enabled: will only use local cache."));
       }
+
+      // Install Summary
+      const endTime = process.hrtime.bigint();
+      const duration = Number(endTime - startTime) / 1_000_000_000; // seconds
+      const installedCount = Object.keys(depsToInstall).length;
+      console.log(boxen(
+        chalk.bold.white(`Installation Summary`) +
+        `\n\n${chalk.green('✔')} Installed ${installedCount} packages` +
+        `\n${chalk.blue('⏱')} Time taken: ${duration.toFixed(2)}s`,
+        {
+          padding: 1,
+          margin: 1,
+          borderStyle: 'round',
+          borderColor: 'green',
+          backgroundColor: 'black',
+          align: 'center',
+        }
+      ));
     }
   } catch (err) {
     console.error(
-      (await getChalk()).red("Error:"),
-      err && err.stack ? err.stack : err,
+      chalk.red("❌ Error:"),
+      err && err.stack ? chalk.red(err.stack) : chalk.red(err),
     );
     process.exit(1);
   }
 }
+
+// Add startTime at the beginning of main function
+const startTime = process.hrtime.bigint();
+
+module.exports = { main, printHelp };
 
 module.exports = { main, printHelp };
