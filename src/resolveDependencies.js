@@ -34,6 +34,15 @@ async function fetchPackageMeta(name, { offline = false } = {}) {
 
 const CONCURRENCY = 8;
 
+function isGithubOrTarballSpec(spec) {
+  return (
+    typeof spec === "string" &&
+    (/^github:[^/]+\/[^#]+(#.+)?$/.test(spec) ||
+      /^[^/]+\/[^#]+(#.+)?$/.test(spec) ||
+      /^https?:\/\/.+\.(tgz|tar\.gz)$/.test(spec))
+  );
+}
+
 async function resolveDependencies(
   dependencies,
   resolved = {},
@@ -46,10 +55,12 @@ async function resolveDependencies(
   let idx = 0;
   async function worker([name, versionRange]) {
     if (resolved[name]) return; // Avoid cycles
-    // Handle file: and link: dependencies directly
+    // Handle file:, link:, and GitHub/tarball dependencies directly
     if (
       typeof versionRange === "string" &&
-      (versionRange.startsWith("file:") || versionRange.startsWith("link:"))
+      (versionRange.startsWith("file:") ||
+        versionRange.startsWith("link:") ||
+        isGithubOrTarballSpec(versionRange))
     ) {
       resolved[name] = { version: versionRange, dependencies: {} };
       return;
@@ -57,6 +68,7 @@ async function resolveDependencies(
     const meta = await fetchPackageMeta(name, options);
     const latestVersion = meta["dist-tags"].latest;
     const pkg = meta.versions[latestVersion];
+    // If the version is a GitHub/tarball spec, pass it through as-is for installTree to handle
     resolved[name] = {
       version: latestVersion,
       dependencies: pkg.dependencies || {},

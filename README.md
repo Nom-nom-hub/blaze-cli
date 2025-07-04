@@ -65,6 +65,26 @@ Or use directly in your project:
 npm install blaze-install --save-dev
 ```
 
+## Installing from GitHub or Tarball URLs
+
+Blaze supports installing packages directly from GitHub or tarball URLs:
+
+- GitHub repo (default branch):
+  ```sh
+  blaze install user/repo
+  ```
+- GitHub repo (specific branch, tag, or commit):
+  ```sh
+  blaze install user/repo#branch-or-tag
+  blaze install github:user/repo#commit-sha
+  ```
+- Tarball URL:
+  ```sh
+  blaze install https://example.com/some-package.tgz
+  ```
+
+These packages will be downloaded, extracted, and added to your dependencies and lockfile for reproducible installs.
+
 ## Usage
 
 Run in your project directory:
@@ -466,3 +486,26 @@ blaze fix
 ```
 
 This will automatically format your code, clean up dependencies, update packages, and repair project issues in one command.
+
+## GitHub and Tarball Installs: Advanced Features
+
+- **Private Repos:**
+  - Set the `GITHUB_TOKEN` environment variable to a GitHub personal access token to install from private repositories.
+  - Example: `GITHUB_TOKEN=ghp_... blaze install user/private-repo`
+- **Error Handling:**
+  - Network, HTTP, and extraction errors are reported with clear messages and suggestions.
+  - If you see a 403/404 from GitHub, check your token and repo access.
+  - Invalid specs will print usage examples.
+- **Caching:**
+  - Downloaded tarballs are cached in `~/.blaze_cache/tarballs` for fast reinstalls and offline use.
+- **Retry:**
+  - Blaze will retry failed downloads up to 3 times before failing.
+
+## Troubleshooting
+
+- **Private GitHub repo fails to install:**
+  - Make sure your `GITHUB_TOKEN` is set and has access to the repo.
+- **Spec errors:**
+  - Use formats like `user/repo`, `user/repo#branch`, `github:user/repo#sha`, or a direct tarball URL.
+- **Extraction errors:**
+  - Check that the tarball is a valid npm package tarball.

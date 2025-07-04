@@ -29,11 +29,24 @@ function parsePackageArg(arg) {
   return { name: match[1], range: match[2] };
 }
 
+function isGithubOrTarballSpec(pkgName) {
+  // github:user/repo, user/repo, user/repo#branch, tarball URLs
+  return (
+    /^github:[^/]+\/[^#]+(#.+)?$/.test(pkgName) ||
+    /^[^/]+\/[^#]+(#.+)?$/.test(pkgName) ||
+    /^https?:\/\/.+\.(tgz|tar\.gz)$/.test(pkgName)
+  );
+}
+
 async function resolveVersionOrRange(
   pkgName,
   rangeOrTag,
   { offline = false } = {},
 ) {
+  if (isGithubOrTarballSpec(pkgName)) {
+    // Return as-is for special handling in installTree
+    return pkgName;
+  }
   if (offline) {
     // Try to resolve from local package.json or lockfile
     let pkg, lock;

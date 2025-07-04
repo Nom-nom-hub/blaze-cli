@@ -46,7 +46,7 @@
     "axios": "latest",
     "chalk": "latest",
     "chokidar": "^4.0.3",
-    "cli-progress": "^3.12.0",
+    "cli-progress": "^3.9.1",
     "dotenv": "^17.0.1",
     "glob": "latest",
     "ini": "latest",
@@ -56,6 +56,7 @@
     "open": "^10.1.2",
     "randomcolor": "^0.6.2",
     "semver": "latest",
+    "string-width": "^4.2.3",
     "tar": "latest",
     "yallist": "latest"
   },
