@@ -6,8 +6,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowJs": true,
-    "outDir": "lib"
+    "outDir": "lib",
+    "rootDir": "src"
   },
-  "include": ["src/**/*", "plugins/**/*", "test/**/*"]
+  "include": ["src/**/*"]
 }
  
