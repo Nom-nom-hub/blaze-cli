@@ -1,3 +1,6 @@
+// Minimal placeholder for test-blaze-watch.js
+console.log('test-blaze-watch.js placeholder');
+
 const fs = require("fs");
 const path = require("path");
 

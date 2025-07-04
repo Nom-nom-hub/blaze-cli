@@ -1,3 +1,6 @@
+// Minimal placeholder for test-blaze-plugins.js
+console.log('test-blaze-plugins.js placeholder');
+
 const fs = require("fs");
 const path = require("path");
 
