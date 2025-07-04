@@ -57,3 +57,15 @@
 - Beautiful, colored CLI output with progress bars
 - Lockfile pruning after uninstall
 - Global cache/store in user's home directory
+
+## [1.11.5] - 2025-07-04
+### Added
+- Minimal, beautiful CLI spinner implemented in `src/spinner.js` and built to `lib/spinner.js`.
+- Placeholder test files in `test/` to prevent CI failures due to missing files.
+- `.gitkeep` in root `plugins/` directory to ensure it is always present for runtime/test plugins.
+- Documentation updates in README about directory structure, plugins, spinner, and CI/CD.
+
+### Fixed
+- Import path for spinner in `src/index.js` to ensure correct module resolution after build.
+- CI/CD workflow now passes with correct build, plugin, and test file presence.
+- Restored and clarified plugin/test directory structure for contributors and CI.

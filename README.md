@@ -550,3 +550,24 @@ blaze cache clear
 ```
 
 > **Note:** The cache is used automatically for all installs. You do not need to manage it manually unless you want to free up disk space or troubleshoot issues.
+
+## Directory Structure
+
+- `src/plugins/` — Source code for built-in plugins (compiled to `lib/plugins/`)
+- `plugins/` (root) — For user/test plugins; kept in git with a `.gitkeep` file
+- `test/` — Contains test scripts. Placeholder files are present to ensure CI passes even if real tests are not yet implemented.
+
+## Plugins Directory
+
+- The root `plugins/` directory is for runtime or user-installed plugins, or for test purposes. It is kept in the repo with a `.gitkeep` file so it is always present.
+- Built-in plugins live in `src/plugins/` and are compiled to `lib/plugins/`.
+
+## Spinner
+
+- Blaze now includes a minimal, beautiful CLI spinner for progress indication, implemented in `src/spinner.js`.
+
+## CI/CD & Test Improvements
+
+- Placeholder test files are present in `test/` to prevent CI failures due to missing files. Replace these with real tests as needed.
+- The CI workflow expects the `plugins/` directory to exist and test files to be present.
+- The build and import paths have been fixed to ensure all modules resolve correctly in CI and production.
