@@ -1,6 +1,6 @@
 {
   "name": "blaze-install",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "A new package manager",
   "main": "lib/index.js",
   "bin": {
@@ -15,7 +15,7 @@
     "uninstall": "echo uninstall script",
     "postuninstall": "echo postuninstall script",
     "prepublish": "echo prepublish script",
-    "prepare": "echo prepare script",
+    "prepare": "tsc",
     "prepack": "echo prepack script",
     "postpack": "echo postpack script",
     "postpublish": "echo postpublish script",
@@ -23,7 +23,8 @@
     "version": "echo version script",
     "postversion": "echo postversion script",
     "testscript": "echo testscript ran",
-    "hello": "echo Hello from pkg-a!"
+    "hello": "echo Hello from pkg-a!",
+    "build": "tsc"
   },
   "keywords": [
     "package-manager",

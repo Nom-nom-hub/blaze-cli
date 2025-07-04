@@ -2,15 +2,16 @@
 *
 
 # Include only essential files
-!bin/
-!lib/
-!package.json
-!README.md
-!LICENSE
-!logo.svg
-!logo-dark-cover.svg
-!blaze-dark.png
-!blaze-light.png
+   !bin/
+   !lib/
+   !lib/**
+   !package.json
+   !README.md
+   !LICENSE
+   !logo.svg
+   !logo-dark-cover.svg
+   !blaze-dark.png
+   !blaze-light.png
 
 # Exclude logs, tests, docs, configs, and dev files
 custom-plugin.log
