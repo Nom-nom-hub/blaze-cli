@@ -332,22 +332,32 @@ async function installTree(tree, destDir, options = {}) {
       return;
     }
     await safeRemove(linkPath);
+    const t0 = process.hrtime.bigint();
     if (options.useSymlinks) {
       try {
         await fs.symlink(storePath, linkPath, "dir");
-        // console.log(chalk.green(`✔ Symlinked ${name}@${info.version}`));
       } catch (err) {
-        // console.warn(chalk.yellow(`⚠ Symlink failed (${err.code}). Copied ${name}@${info.version} instead.`));
+        console.warn(chalk.yellow(`⚠ Symlink failed for ${name}@${info.version} (${err.code || err.message}). Falling back to copy. This will be much slower!`));
         await fs.cp(storePath, linkPath, { recursive: true });
       }
     } else {
       await fs.cp(storePath, linkPath, { recursive: true });
-      // console.log(chalk.green(`✔ Copied ${name}@${info.version}`));
+    }
+    const t1 = process.hrtime.bigint();
+    if (isVerbose) {
+      const linkTime = Number(t1 - t0) / 1_000_000; // Convert to milliseconds
+      console.log(chalk.gray(`[TIMING] link/copy ${name}@${info.version}: ${linkTime.toFixed(2)}ms`));
     }
     // Run lifecycle scripts
+    const t2 = process.hrtime.bigint();
     await runLifecycleScript(linkPath, "preinstall", name);
     await runLifecycleScript(linkPath, "install", name);
     await runLifecycleScript(linkPath, "postinstall", name);
+    const t3 = process.hrtime.bigint();
+    if (isVerbose) {
+      const lifecycleTime = Number(t3 - t2) / 1_000_000; // Convert to milliseconds
+      console.log(chalk.gray(`[TIMING] lifecycle ${name}@${info.version}: ${lifecycleTime.toFixed(2)}ms`));
+    }
     i++;
     bar.update(i, { pkg: chalk.yellow(name) });
   }

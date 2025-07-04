@@ -1484,9 +1484,4 @@ async function main(args) {
   }
 }
 
-// Add startTime at the beginning of main function
-const startTime = process.hrtime.bigint();
-
-module.exports = { main, printHelp };
-
 module.exports = { main, printHelp };
