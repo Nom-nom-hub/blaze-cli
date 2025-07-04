@@ -3,6 +3,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const os = require("os");
 const axios = require("axios");
+const cliProgress = require("cli-progress");
 
 const CACHE_DIR = path.join(os.homedir(), ".blaze_cache");
 
@@ -10,7 +11,14 @@ async function prefetchAll(deps) {
   console.log("Prefetching all dependencies and tarballs for offline use...");
   const tree = await resolveDependencies(deps);
   let count = 0;
-  for (const [name, info] of Object.entries(tree)) {
+  const pkgs = Object.entries(tree);
+  const bar = new cliProgress.SingleBar({
+    format: 'Prefetching [{bar}] {value}/{total} {package}',
+    clearOnComplete: true
+  }, cliProgress.Presets.shades_classic);
+  bar.start(pkgs.length, 0, { package: '' });
+  let i = 0;
+  for (const [name, info] of pkgs) {
     if (
       info.version &&
       (info.version.startsWith("file:") || info.version.startsWith("link:"))
@@ -40,7 +48,10 @@ async function prefetchAll(deps) {
       await fs.writeFile(tarballPath, res.data);
       count++;
     }
+    i++;
+    bar.update(i, { package: name });
   }
+  bar.stop();
   console.log(
     `Prefetch complete. ${Object.keys(tree).length} packages metadata and ${count} tarballs cached.`,
   );

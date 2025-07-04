@@ -661,19 +661,19 @@ async function main(args) {
       console.log("Running all available auto-fixers (lint, deps, doctor, audit)...");
       // Lint/Prettier fix
       try {
-        require("../plugins/eslintPrettierRunner.js").runLintersFix();
+        require("./plugins/eslintPrettierRunner.js").runLintersFix();
       } catch (e) {
         console.warn("[fix] Lint/Prettier auto-fix failed:", e.message);
       }
       // Remove unused dependencies
       try {
-        require("../plugins/unusedDependencyLinter.js").removeUnusedDeps();
+        require("./plugins/unusedDependencyLinter.js").removeUnusedDeps();
       } catch (e) {
         console.warn("[fix] Unused dependency removal failed:", e.message);
       }
       // Update outdated dependencies
       try {
-        await require("../plugins/outdatedDependencyNotifier.js").updateOutdatedDeps();
+        await require("./plugins/outdatedDependencyNotifier.js").updateOutdatedDeps();
       } catch (e) {
         console.warn("[fix] Outdated dependency update failed:", e.message);
       }

@@ -178,7 +178,7 @@ if (supported.includes(command)) {
         `[blaze-watch] Installing missing packages: ${pkgs.join(", ")}`,
       );
       try {
-        execSync(`node bin/blaze-install.js install ${pkgs.join(" ")}`, {
+        execSync(`blaze install ${pkgs.join(" ")}`, {
           stdio: "inherit",
         });
         pkgs.forEach((pkg) => installed.add(pkg));
@@ -220,7 +220,7 @@ if (supported.includes(command)) {
         `[blaze-watch] Detected missing packages on startup: ${missing.join(", ")}`,
       );
       try {
-        execSync(`node bin/blaze-install.js install ${missing.join(" ")}`, {
+        execSync(`blaze install ${missing.join(" ")}`, {
           stdio: "inherit",
         });
         missing.forEach((pkg) => installed.add(pkg));
