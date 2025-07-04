@@ -209,7 +209,7 @@ async function installTree(tree, destDir, options = {}) {
     format: '{bar} {percentage}% | {value}/{total} 📦',
     barCompleteChar: '█',
     barIncompleteChar: '░',
-    hideCursor: true,
+      hideCursor: true,
     linewrap: false,
     clearOnComplete: false,
     barsize: 30,
@@ -369,7 +369,7 @@ async function installTree(tree, destDir, options = {}) {
     }
   }
   try {
-    await runBatch();
+  await runBatch();
   } catch (err) {
     bar && bar.stop();
     console.log(boxen(chalk.red.bold('❌ Install failed!') + '\n' + chalk.gray(err.message), {

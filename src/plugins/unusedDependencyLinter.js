@@ -38,10 +38,10 @@ function scanForUnusedDeps() {
   }
   const unused = deps.filter((dep) => !used.has(dep));
   if (isVerbose) {
-    if (unused.length) {
+  if (unused.length) {
       console.warn(chalk.yellow.bold('[unusedDependencyLinter] Unused dependencies found:'));
       unused.forEach((dep) => console.warn(chalk.yellow('  - ' + dep)));
-    } else {
+  } else {
       console.log(chalk.green('[unusedDependencyLinter] No unused dependencies found.'));
     }
   }

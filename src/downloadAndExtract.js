@@ -75,8 +75,8 @@ async function downloadTarballCAS(tarballUrl) {
   if (isVerbose) {
     console.log(chalk.gray(`[CAS] Downloading and caching tarball: ${cachePath}`));
   }
-  await fs.writeFile(cachePath, Buffer.concat(chunks));
-  return { cachePath, digest };
+    await fs.writeFile(cachePath, Buffer.concat(chunks));
+    return { cachePath, digest };
 }
 
 // Compute SHA1 hash of an existing tarball

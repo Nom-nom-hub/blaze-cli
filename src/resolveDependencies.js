@@ -134,11 +134,11 @@ async function resolveDependencies(
   // Print peer/optional warnings at the end (only at the top level)
   if (parent === null) {
     if (isVerbose) {
-      if (peerWarnings.length > 0) {
+    if (peerWarnings.length > 0) {
         console.warn(chalk.yellow.bold('⚠️ Peer dependency warnings:'));
         for (const w of peerWarnings) console.warn(chalk.yellow('  - ' + w));
-      }
-      if (optionalWarnings.length > 0) {
+    }
+    if (optionalWarnings.length > 0) {
         console.warn(chalk.yellow.bold('⚠️ Optional dependency warnings:'));
         for (const w of optionalWarnings) console.warn(chalk.yellow('  - ' + w));
       }

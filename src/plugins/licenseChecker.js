@@ -19,10 +19,10 @@ function checkLicenses() {
     }
   }
   if (isVerbose) {
-    if (found.length) {
+  if (found.length) {
       console.warn(chalk.yellow.bold('[licenseChecker] Non-allowed licenses found:'));
       found.forEach((f) => console.warn(chalk.yellow(`  - ${f.name}: ${f.license}`)));
-    } else {
+  } else {
       console.log(chalk.green('[licenseChecker] All licenses allowed.'));
     }
   }
