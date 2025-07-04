@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.11.0
+
+- Feat: Unified `blaze fix` command to auto-fix code style, remove unused dependencies, update outdated dependencies, run diagnostics, and audit in one step.
+- Feat: Enhanced ESLint/Prettier runner to only target existing source directories (`src/`, `plugins/`, `test/`).
+- Feat: `unusedDependencyLinter` plugin now supports auto-removal of unused dependencies.
+- Feat: `outdatedDependencyNotifier` plugin now supports auto-updating outdated dependencies.
+- Chore: Migrated all source files from `lib/` to `src/` for best-practice project structure.
+- Docs: Updated README and docs to reflect new structure and auto-fix features.
+
 ## v1.5.0
 
 - Feat: Offline mode (`--offline`) for fully local, cache-only installs.
