@@ -635,6 +635,7 @@ async function cleanGithubSpecs() {
 }
 
 async function main(args) {
+  const startTime = process.hrtime.bigint(); // Move startTime here
   // Welcome banner
   console.log(boxen(
     `${chalk.bold.cyan('🚀 blaze-install')} ${chalk.gray(`v${version}`)}`,
@@ -1483,10 +1484,5 @@ async function main(args) {
     process.exit(1);
   }
 }
-
-// Add startTime at the beginning of main function
-const startTime = process.hrtime.bigint();
-
-module.exports = { main, printHelp };
 
 module.exports = { main, printHelp };

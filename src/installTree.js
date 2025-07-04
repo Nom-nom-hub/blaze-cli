@@ -332,22 +332,26 @@ async function installTree(tree, destDir, options = {}) {
       return;
     }
     await safeRemove(linkPath);
+    const t0 = Date.now();
     if (options.useSymlinks) {
       try {
         await fs.symlink(storePath, linkPath, "dir");
-        // console.log(chalk.green(`✔ Symlinked ${name}@${info.version}`));
       } catch (err) {
-        // console.warn(chalk.yellow(`⚠ Symlink failed (${err.code}). Copied ${name}@${info.version} instead.`));
+        console.warn(chalk.yellow(`⚠ Symlink failed for ${name}@${info.version} (${err.code || err.message}). Falling back to copy. This will be much slower!`));
         await fs.cp(storePath, linkPath, { recursive: true });
       }
     } else {
       await fs.cp(storePath, linkPath, { recursive: true });
-      // console.log(chalk.green(`✔ Copied ${name}@${info.version}`));
     }
+    const t1 = Date.now();
+    console.log(chalk.gray(`[TIMING] link/copy ${name}@${info.version}: ${(t1-t0)}ms`));
     // Run lifecycle scripts
+    const t2 = Date.now();
     await runLifecycleScript(linkPath, "preinstall", name);
     await runLifecycleScript(linkPath, "install", name);
     await runLifecycleScript(linkPath, "postinstall", name);
+    const t3 = Date.now();
+    console.log(chalk.gray(`[TIMING] lifecycle ${name}@${info.version}: ${(t3-t2)}ms`));
     i++;
     bar.update(i, { pkg: chalk.yellow(name) });
   }
