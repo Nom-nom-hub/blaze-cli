@@ -1,42 +1,43 @@
-const fs = require('fs');
+const fs = require("fs");
 function log(msg) {
   const timestamp = new Date().toISOString();
-  fs.appendFileSync('custom-plugin.log', `[${timestamp}] ${msg}\n`);
+  fs.appendFileSync("custom-plugin.log", `[${timestamp}] ${msg}\n`);
   console.log(`[customPlugin] ${msg}`);
 }
 
 module.exports = {
-  onCommand: ({ command, args, context }) => {
-    log(`onCommand: ${command} (cwd: ${context.cwd})`);
+  onCommand: ({ command, _context } = {}) => {
+    const cwd = _context && _context.cwd ? _context.cwd : 'unknown';
+    log(`onCommand: ${command} (cwd: ${cwd})`);
   },
-  beforeInstall: ({ args, context }) => {
-    log('beforeInstall');
+  beforeInstall: () => {
+    log("beforeInstall");
   },
-  afterInstall: ({ args, context }) => {
-    log('afterInstall');
+  afterInstall: () => {
+    log("afterInstall");
   },
-  beforeUninstall: ({ args, context }) => {
-    log('beforeUninstall');
+  beforeUninstall: () => {
+    log("beforeUninstall");
   },
-  afterUninstall: ({ args, context }) => {
-    log('afterUninstall');
+  afterUninstall: () => {
+    log("afterUninstall");
   },
-  beforeUpdate: ({ args, context }) => {
-    log('beforeUpdate');
+  beforeUpdate: () => {
+    log("beforeUpdate");
   },
-  afterUpdate: ({ args, context }) => {
-    log('afterUpdate');
+  afterUpdate: () => {
+    log("afterUpdate");
   },
-  beforeAudit: ({ context }) => {
-    log('beforeAudit');
+  beforeAudit: () => {
+    log("beforeAudit");
   },
-  afterAudit: ({ context }) => {
-    log('afterAudit');
+  afterAudit: () => {
+    log("afterAudit");
   },
-  beforeClean: ({ context }) => {
-    log('beforeClean');
+  beforeClean: () => {
+    log("beforeClean");
   },
-  afterClean: ({ context }) => {
-    log('afterClean');
+  afterClean: () => {
+    log("afterClean");
   },
-}; 
+};

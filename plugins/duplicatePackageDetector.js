@@ -1,23 +1,22 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 function findDuplicates() {
-  const nodeModules = path.join(process.cwd(), 'node_modules');
+  const nodeModules = path.join(process.cwd(), "node_modules");
   if (!fs.existsSync(nodeModules)) return;
   const seen = {};
   const duplicates = {};
 
   function scan(dir) {
-    const entries = fs.readdirSync(dir).filter(f => !f.startsWith('.'));
+    const entries = fs.readdirSync(dir).filter((f) => !f.startsWith("."));
     for (const entry of entries) {
       const entryPath = path.join(dir, entry);
-      if (entry.startsWith('@')) {
+      if (entry.startsWith("@")) {
         scan(entryPath); // scoped packages
       } else {
-        const pkgJson = path.join(entryPath, 'package.json');
+        const pkgJson = path.join(entryPath, "package.json");
         if (fs.existsSync(pkgJson)) {
-          const data = JSON.parse(fs.readFileSync(pkgJson, 'utf8'));
-          const key = data.name + '@' + data.version;
+          const data = JSON.parse(fs.readFileSync(pkgJson, "utf8"));
           if (!seen[data.name]) seen[data.name] = [];
           seen[data.name].push(data.version);
         }
@@ -35,16 +34,16 @@ function findDuplicates() {
   }
 
   if (Object.keys(duplicates).length) {
-    console.warn('[duplicatePackageDetector] Duplicate packages found:');
+    console.warn("[duplicatePackageDetector] Duplicate packages found:");
     for (const name in duplicates) {
-      console.warn(`  - ${name}: ${duplicates[name].join(', ')}`);
+      console.warn(`  - ${name}: ${duplicates[name].join(", ")}`);
     }
   } else {
-    console.log('[duplicatePackageDetector] No duplicate packages found.');
+    console.log("[duplicatePackageDetector] No duplicate packages found.");
   }
 }
 
 module.exports = {
   afterInstall: findDuplicates,
   afterUpdate: findDuplicates,
-}; 
+};

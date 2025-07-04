@@ -39,4 +39,4 @@ jobs:
 
       - name: Check build (optional)
         run: npm run build
-        continue-on-error: true 
+        continue-on-error: true

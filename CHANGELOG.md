@@ -1,6 +1,7 @@
 # Changelog
 
 ## v1.5.0
+
 - Feat: Offline mode (`--offline`) for fully local, cache-only installs.
 - Feat: `blaze prefetch` command to prefetch/cache all dependencies and tarballs for offline use.
 - Feat: Self-healing and diagnostics improvements: `blaze doctor --fix` auto-repairs common issues (missing node_modules, lockfile, broken symlinks).
@@ -9,9 +10,11 @@
 - Fix: CLI now robustly handles all commands and flags, including new features.
 
 ## v1.4.1
+
 - Chore: Removed `packages` folder and sample workspaces for a cleaner release.
 
 ## v1.4.0
+
 - Feat: `blaze graph` command for visual dependency graphs (Mermaid.js output).
 - Feat: `blaze upgrade` for interactive upgrades of outdated dependencies.
 - Feat: Monorepo/workspaces support with `--workspaces` flag for running scripts across all workspaces.
@@ -21,13 +24,16 @@
 - Fix: Various bug fixes and stability improvements.
 
 ## v1.3.1
+
 - Chore: Version bump for patch release.
 
 ## v1.3.0
+
 - Feat: Enhanced plugin system with a comprehensive set of lifecycle hooks (`before`/`after` for `uninstall`, `update`, `audit`, and `clean`).
 - Fix: Resolved multiple dependency and scoping issues to improve stability.
 
 ## v1.0.0
+
 - Initial release of blaze-install
 - Full dependency tree resolution and lockfile support
 - Parallelized downloads and extraction, with caching and deduplication
@@ -41,4 +47,4 @@
 - Robust error handling and reporting
 - Beautiful, colored CLI output with progress bars
 - Lockfile pruning after uninstall
-- Global cache/store in user's home directory 
+- Global cache/store in user's home directory

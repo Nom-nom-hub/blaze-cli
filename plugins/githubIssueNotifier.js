@@ -1,9 +1,17 @@
+require("dotenv").config();
 function checkGithubIssues() {
-  // Placeholder: In a real implementation, query GitHub API for each package
-  console.log('[githubIssueNotifier] (Placeholder) Check for open security issues on GitHub for installed packages.');
+  const github = process.env.GITHUB_TOKEN;
+  if (!github) {
+    console.warn(
+      "[githubIssueNotifier] No GitHub token set in .env. Skipping issue check.",
+    );
+    return;
+  }
+  // TODO: Use GitHub API to check for open issues
+  console.log("[githubIssueNotifier] Would check GitHub issues.");
 }
 
 module.exports = {
   afterInstall: checkGithubIssues,
   afterUpdate: checkGithubIssues,
-}; 
+};

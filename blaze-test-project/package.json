@@ -1,0 +1,23 @@
+{
+  "name": "blaze-test-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "hello": "echo \"Hello from blaze! This is a custom script.\"",
+    "build": "echo \"Building project...\" && echo \"Build complete!\"",
+    "dev": "echo \"Starting development server...\" && echo \"Server running on http://localhost:3000\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "30.0.4"
+  }
+}

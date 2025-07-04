@@ -17,4 +17,5 @@ In the interest of fostering an open and welcoming environment, we as contributo
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by opening an issue or contacting the maintainers.
 
 ---
-Thank you for helping make blaze-install a friendly and inclusive project! 
+
+Thank you for helping make blaze-install a friendly and inclusive project!

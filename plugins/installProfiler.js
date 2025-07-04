@@ -1,8 +1,15 @@
-function reportInstallTimes() {
-  // Placeholder: In a real implementation, track and report install times per package
-  console.log('[installProfiler] (Placeholder) Report how long each package took to install.');
+let start;
+function beforeInstall() {
+  start = Date.now();
+}
+function afterInstall() {
+  if (start) {
+    const duration = ((Date.now() - start) / 1000).toFixed(2);
+    console.log(`[installProfiler] Install took ${duration} seconds.`);
+  }
 }
 
 module.exports = {
-  afterInstall: reportInstallTimes,
-}; 
+  beforeInstall,
+  afterInstall,
+};

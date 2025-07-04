@@ -163,4 +163,4 @@ Blaze comes with a set of example plugins to showcase the power and flexibility 
   - Warns if any dependencies are outdated after install/update (placeholder for real version check).
   - Hooks: `afterInstall`, `afterUpdate`
 
-These plugins demonstrate how easy it is to extend Blaze for real-world needs. You can write your own plugins using the same hooks and drop them into the `plugins/` directory. 
+These plugins demonstrate how easy it is to extend Blaze for real-world needs. You can write your own plugins using the same hooks and drop them into the `plugins/` directory.

@@ -68,3 +68,9 @@ logo-dark.svg
 logo-light.svg
 logo-dark-cover.svg
 blaze-install-devto-launch.md
+
+# Add the 'test/' directory to the ignore list
+test/
+
+# .env
+.env

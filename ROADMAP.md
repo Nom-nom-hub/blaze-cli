@@ -5,6 +5,7 @@ This roadmap outlines the planned evolution of blaze-install, focusing on new fe
 ---
 
 ## **Q3–Q4 2025: Polish, Stability, and Ecosystem**
+
 - **Stability & Polish**
   - Ongoing bug fixes and performance improvements
   - More robust error handling and diagnostics
@@ -22,6 +23,7 @@ This roadmap outlines the planned evolution of blaze-install, focusing on new fe
 ---
 
 ## **2026: Advanced Features & Integrations**
+
 - **Monorepo & Workspace Tools**
   - Smarter workspace linking/unlinking
   - Batch upgrades and workspace-aware scripts
@@ -48,6 +50,7 @@ This roadmap outlines the planned evolution of blaze-install, focusing on new fe
 ---
 
 ## **2027: Ecosystem, Enterprise, and Expansion**
+
 - **Community Growth**
   - Monthly community calls and hackathons
   - Contributor onboarding improvements
@@ -67,10 +70,11 @@ This roadmap outlines the planned evolution of blaze-install, focusing on new fe
 ---
 
 ## **Ongoing & Community-Driven**
+
 - Respond to user feedback and evolving best practices
 - Continuous performance, security, and UX enhancements
 - Feature requests and contributions always welcome!
 
 ---
 
-*This roadmap is a living document. Priorities may shift based on user needs and ecosystem changes. To suggest features or improvements, open an issue or join the community chat!* 
+_This roadmap is a living document. Priorities may shift based on user needs and ecosystem changes. To suggest features or improvements, open an issue or join the community chat!_

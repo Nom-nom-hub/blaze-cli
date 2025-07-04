@@ -7,7 +7,7 @@
     "blaze": "bin/blaze-install.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test/test-blaze-features.js && node test/test-blaze-plugins.js && node test/test-blaze-watch.js && node test/blaze-watch-test.js",
     "preinstall": "echo preinstall script",
     "install": "echo install script",
     "postinstall": "echo postinstall script",
@@ -22,7 +22,8 @@
     "preversion": "echo preversion script",
     "version": "echo version script",
     "postversion": "echo postversion script",
-    "testscript": "echo testscript ran"
+    "testscript": "echo testscript ran",
+    "hello": "echo Hello from pkg-a!"
   },
   "keywords": [
     "package-manager",
@@ -45,16 +46,23 @@
     "chalk": "latest",
     "chokidar": "^4.0.3",
     "cli-progress": "latest",
+    "dotenv": "^17.0.1",
     "glob": "latest",
     "ini": "latest",
     "inquirer": "latest",
+    "jiti": "^2.4.2",
     "lodash": "^4.17.21",
+    "open": "^10.1.2",
+    "randomcolor": "^0.6.2",
     "semver": "latest",
     "tar": "latest",
     "yallist": "latest"
   },
   "devDependencies": {
-    "eslint": "latest"
+    "@eslint/js": "^9.30.1",
+    "eslint": "^8.57.1",
+    "globals": "^16.3.0",
+    "is-odd": "^3.0.1"
   },
   "peerDependencies": {
     "@types/node": ">=18"
