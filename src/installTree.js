@@ -189,30 +189,7 @@ async function downloadWithRetry(url, dest, headers = {}, maxRetries = 3) {
   throw lastErr;
 }
 
-async function downloadWithSSH(sshUrl, ref, dest) {
-  const { execSync } = require('child_process');
-  const os = require('os');
-  const tempDir = path.join(os.tmpdir(), `blaze-ssh-${Date.now()}`);
-  
-  try {
-    // Clone the repo
-    execSync(`git clone --depth 1 --branch ${ref} ${sshUrl} "${tempDir}"`, { stdio: 'pipe' });
-    
-    // Create tarball
-    execSync(`tar -czf "${dest}" -C "${tempDir}" .`, { stdio: 'pipe' });
-    
-    if (isVerbose) {
-      console.log(chalk.cyan(`Downloaded via SSH: ${sshUrl}#${ref}`));
-    }
-  } finally {
-    // Clean up temp directory
-    try {
-      await fs.rm(tempDir, { recursive: true, force: true });
-    } catch (err) {
-      // Ignore cleanup errors
-    }
-  }
-}
+const { downloadWithSSH, getGitHubAuthHeaders } = require('./sshHelper');
 
 function validateGithubOrTarballSpec(spec) {
   if (isTarballUrl(spec)) return true;
@@ -227,31 +204,7 @@ function sanitizePackageDirName(name) {
 
 const isVerbose = process.argv.includes('--verbose');
 
-// Function to get GitHub authentication headers (supports both token and SSH)
-async function getGitHubAuthHeaders() {
-  const headers = {};
-  
-  // First try GITHUB_TOKEN
-  const token = process.env.GITHUB_TOKEN;
-  if (token) {
-    headers['Authorization'] = `token ${token}`;
-    return headers;
-  }
-  
-  // Then try SSH key authentication
-  try {
-    const { execSync } = require('child_process');
-    const sshKey = execSync('ssh-add -l', { encoding: 'utf8', stdio: 'pipe' });
-    if (sshKey && !sshKey.includes('no identities')) {
-      // SSH key is available, use SSH URL instead of HTTPS
-      return { useSSH: true };
-    }
-  } catch (err) {
-    // SSH key not available or ssh-add failed
-  }
-  
-  return headers;
-}
+
 
 async function installTree(tree, destDir, options = {}) {
   const nodeModulesDir = path.join(destDir, "node_modules");
@@ -348,7 +301,7 @@ async function installTree(tree, destDir, options = {}) {
         try {
           if (useSSH && tarballMeta.sshUrl) {
             // Use SSH to clone and create tarball
-            await downloadWithSSH(tarballMeta.sshUrl, tarballMeta.ref, tarballPath);
+            await downloadWithSSH(tarballMeta.sshUrl, tarballMeta.ref, tarballPath, isVerbose);
           } else {
             await downloadWithRetry(tarballMeta.tarballUrl, tarballPath, headers, 3);
           }
