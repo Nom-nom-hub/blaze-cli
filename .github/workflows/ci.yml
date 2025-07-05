@@ -16,30 +16,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: npm ci
+- name: Install dependencies
+run: npm ci
 
-      - name: Build (must come before CLI)
-        run: npm run build
+- name: Build (must come before CLI)
+run: npm run build
 
       - name: List lib directory (debug)
         run: ls -l lib
 
-      - name: Clean non-npm specs from package.json
-        run: node bin/blaze-install.js clean-github-specs
+- name: Clean non-npm specs from package.json
+run: node bin/blaze-install.js clean-github-specs
 
-      - name: Lint (optional)
-        run: npm run lint
-        continue-on-error: true
+- name: Lint (optional)
+run: npm run lint
+continue-on-error: true
 
-      - name: Run tests (if you have tests)
-        run: npm test
-        continue-on-error: true
+- name: Run tests (if you have tests)
+run: npm test
+continue-on-error: true
 
-      - name: Run feature script (optional)
-        run: node test-blaze-features.js
-        continue-on-error: true
+- name: Run feature script (optional)
+run: node test-blaze-features.js
+continue-on-error: true
 
-      - name: Check build (optional)
-        run: npm run build
-        continue-on-error: true
+- name: Check build (optional)
+run: npm run build
+continue-on-error: true

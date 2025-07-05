@@ -25,7 +25,6 @@ async function runLifecycleScript(pkgDir, scriptName, pkgName) {
           {
             cwd: pkgDir,
             stdio: "inherit",
-            shell: true,
           },
         );
         child.on("close", async (code) => {
@@ -155,8 +154,10 @@ function parseGithubSpec(spec) {
   const user = m[1], repo = m[2], ref = m[4] || 'main';
   return {
     tarballUrl: `https://codeload.github.com/${user}/${repo}/tar.gz/${ref}`,
+    sshUrl: `git@github.com:${user}/${repo}.git`,
     name: repo,
     ref,
+    user,
   };
 }
 
@@ -188,6 +189,31 @@ async function downloadWithRetry(url, dest, headers = {}, maxRetries = 3) {
   throw lastErr;
 }
 
+async function downloadWithSSH(sshUrl, ref, dest) {
+  const { execSync } = require('child_process');
+  const os = require('os');
+  const tempDir = path.join(os.tmpdir(), `blaze-ssh-${Date.now()}`);
+  
+  try {
+    // Clone the repo
+    execSync(`git clone --depth 1 --branch ${ref} ${sshUrl} "${tempDir}"`, { stdio: 'pipe' });
+    
+    // Create tarball
+    execSync(`tar -czf "${dest}" -C "${tempDir}" .`, { stdio: 'pipe' });
+    
+    if (isVerbose) {
+      console.log(chalk.cyan(`Downloaded via SSH: ${sshUrl}#${ref}`));
+    }
+  } finally {
+    // Clean up temp directory
+    try {
+      await fs.rm(tempDir, { recursive: true, force: true });
+    } catch (err) {
+      // Ignore cleanup errors
+    }
+  }
+}
+
 function validateGithubOrTarballSpec(spec) {
   if (isTarballUrl(spec)) return true;
   if (parseGithubSpec(spec)) return true;
@@ -200,6 +226,32 @@ function sanitizePackageDirName(name) {
 }
 
 const isVerbose = process.argv.includes('--verbose');
+
+// Function to get GitHub authentication headers (supports both token and SSH)
+async function getGitHubAuthHeaders() {
+  const headers = {};
+  
+  // First try GITHUB_TOKEN
+  const token = process.env.GITHUB_TOKEN;
+  if (token) {
+    headers['Authorization'] = `token ${token}`;
+    return headers;
+  }
+  
+  // Then try SSH key authentication
+  try {
+    const { execSync } = require('child_process');
+    const sshKey = execSync('ssh-add -l', { encoding: 'utf8', stdio: 'pipe' });
+    if (sshKey && !sshKey.includes('no identities')) {
+      // SSH key is available, use SSH URL instead of HTTPS
+      return { useSSH: true };
+    }
+  } catch (err) {
+    // SSH key not available or ssh-add failed
+  }
+  
+  return headers;
+}
 
 async function installTree(tree, destDir, options = {}) {
   const nodeModulesDir = path.join(destDir, "node_modules");
@@ -243,7 +295,7 @@ async function installTree(tree, destDir, options = {}) {
       }
       const gh = parseGithubSpec(info.version);
       if (gh) {
-        return { name, info, tarballMeta: { tarballUrl: gh.tarballUrl } };
+        return { name, info, tarballMeta: gh };
       }
       const tarballMeta = await getTarballUrl(name, info.version);
       return { name, info, tarballMeta };
@@ -282,15 +334,31 @@ async function installTree(tree, destDir, options = {}) {
       } else {
         // Download with retry and auth if needed
         let headers = {};
+        let useSSH = false;
+        
         if (tarballMeta.tarballUrl.includes('codeload.github.com')) {
-          const token = process.env.GITHUB_TOKEN;
-          if (token) headers['Authorization'] = `token ${token}`;
+          const auth = await getGitHubAuthHeaders();
+          if (auth.useSSH) {
+            useSSH = true;
+          } else if (auth.Authorization) {
+            headers = auth;
+          }
         }
+        
         try {
-          await downloadWithRetry(tarballMeta.tarballUrl, tarballPath, headers, 3);
+          if (useSSH && tarballMeta.sshUrl) {
+            // Use SSH to clone and create tarball
+            await downloadWithSSH(tarballMeta.sshUrl, tarballMeta.ref, tarballPath);
+          } else {
+            await downloadWithRetry(tarballMeta.tarballUrl, tarballPath, headers, 3);
+          }
         } catch (err) {
-          if (tarballMeta.tarballUrl.includes('codeload.github.com') && (!process.env.GITHUB_TOKEN)) {
-            console.error(chalk.red(`Failed to download from GitHub. If this is a private repo, set GITHUB_TOKEN env var with a personal access token.`));
+          if (tarballMeta.tarballUrl.includes('codeload.github.com')) {
+            if (!process.env.GITHUB_TOKEN) {
+              console.error(chalk.red(`Failed to download from GitHub. For private repos, either:`));
+              console.error(chalk.red(`  1. Set GITHUB_TOKEN env var with a personal access token, or`));
+              console.error(chalk.red(`  2. Add your SSH key with 'ssh-add' for SSH authentication`));
+            }
           }
           if (err.response && (err.response.status === 403 || err.response.status === 404)) {
             console.error(chalk.red(`HTTP ${err.response.status} for ${tarballMeta.tarballUrl}. Check repo access or token.`));

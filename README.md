@@ -85,6 +85,53 @@ Blaze supports installing packages directly from GitHub or tarball URLs:
 
 These packages will be downloaded, extracted, and added to your dependencies and lockfile for reproducible installs.
 
+## Installing Private GitHub Repositories (SSH)
+
+Blaze supports installing private GitHub repositories using SSH keys. Here's how to set it up:
+
+1. **Generate and Add Your SSH Key to GitHub**
+   - If you don't already have an SSH key, run:
+     ```sh
+     ssh-keygen -t ed25519 -C "your_email@example.com"
+     ```
+   - Add the public key (`id_ed25519.pub`) to your [GitHub SSH keys](https://github.com/settings/keys).
+
+2. **Start the SSH Agent and Add Your Key (Windows)**
+   - Open PowerShell as Administrator and run:
+     ```powershell
+     Set-Service -Name ssh-agent -StartupType Manual
+     Start-Service ssh-agent
+     ssh-add $env:USERPROFILE\.ssh\id_ed25519
+     ```
+   - On macOS/Linux, use:
+     ```sh
+     eval $(ssh-agent -s)
+     ssh-add ~/.ssh/id_ed25519
+     ```
+
+3. **Add Your Private Repo to `package.json`**
+   ```json
+   "dependencies": {
+     "YourPackage": "github:your-username/your-private-repo#main"
+   }
+   ```
+
+4. **Remove the Old Lockfile (if present)**
+   ```sh
+   del blaze-lock.json
+   # or
+   Remove-Item blaze-lock.json
+   ```
+
+5. **Install with Blaze**
+   ```sh
+   node bin/blaze-install.js install
+   # or, from a subproject:
+   node ../bin/blaze-install.js install
+   ```
+
+Blaze will now use your SSH key to fetch private GitHub repos. If you see errors, make sure your SSH key is loaded and added to GitHub, and that you have access to the repo.
+
 ## Usage
 
 Run in your project directory:

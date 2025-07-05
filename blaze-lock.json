@@ -1,4 +1,126 @@
 {
+  "ini": {
+    "version": "5.0.0",
+    "dependencies": {},
+    "parent": null
+  },
+  "dotenv": {
+    "version": "17.0.1",
+    "dependencies": {},
+    "parent": null
+  },
+  "boxen": {
+    "version": "8.0.1",
+    "dependencies": {
+      "ansi-align": "^3.0.1",
+      "camelcase": "^8.0.0",
+      "chalk": "^5.3.0",
+      "cli-boxes": "^3.0.0",
+      "string-width": "^7.2.0",
+      "type-fest": "^4.21.0",
+      "widest-line": "^5.0.0",
+      "wrap-ansi": "^9.0.0"
+    },
+    "parent": null
+  },
+  "wrap-ansi": {
+    "version": "9.0.0",
+    "dependencies": {
+      "ansi-styles": "^6.2.1",
+      "string-width": "^7.0.0",
+      "strip-ansi": "^7.1.0"
+    },
+    "parent": "boxen"
+  },
+  "widest-line": {
+    "version": "5.0.0",
+    "dependencies": {
+      "string-width": "^7.0.0"
+    },
+    "parent": "boxen"
+  },
+  "string-width": {
+    "version": "7.2.0",
+    "dependencies": {
+      "emoji-regex": "^10.3.0",
+      "get-east-asian-width": "^1.0.0",
+      "strip-ansi": "^7.1.0"
+    },
+    "parent": "widest-line"
+  },
+  "type-fest": {
+    "version": "4.41.0",
+    "dependencies": {},
+    "parent": "boxen"
+  },
+  "strip-ansi": {
+    "version": "7.1.0",
+    "dependencies": {
+      "ansi-regex": "^6.0.1"
+    },
+    "parent": "string-width"
+  },
+  "ansi-align": {
+    "version": "3.0.1",
+    "dependencies": {
+      "string-width": "^4.1.0"
+    },
+    "parent": "boxen"
+  },
+  "cli-boxes": {
+    "version": "4.0.1",
+    "dependencies": {},
+    "parent": "boxen"
+  },
+  "glob": {
+    "version": "11.0.3",
+    "dependencies": {
+      "foreground-child": "^3.3.1",
+      "jackspeak": "^4.1.1",
+      "minimatch": "^10.0.3",
+      "minipass": "^7.1.2",
+      "package-json-from-dist": "^1.0.0",
+      "path-scurry": "^2.0.0"
+    },
+    "parent": null
+  },
+  "package-json-from-dist": {
+    "version": "1.0.1",
+    "dependencies": {},
+    "parent": "glob"
+  },
+  "jackspeak": {
+    "version": "4.1.1",
+    "dependencies": {
+      "@isaacs/cliui": "^8.0.2"
+    },
+    "parent": "glob"
+  },
+  "minipass": {
+    "version": "7.1.2",
+    "dependencies": {},
+    "parent": "glob"
+  },
+  "path-scurry": {
+    "version": "2.0.0",
+    "dependencies": {
+      "lru-cache": "^11.0.0",
+      "minipass": "^7.1.2"
+    },
+    "parent": "glob"
+  },
+  "minimatch": {
+    "version": "10.0.3",
+    "dependencies": {
+      "@isaacs/brace-expansion": "^5.0.0"
+    },
+    "parent": "glob"
+  },
+  "lru-cache": {
+    "version": "11.1.0",
+    "dependencies": {},
+    "parent": "path-scurry"
+  },
   "chokidar": {
     "version": "4.0.3",
     "dependencies": {
@@ -13,45 +135,15 @@
     },
     "parent": null
   },
-  "dotenv": {
-    "version": "17.0.0",
+  "readdirp": {
+    "version": "4.1.2",
     "dependencies": {},
-    "parent": null
+    "parent": "chokidar"
   },
-  "chalk": {
-    "version": "5.4.1",
+  "ansi-regex": {
+    "version": "6.1.0",
     "dependencies": {},
-    "parent": null
-  },
-  "ini": {
-    "version": "5.0.0",
-    "dependencies": {},
-    "parent": null
-  },
-  "inquirer": {
-    "version": "12.6.3",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/prompts": "^7.5.3",
-      "@inquirer/type": "^3.0.7",
-      "ansi-escapes": "^4.3.2",
-      "mute-stream": "^2.0.0",
-      "run-async": "^3.0.0",
-      "rxjs": "^7.8.2"
-    },
-    "parent": null
-  },
-  "glob": {
-    "version": "11.0.3",
-    "dependencies": {
-      "foreground-child": "^3.3.1",
-      "jackspeak": "^4.1.1",
-      "minimatch": "^10.0.3",
-      "minipass": "^7.1.2",
-      "package-json-from-dist": "^1.0.0",
-      "path-scurry": "^2.0.0"
-    },
-    "parent": null
+    "parent": "strip-ansi"
   },
   "axios": {
     "version": "1.10.0",
@@ -62,70 +154,6 @@
     },
     "parent": null
   },
-  "string-width": {
-    "version": "7.2.0",
-    "dependencies": {
-      "emoji-regex": "^10.3.0",
-      "get-east-asian-width": "^1.0.0",
-      "strip-ansi": "^7.1.0"
-    },
-    "parent": "cli-progress"
-  },
-  "readdirp": {
-    "version": "4.1.2",
-    "dependencies": {},
-    "parent": "chokidar"
-  },
-  "ansi-escapes": {
-    "version": "7.0.0",
-    "dependencies": {
-      "environment": "^1.0.0"
-    },
-    "parent": "inquirer"
-  },
-  "@inquirer/type": {
-    "version": "3.0.7",
-    "dependencies": {},
-    "parent": "inquirer"
-  },
-  "@inquirer/core": {
-    "version": "10.1.13",
-    "dependencies": {
-      "@inquirer/figures": "^1.0.12",
-      "@inquirer/type": "^3.0.7",
-      "ansi-escapes": "^4.3.2",
-      "cli-width": "^4.1.0",
-      "mute-stream": "^2.0.0",
-      "signal-exit": "^4.1.0",
-      "wrap-ansi": "^6.2.0",
-      "yoctocolors-cjs": "^2.1.2"
-    },
-    "parent": "inquirer"
-  },
-  "@inquirer/prompts": {
-    "version": "7.5.3",
-    "dependencies": {
-      "@inquirer/checkbox": "^4.1.8",
-      "@inquirer/confirm": "^5.1.12",
-      "@inquirer/editor": "^4.2.13",
-      "@inquirer/expand": "^4.0.15",
-      "@inquirer/input": "^4.1.12",
-      "@inquirer/number": "^3.0.15",
-      "@inquirer/password": "^4.0.15",
-      "@inquirer/rawlist": "^4.1.3",
-      "@inquirer/search": "^3.0.15",
-      "@inquirer/select": "^4.2.3"
-    },
-    "parent": "inquirer"
-  },
-  "run-async": {
-    "version": "4.0.4",
-    "dependencies": {
-      "oxlint": "^1.2.0",
-      "prettier": "^3.5.3"
-    },
-    "parent": "inquirer"
-  },
   "foreground-child": {
     "version": "3.3.1",
     "dependencies": {
@@ -134,45 +162,43 @@
     },
     "parent": "glob"
   },
-  "mute-stream": {
-    "version": "2.0.0",
-    "dependencies": {},
-    "parent": "@inquirer/core"
-  },
-  "jackspeak": {
-    "version": "4.1.1",
-    "dependencies": {
-      "@isaacs/cliui": "^8.0.2"
-    },
-    "parent": "glob"
-  },
-  "minimatch": {
-    "version": "10.0.3",
-    "dependencies": {
-      "@isaacs/brace-expansion": "^5.0.0"
-    },
-    "parent": "glob"
-  },
-  "path-scurry": {
-    "version": "2.0.0",
-    "dependencies": {
-      "lru-cache": "^11.0.0",
-      "minipass": "^7.1.2"
-    },
-    "parent": "glob"
-  },
-  "package-json-from-dist": {
-    "version": "1.0.1",
-    "dependencies": {},
-    "parent": "glob"
-  },
-  "minipass": {
-    "version": "7.1.2",
-    "dependencies": {},
-    "parent": "path-scurry"
-  },
   "proxy-from-env": {
     "version": "1.1.0",
+    "dependencies": {},
+    "parent": "axios"
+  },
+  "signal-exit": {
+    "version": "4.1.0",
+    "dependencies": {},
+    "parent": "foreground-child"
+  },
+  "get-east-asian-width": {
+    "version": "1.3.0",
+    "dependencies": {},
+    "parent": "string-width"
+  },
+  "ansi-styles": {
+    "version": "6.2.1",
+    "dependencies": {},
+    "parent": "wrap-ansi"
+  },
+  "emoji-regex": {
+    "version": "10.4.0",
+    "dependencies": {},
+    "parent": "string-width"
+  },
+  "chalk": {
+    "version": "5.4.1",
+    "dependencies": {},
+    "parent": null
+  },
+  "camelcase": {
+    "version": "8.0.0",
+    "dependencies": {},
+    "parent": "boxen"
+  },
+  "follow-redirects": {
+    "version": "1.15.9",
     "dependencies": {},
     "parent": "axios"
   },
@@ -187,153 +213,19 @@
     },
     "parent": "axios"
   },
-  "follow-redirects": {
-    "version": "1.15.9",
-    "dependencies": {},
-    "parent": "axios"
-  },
-  "rxjs": {
-    "version": "7.8.2",
+  "@isaacs/brace-expansion": {
+    "version": "5.0.0",
     "dependencies": {
-      "tslib": "^2.1.0"
+      "@isaacs/balanced-match": "^4.0.1"
     },
-    "parent": "inquirer"
+    "parent": "minimatch"
   },
-  "environment": {
-    "version": "1.1.0",
-    "dependencies": {},
-    "parent": "ansi-escapes"
-  },
-  "get-east-asian-width": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "string-width"
-  },
-  "strip-ansi": {
-    "version": "7.1.0",
+  "mime-types": {
+    "version": "3.0.1",
     "dependencies": {
-      "ansi-regex": "^6.0.1"
+      "mime-db": "^1.54.0"
     },
-    "parent": "string-width"
-  },
-  "emoji-regex": {
-    "version": "10.4.0",
-    "dependencies": {},
-    "parent": "string-width"
-  },
-  "cli-width": {
-    "version": "4.1.0",
-    "dependencies": {},
-    "parent": "@inquirer/core"
-  },
-  "signal-exit": {
-    "version": "4.1.0",
-    "dependencies": {},
-    "parent": "foreground-child"
-  },
-  "wrap-ansi": {
-    "version": "9.0.0",
-    "dependencies": {
-      "ansi-styles": "^6.2.1",
-      "string-width": "^7.0.0",
-      "strip-ansi": "^7.1.0"
-    },
-    "parent": "@inquirer/core"
-  },
-  "yoctocolors-cjs": {
-    "version": "2.1.2",
-    "dependencies": {},
-    "parent": "@inquirer/core"
-  },
-  "@inquirer/input": {
-    "version": "4.1.12",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/type": "^3.0.7"
-    },
-    "parent": "@inquirer/prompts"
-  },
-  "@inquirer/confirm": {
-    "version": "5.1.12",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/type": "^3.0.7"
-    },
-    "parent": "@inquirer/prompts"
-  },
-  "@inquirer/figures": {
-    "version": "1.0.12",
-    "dependencies": {},
-    "parent": "@inquirer/core"
-  },
-  "@inquirer/expand": {
-    "version": "4.0.15",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/type": "^3.0.7",
-      "yoctocolors-cjs": "^2.1.2"
-    },
-    "parent": "@inquirer/prompts"
-  },
-  "@inquirer/checkbox": {
-    "version": "4.1.8",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/figures": "^1.0.12",
-      "@inquirer/type": "^3.0.7",
-      "ansi-escapes": "^4.3.2",
-      "yoctocolors-cjs": "^2.1.2"
-    },
-    "parent": "@inquirer/prompts"
-  },
-  "cross-spawn": {
-    "version": "7.0.6",
-    "dependencies": {
-      "which": "^2.0.1",
-      "path-key": "^3.1.0",
-      "shebang-command": "^2.0.0"
-    },
-    "parent": "foreground-child"
-  },
-  "@inquirer/password": {
-    "version": "4.0.15",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/type": "^3.0.7",
-      "ansi-escapes": "^4.3.2"
-    },
-    "parent": "@inquirer/prompts"
-  },
-  "@inquirer/editor": {
-    "version": "4.2.13",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/type": "^3.0.7",
-      "external-editor": "^3.1.0"
-    },
-    "parent": "@inquirer/prompts"
-  },
-  "@inquirer/rawlist": {
-    "version": "4.1.3",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/type": "^3.0.7",
-      "yoctocolors-cjs": "^2.1.2"
-    },
-    "parent": "@inquirer/prompts"
-  },
-  "oxlint": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "run-async"
-  },
-  "@inquirer/number": {
-    "version": "3.0.15",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/type": "^3.0.7"
-    },
-    "parent": "@inquirer/prompts"
+    "parent": "form-data"
   },
   "@isaacs/cliui": {
     "version": "8.0.2",
@@ -347,21 +239,69 @@
     },
     "parent": "jackspeak"
   },
-  "@isaacs/brace-expansion": {
+  "cross-spawn": {
+    "version": "7.0.6",
+    "dependencies": {
+      "which": "^2.0.1",
+      "path-key": "^3.1.0",
+      "shebang-command": "^2.0.0"
+    },
+    "parent": "foreground-child"
+  },
+  "mime-db": {
+    "version": "1.54.0",
+    "dependencies": {},
+    "parent": "mime-types"
+  },
+  "string-width-cjs": {
+    "version": "5.1.1",
+    "dependencies": {},
+    "parent": "@isaacs/cliui"
+  },
+  "wrap-ansi-cjs": {
+    "version": "8.0.0",
+    "dependencies": {},
+    "parent": "@isaacs/cliui"
+  },
+  "strip-ansi-cjs": {
+    "version": "8.0.0",
+    "dependencies": {},
+    "parent": "@isaacs/cliui"
+  },
+  "which": {
     "version": "5.0.0",
     "dependencies": {
-      "@isaacs/balanced-match": "^4.0.1"
+      "isexe": "^3.1.1"
     },
-    "parent": "minimatch"
+    "parent": "cross-spawn"
   },
-  "lru-cache": {
-    "version": "11.1.0",
+  "path-key": {
+    "version": "4.0.0",
     "dependencies": {},
-    "parent": "path-scurry"
+    "parent": "cross-spawn"
   },
-  "asynckit": {
-    "version": "0.4.0",
+  "shebang-command": {
+    "version": "2.0.0",
+    "dependencies": {
+      "shebang-regex": "^3.0.0"
+    },
+    "parent": "cross-spawn"
+  },
+  "shebang-regex": {
+    "version": "4.0.0",
     "dependencies": {},
+    "parent": "shebang-command"
+  },
+  "isexe": {
+    "version": "3.1.1",
+    "dependencies": {},
+    "parent": "which"
+  },
+  "hasown": {
+    "version": "2.0.2",
+    "dependencies": {
+      "function-bind": "^1.1.2"
+    },
     "parent": "form-data"
   },
   "es-set-tostringtag": {
@@ -374,18 +314,9 @@
     },
     "parent": "form-data"
   },
-  "hasown": {
-    "version": "2.0.2",
-    "dependencies": {
-      "function-bind": "^1.1.2"
-    },
-    "parent": "es-set-tostringtag"
-  },
-  "mime-types": {
-    "version": "3.0.1",
-    "dependencies": {
-      "mime-db": "^1.54.0"
-    },
+  "asynckit": {
+    "version": "0.4.0",
+    "dependencies": {},
     "parent": "form-data"
   },
   "combined-stream": {
@@ -395,78 +326,15 @@
     },
     "parent": "form-data"
   },
-  "tslib": {
-    "version": "2.8.1",
-    "dependencies": {},
-    "parent": "rxjs"
-  },
-  "prettier": {
-    "version": "3.6.2",
-    "dependencies": {},
-    "parent": "run-async"
-  },
-  "ansi-regex": {
-    "version": "6.1.0",
-    "dependencies": {},
-    "parent": "strip-ansi"
-  },
-  "ansi-styles": {
-    "version": "6.2.1",
-    "dependencies": {},
-    "parent": "wrap-ansi"
-  },
-  "which": {
-    "version": "5.0.0",
-    "dependencies": {
-      "isexe": "^3.1.1"
-    },
-    "parent": "cross-spawn"
-  },
-  "shebang-command": {
-    "version": "2.0.0",
-    "dependencies": {
-      "shebang-regex": "^3.0.0"
-    },
-    "parent": "cross-spawn"
-  },
-  "path-key": {
-    "version": "4.0.0",
-    "dependencies": {},
-    "parent": "cross-spawn"
-  },
-  "external-editor": {
-    "version": "3.1.0",
-    "dependencies": {
-      "chardet": "^0.7.0",
-      "iconv-lite": "^0.4.24",
-      "tmp": "^0.0.33"
-    },
-    "parent": "@inquirer/editor"
-  },
-  "wrap-ansi-cjs": {
-    "version": "8.0.0",
-    "dependencies": {},
-    "parent": "@isaacs/cliui"
-  },
-  "string-width-cjs": {
-    "version": "5.1.1",
-    "dependencies": {},
-    "parent": "@isaacs/cliui"
-  },
-  "@oxlint/win32-x64": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "run-async"
-  },
-  "strip-ansi-cjs": {
-    "version": "8.0.0",
-    "dependencies": {},
-    "parent": "@isaacs/cliui"
-  },
   "@isaacs/balanced-match": {
     "version": "4.0.1",
     "dependencies": {},
     "parent": "@isaacs/brace-expansion"
+  },
+  "function-bind": {
+    "version": "1.1.2",
+    "dependencies": {},
+    "parent": "hasown"
   },
   "get-intrinsic": {
     "version": "1.3.0",
@@ -484,6 +352,16 @@
     },
     "parent": "es-set-tostringtag"
   },
+  "delayed-stream": {
+    "version": "1.0.0",
+    "dependencies": {},
+    "parent": "combined-stream"
+  },
+  "es-errors": {
+    "version": "1.3.0",
+    "dependencies": {},
+    "parent": "get-intrinsic"
+  },
   "has-tostringtag": {
     "version": "1.0.2",
     "dependencies": {
@@ -491,65 +369,16 @@
     },
     "parent": "es-set-tostringtag"
   },
-  "function-bind": {
-    "version": "1.1.2",
+  "es-define-property": {
+    "version": "1.0.1",
     "dependencies": {},
     "parent": "get-intrinsic"
-  },
-  "es-errors": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "get-intrinsic"
-  },
-  "delayed-stream": {
-    "version": "1.0.0",
-    "dependencies": {},
-    "parent": "combined-stream"
-  },
-  "mime-db": {
-    "version": "1.54.0",
-    "dependencies": {},
-    "parent": "mime-types"
-  },
-  "isexe": {
-    "version": "3.1.1",
-    "dependencies": {},
-    "parent": "which"
-  },
-  "shebang-regex": {
-    "version": "4.0.0",
-    "dependencies": {},
-    "parent": "shebang-command"
-  },
-  "chardet": {
-    "version": "2.1.0",
-    "dependencies": {},
-    "parent": "external-editor"
-  },
-  "iconv-lite": {
-    "version": "0.6.3",
-    "dependencies": {
-      "safer-buffer": ">= 2.1.2 < 3.0.0"
-    },
-    "parent": "external-editor"
-  },
-  "tmp": {
-    "version": "0.2.3",
-    "dependencies": {},
-    "parent": "external-editor"
   },
   "call-bind-apply-helpers": {
     "version": "1.0.2",
     "dependencies": {
       "es-errors": "^1.3.0",
       "function-bind": "^1.1.2"
-    },
-    "parent": "get-intrinsic"
-  },
-  "es-object-atoms": {
-    "version": "1.1.1",
-    "dependencies": {
-      "es-errors": "^1.3.0"
     },
     "parent": "get-intrinsic"
   },
@@ -561,25 +390,22 @@
     },
     "parent": "get-intrinsic"
   },
-  "es-define-property": {
-    "version": "1.0.1",
-    "dependencies": {},
-    "parent": "get-intrinsic"
-  },
-  "has-symbols": {
-    "version": "1.1.0",
-    "dependencies": {},
-    "parent": "get-intrinsic"
-  },
   "gopd": {
     "version": "1.2.0",
     "dependencies": {},
     "parent": "get-intrinsic"
   },
-  "@oxlint/win32-arm64": {
-    "version": "1.3.0",
+  "es-object-atoms": {
+    "version": "1.1.1",
+    "dependencies": {
+      "es-errors": "^1.3.0"
+    },
+    "parent": "get-proto"
+  },
+  "has-symbols": {
+    "version": "1.1.0",
     "dependencies": {},
-    "parent": "run-async"
+    "parent": "has-tostringtag"
   },
   "dunder-proto": {
     "version": "1.0.1",
@@ -590,69 +416,23 @@
     },
     "parent": "get-proto"
   },
-  "safer-buffer": {
-    "version": "2.1.2",
-    "dependencies": {},
-    "parent": "iconv-lite"
-  },
-  "@oxlint/linux-x64-gnu": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "run-async"
-  },
   "math-intrinsics": {
     "version": "1.1.0",
     "dependencies": {},
     "parent": "get-intrinsic"
   },
-  "@inquirer/search": {
-    "version": "3.0.15",
+  "open": {
+    "version": "10.1.2",
     "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/figures": "^1.0.12",
-      "@inquirer/type": "^3.0.7",
-      "yoctocolors-cjs": "^2.1.2"
+      "default-browser": "^5.2.1",
+      "define-lazy-prop": "^3.0.0",
+      "is-inside-container": "^1.0.0",
+      "is-wsl": "^3.1.0"
     },
-    "parent": "@inquirer/prompts"
+    "parent": null
   },
-  "@inquirer/select": {
-    "version": "4.2.3",
-    "dependencies": {
-      "@inquirer/core": "^10.1.13",
-      "@inquirer/figures": "^1.0.12",
-      "@inquirer/type": "^3.0.7",
-      "ansi-escapes": "^4.3.2",
-      "yoctocolors-cjs": "^2.1.2"
-    },
-    "parent": "@inquirer/prompts"
-  },
-  "@oxlint/linux-arm64-gnu": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "run-async"
-  },
-  "@oxlint/linux-x64-musl": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "run-async"
-  },
-  "@oxlint/linux-arm64-musl": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "run-async"
-  },
-  "@oxlint/darwin-x64": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "run-async"
-  },
-  "@oxlint/darwin-arm64": {
-    "version": "1.3.0",
-    "dependencies": {},
-    "parent": "run-async"
-  },
-  "@eslint/js": {
-    "version": "9.30.1",
+  "randomcolor": {
+    "version": "0.6.2",
     "dependencies": {},
     "parent": null
   },
@@ -661,8 +441,26 @@
     "dependencies": {},
     "parent": null
   },
-  "randomcolor": {
-    "version": "0.6.2",
+  "jiti": {
+    "version": "2.4.2",
+    "dependencies": {},
+    "parent": null
+  },
+  "inquirer": {
+    "version": "12.7.0",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/prompts": "^7.6.0",
+      "@inquirer/type": "^3.0.7",
+      "ansi-escapes": "^4.3.2",
+      "mute-stream": "^2.0.0",
+      "run-async": "^4.0.4",
+      "rxjs": "^7.8.2"
+    },
+    "parent": null
+  },
+  "semver": {
+    "version": "7.7.2",
     "dependencies": {},
     "parent": null
   },
@@ -678,41 +476,104 @@
     },
     "parent": null
   },
-  "open": {
-    "version": "10.1.2",
+  "is-inside-container": {
+    "version": "1.0.0",
     "dependencies": {
-      "default-browser": "^5.2.1",
-      "define-lazy-prop": "^3.0.0",
-      "is-inside-container": "^1.0.0",
-      "is-wsl": "^3.1.0"
+      "is-docker": "^3.0.0"
     },
-    "parent": null
+    "parent": "open"
   },
-  "semver": {
-    "version": "7.7.2",
-    "dependencies": {},
-    "parent": null
+  "is-wsl": {
+    "version": "3.1.0",
+    "dependencies": {
+      "is-inside-container": "^1.0.0"
+    },
+    "parent": "open"
   },
-  "jiti": {
-    "version": "2.4.2",
+  "mute-stream": {
+    "version": "2.0.0",
     "dependencies": {},
-    "parent": null
+    "parent": "inquirer"
+  },
+  "run-async": {
+    "version": "4.0.4",
+    "dependencies": {
+      "oxlint": "^1.2.0",
+      "prettier": "^3.5.3"
+    },
+    "parent": "inquirer"
+  },
+  "minizlib": {
+    "version": "3.0.2",
+    "dependencies": {
+      "minipass": "^7.1.2"
+    },
+    "parent": "tar"
+  },
+  "mkdirp": {
+    "version": "3.0.1",
+    "dependencies": {},
+    "parent": "tar"
   },
   "yallist": {
     "version": "5.0.0",
     "dependencies": {},
     "parent": "tar"
   },
-  "chownr": {
+  "rxjs": {
+    "version": "7.8.2",
+    "dependencies": {
+      "tslib": "^2.1.0"
+    },
+    "parent": "inquirer"
+  },
+  "is-docker": {
     "version": "3.0.0",
     "dependencies": {},
-    "parent": "tar"
+    "parent": "is-inside-container"
+  },
+  "oxlint": {
+    "version": "1.5.0",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "tslib": {
+    "version": "2.8.1",
+    "dependencies": {},
+    "parent": "rxjs"
+  },
+  "prettier": {
+    "version": "3.6.2",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "@inquirer/type": {
+    "version": "3.0.7",
+    "dependencies": {},
+    "parent": "inquirer"
+  },
+  "ansi-escapes": {
+    "version": "7.0.0",
+    "dependencies": {
+      "environment": "^1.0.0"
+    },
+    "parent": "inquirer"
+  },
+  "define-lazy-prop": {
+    "version": "3.0.0",
+    "dependencies": {},
+    "parent": "open"
   },
   "@isaacs/fs-minipass": {
     "version": "4.0.1",
     "dependencies": {
       "minipass": "^7.0.4"
     },
+    "parent": "tar"
+  },
+  "chownr": {
+    "version": "3.0.0",
+    "dependencies": {},
     "parent": "tar"
   },
   "default-browser": {
@@ -723,41 +584,45 @@
     },
     "parent": "open"
   },
-  "mkdirp": {
-    "version": "3.0.1",
-    "dependencies": {},
-    "parent": "tar"
-  },
-  "minizlib": {
-    "version": "3.0.2",
+  "@inquirer/prompts": {
+    "version": "7.6.0",
     "dependencies": {
-      "minipass": "^7.1.2"
+      "@inquirer/checkbox": "^4.1.9",
+      "@inquirer/confirm": "^5.1.13",
+      "@inquirer/editor": "^4.2.14",
+      "@inquirer/expand": "^4.0.16",
+      "@inquirer/input": "^4.2.0",
+      "@inquirer/number": "^3.0.16",
+      "@inquirer/password": "^4.0.16",
+      "@inquirer/rawlist": "^4.1.4",
+      "@inquirer/search": "^3.0.16",
+      "@inquirer/select": "^4.2.4"
     },
-    "parent": "tar"
+    "parent": "inquirer"
   },
-  "is-inside-container": {
-    "version": "1.0.0",
+  "@inquirer/core": {
+    "version": "10.1.14",
     "dependencies": {
-      "is-docker": "^3.0.0"
+      "@inquirer/figures": "^1.0.12",
+      "@inquirer/type": "^3.0.7",
+      "ansi-escapes": "^4.3.2",
+      "cli-width": "^4.1.0",
+      "mute-stream": "^2.0.0",
+      "signal-exit": "^4.1.0",
+      "wrap-ansi": "^6.2.0",
+      "yoctocolors-cjs": "^2.1.2"
     },
-    "parent": "open"
+    "parent": "inquirer"
   },
-  "define-lazy-prop": {
-    "version": "3.0.0",
+  "yoctocolors-cjs": {
+    "version": "2.1.2",
     "dependencies": {},
-    "parent": "open"
+    "parent": "@inquirer/core"
   },
-  "is-wsl": {
-    "version": "3.1.0",
-    "dependencies": {
-      "is-inside-container": "^1.0.0"
-    },
-    "parent": "open"
-  },
-  "is-docker": {
-    "version": "3.0.0",
+  "@oxlint/win32-x64": {
+    "version": "1.5.0",
     "dependencies": {},
-    "parent": "is-inside-container"
+    "parent": "run-async"
   },
   "bundle-name": {
     "version": "4.1.0",
@@ -776,12 +641,181 @@
     "dependencies": {},
     "parent": "bundle-name"
   },
-  "sindresorhus/slugify": {
-    "version": "sindresorhus/slugify",
-    "dependencies": {}
+  "environment": {
+    "version": "1.1.0",
+    "dependencies": {},
+    "parent": "ansi-escapes"
   },
-  "globals": {
-    "version": "16.3.0",
+  "@inquirer/expand": {
+    "version": "4.0.16",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/type": "^3.0.7",
+      "yoctocolors-cjs": "^2.1.2"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "cli-width": {
+    "version": "4.1.0",
+    "dependencies": {},
+    "parent": "@inquirer/core"
+  },
+  "@inquirer/number": {
+    "version": "3.0.16",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/type": "^3.0.7"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "@inquirer/figures": {
+    "version": "1.0.12",
+    "dependencies": {},
+    "parent": "@inquirer/core"
+  },
+  "@inquirer/input": {
+    "version": "4.2.0",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/type": "^3.0.7"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "@inquirer/checkbox": {
+    "version": "4.1.9",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/figures": "^1.0.12",
+      "@inquirer/type": "^3.0.7",
+      "ansi-escapes": "^4.3.2",
+      "yoctocolors-cjs": "^2.1.2"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "@inquirer/confirm": {
+    "version": "5.1.13",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/type": "^3.0.7"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "@inquirer/password": {
+    "version": "4.0.16",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/type": "^3.0.7",
+      "ansi-escapes": "^4.3.2"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "@inquirer/rawlist": {
+    "version": "4.1.4",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/type": "^3.0.7",
+      "yoctocolors-cjs": "^2.1.2"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "@oxlint/win32-arm64": {
+    "version": "1.5.0",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "@inquirer/editor": {
+    "version": "4.2.14",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/type": "^3.0.7",
+      "external-editor": "^3.1.0"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "external-editor": {
+    "version": "3.1.0",
+    "dependencies": {
+      "chardet": "^0.7.0",
+      "iconv-lite": "^0.4.24",
+      "tmp": "^0.0.33"
+    },
+    "parent": "@inquirer/editor"
+  },
+  "tmp": {
+    "version": "0.2.3",
+    "dependencies": {},
+    "parent": "external-editor"
+  },
+  "chardet": {
+    "version": "2.1.0",
+    "dependencies": {},
+    "parent": "external-editor"
+  },
+  "iconv-lite": {
+    "version": "0.6.3",
+    "dependencies": {
+      "safer-buffer": ">= 2.1.2 < 3.0.0"
+    },
+    "parent": "external-editor"
+  },
+  "@oxlint/linux-x64-gnu": {
+    "version": "1.5.0",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "safer-buffer": {
+    "version": "2.1.2",
+    "dependencies": {},
+    "parent": "iconv-lite"
+  },
+  "@inquirer/search": {
+    "version": "3.0.16",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/figures": "^1.0.12",
+      "@inquirer/type": "^3.0.7",
+      "yoctocolors-cjs": "^2.1.2"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "@inquirer/select": {
+    "version": "4.2.4",
+    "dependencies": {
+      "@inquirer/core": "^10.1.14",
+      "@inquirer/figures": "^1.0.12",
+      "@inquirer/type": "^3.0.7",
+      "ansi-escapes": "^4.3.2",
+      "yoctocolors-cjs": "^2.1.2"
+    },
+    "parent": "@inquirer/prompts"
+  },
+  "@oxlint/linux-arm64-gnu": {
+    "version": "1.5.0",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "@oxlint/linux-x64-musl": {
+    "version": "1.5.0",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "@oxlint/linux-arm64-musl": {
+    "version": "1.5.0",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "@oxlint/darwin-x64": {
+    "version": "1.5.0",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "@oxlint/darwin-arm64": {
+    "version": "1.5.0",
+    "dependencies": {},
+    "parent": "run-async"
+  },
+  "uniq": {
+    "version": "1.0.1",
     "dependencies": {},
     "parent": null
   },
@@ -797,8 +831,13 @@
     "dependencies": {},
     "parent": null
   },
-  "uniq": {
-    "version": "1.0.1",
+  "is-number": {
+    "version": "7.0.0",
+    "dependencies": {},
+    "parent": "is-odd"
+  },
+  "globals": {
+    "version": "16.3.0",
     "dependencies": {},
     "parent": null
   },
@@ -807,13 +846,9 @@
     "dependencies": {},
     "parent": null
   },
-  "eslint-config-airbnb": {
-    "version": "19.0.4",
-    "dependencies": {
-      "object.assign": "^4.1.2",
-      "object.entries": "^1.1.5",
-      "eslint-config-airbnb-base": "^15.0.0"
-    },
+  "@eslint/js": {
+    "version": "9.30.1",
+    "dependencies": {},
     "parent": null
   },
   "eslint": {
@@ -857,47 +892,24 @@
     },
     "parent": null
   },
-  "is-number": {
-    "version": "7.0.0",
-    "dependencies": {},
-    "parent": "is-odd"
-  },
-  "eslint-config-airbnb-base": {
-    "version": "15.0.0",
-    "dependencies": {
-      "semver": "^6.3.0",
-      "object.assign": "^4.1.2",
-      "object.entries": "^1.1.5",
-      "confusing-browser-globals": "^1.0.10"
-    },
-    "parent": "eslint-config-airbnb"
-  },
-  "object.entries": {
-    "version": "1.1.9",
-    "dependencies": {
-      "call-bind": "^1.0.8",
-      "call-bound": "^1.0.4",
-      "define-properties": "^1.2.1",
-      "es-object-atoms": "^1.1.1"
-    },
-    "parent": "eslint-config-airbnb-base"
-  },
-  "object.assign": {
-    "version": "4.1.7",
-    "dependencies": {
-      "call-bind": "^1.0.8",
-      "call-bound": "^1.0.3",
-      "define-properties": "^1.2.1",
-      "es-object-atoms": "^1.0.0",
-      "has-symbols": "^1.1.0",
-      "object-keys": "^1.1.1"
-    },
-    "parent": "eslint-config-airbnb-base"
-  },
   "@eslint-community/eslint-utils": {
     "version": "4.7.0",
     "dependencies": {
       "eslint-visitor-keys": "^3.4.3"
+    },
+    "parent": "eslint"
+  },
+  "@eslint/config-helpers": {
+    "version": "0.3.0",
+    "dependencies": {},
+    "parent": "eslint"
+  },
+  "@eslint/config-array": {
+    "version": "0.21.0",
+    "dependencies": {
+      "@eslint/object-schema": "^2.1.6",
+      "debug": "^4.3.1",
+      "minimatch": "^3.1.2"
     },
     "parent": "eslint"
   },
@@ -906,10 +918,45 @@
     "dependencies": {},
     "parent": "eslint"
   },
-  "@eslint/config-helpers": {
-    "version": "0.3.0",
+  "eslint-visitor-keys": {
+    "version": "4.2.1",
     "dependencies": {},
+    "parent": "@eslint-community/eslint-utils"
+  },
+  "@eslint/core": {
+    "version": "0.15.1",
+    "dependencies": {
+      "@types/json-schema": "^7.0.15"
+    },
     "parent": "eslint"
+  },
+  "@eslint/plugin-kit": {
+    "version": "0.3.3",
+    "dependencies": {
+      "@eslint/core": "^0.15.1",
+      "levn": "^0.4.1"
+    },
+    "parent": "eslint"
+  },
+  "levn": {
+    "version": "0.4.1",
+    "dependencies": {
+      "prelude-ls": "^1.2.1",
+      "type-check": "~0.4.0"
+    },
+    "parent": "@eslint/plugin-kit"
+  },
+  "prelude-ls": {
+    "version": "1.2.1",
+    "dependencies": {},
+    "parent": "levn"
+  },
+  "type-check": {
+    "version": "0.4.0",
+    "dependencies": {
+      "prelude-ls": "^1.2.1"
+    },
+    "parent": "levn"
   },
   "@eslint/eslintrc": {
     "version": "3.3.1",
@@ -926,71 +973,17 @@
     },
     "parent": "eslint"
   },
-  "@eslint/config-array": {
-    "version": "0.21.0",
+  "debug": {
+    "version": "4.4.1",
     "dependencies": {
-      "@eslint/object-schema": "^2.1.6",
-      "debug": "^4.3.1",
-      "minimatch": "^3.1.2"
+      "ms": "^2.1.3"
     },
-    "parent": "eslint"
+    "parent": "@eslint/eslintrc"
   },
-  "@eslint/plugin-kit": {
-    "version": "0.3.3",
-    "dependencies": {
-      "@eslint/core": "^0.15.1",
-      "levn": "^0.4.1"
-    },
-    "parent": "eslint"
-  },
-  "@eslint/core": {
-    "version": "0.15.1",
-    "dependencies": {
-      "@types/json-schema": "^7.0.15"
-    },
-    "parent": "@eslint/plugin-kit"
-  },
-  "call-bound": {
-    "version": "1.0.4",
-    "dependencies": {
-      "call-bind-apply-helpers": "^1.0.2",
-      "get-intrinsic": "^1.3.0"
-    },
-    "parent": "object.assign"
-  },
-  "define-properties": {
-    "version": "1.2.1",
-    "dependencies": {
-      "define-data-property": "^1.0.1",
-      "has-property-descriptors": "^1.0.0",
-      "object-keys": "^1.1.1"
-    },
-    "parent": "object.entries"
-  },
-  "confusing-browser-globals": {
-    "version": "1.0.11",
+  "@eslint/object-schema": {
+    "version": "2.1.6",
     "dependencies": {},
-    "parent": "eslint-config-airbnb-base"
-  },
-  "call-bind": {
-    "version": "1.0.8",
-    "dependencies": {
-      "call-bind-apply-helpers": "^1.0.0",
-      "es-define-property": "^1.0.0",
-      "get-intrinsic": "^1.2.4",
-      "set-function-length": "^1.2.2"
-    },
-    "parent": "object.assign"
-  },
-  "object-keys": {
-    "version": "1.1.1",
-    "dependencies": {},
-    "parent": "define-properties"
-  },
-  "eslint-visitor-keys": {
-    "version": "4.2.1",
-    "dependencies": {},
-    "parent": "@eslint-community/eslint-utils"
+    "parent": "@eslint/config-array"
   },
   "import-fresh": {
     "version": "3.3.1",
@@ -1000,13 +993,9 @@
     },
     "parent": "@eslint/eslintrc"
   },
-  "espree": {
-    "version": "10.4.0",
-    "dependencies": {
-      "acorn": "^8.15.0",
-      "acorn-jsx": "^5.3.2",
-      "eslint-visitor-keys": "^4.2.1"
-    },
+  "ignore": {
+    "version": "7.0.5",
+    "dependencies": {},
     "parent": "@eslint/eslintrc"
   },
   "js-yaml": {
@@ -1016,35 +1005,36 @@
     },
     "parent": "@eslint/eslintrc"
   },
-  "@eslint/object-schema": {
-    "version": "2.1.6",
+  "ms": {
+    "version": "2.1.3",
     "dependencies": {},
-    "parent": "@eslint/config-array"
+    "parent": "debug"
   },
-  "ignore": {
-    "version": "7.0.5",
+  "resolve-from": {
+    "version": "5.0.0",
     "dependencies": {},
-    "parent": "@eslint/eslintrc"
+    "parent": "import-fresh"
   },
-  "debug": {
-    "version": "4.4.1",
+  "parent-module": {
+    "version": "3.1.0",
     "dependencies": {
-      "ms": "^2.1.3"
+      "callsites": "^4.1.0"
     },
-    "parent": "@eslint/eslintrc"
-  },
-  "levn": {
-    "version": "0.4.1",
-    "dependencies": {
-      "prelude-ls": "^1.2.1",
-      "type-check": "~0.4.0"
-    },
-    "parent": "@eslint/plugin-kit"
+    "parent": "import-fresh"
   },
   "@types/json-schema": {
     "version": "7.0.15",
     "dependencies": {},
     "parent": "@eslint/core"
+  },
+  "espree": {
+    "version": "10.4.0",
+    "dependencies": {
+      "acorn": "^8.15.0",
+      "acorn-jsx": "^5.3.2",
+      "eslint-visitor-keys": "^4.2.1"
+    },
+    "parent": "@eslint/eslintrc"
   },
   "ajv": {
     "version": "8.17.1",
@@ -1056,90 +1046,18 @@
     },
     "parent": "@eslint/eslintrc"
   },
-  "has-property-descriptors": {
-    "version": "1.0.2",
-    "dependencies": {
-      "es-define-property": "^1.0.0"
-    },
-    "parent": "define-properties"
-  },
-  "define-data-property": {
-    "version": "1.1.4",
-    "dependencies": {
-      "es-define-property": "^1.0.0",
-      "es-errors": "^1.3.0",
-      "gopd": "^1.0.1"
-    },
-    "parent": "define-properties"
-  },
-  "set-function-length": {
-    "version": "1.2.2",
-    "dependencies": {
-      "define-data-property": "^1.1.4",
-      "es-errors": "^1.3.0",
-      "function-bind": "^1.1.2",
-      "get-intrinsic": "^1.2.4",
-      "gopd": "^1.0.1",
-      "has-property-descriptors": "^1.0.2"
-    },
-    "parent": "call-bind"
-  },
-  "parent-module": {
-    "version": "3.1.0",
-    "dependencies": {
-      "callsites": "^4.1.0"
-    },
-    "parent": "import-fresh"
-  },
-  "resolve-from": {
-    "version": "5.0.0",
+  "callsites": {
+    "version": "4.2.0",
     "dependencies": {},
-    "parent": "import-fresh"
+    "parent": "parent-module"
   },
   "argparse": {
     "version": "2.0.1",
     "dependencies": {},
     "parent": "js-yaml"
   },
-  "acorn-jsx": {
-    "version": "5.3.2",
-    "dependencies": {},
-    "parent": "espree"
-  },
-  "acorn": {
-    "version": "8.15.0",
-    "dependencies": {},
-    "parent": "espree"
-  },
-  "ms": {
-    "version": "2.1.3",
-    "dependencies": {},
-    "parent": "debug"
-  },
-  "prelude-ls": {
-    "version": "1.2.1",
-    "dependencies": {},
-    "parent": "levn"
-  },
-  "type-check": {
-    "version": "0.4.0",
-    "dependencies": {
-      "prelude-ls": "^1.2.1"
-    },
-    "parent": "levn"
-  },
-  "fast-uri": {
-    "version": "3.0.6",
-    "dependencies": {},
-    "parent": "ajv"
-  },
   "require-from-string": {
     "version": "2.0.2",
-    "dependencies": {},
-    "parent": "ajv"
-  },
-  "fast-deep-equal": {
-    "version": "3.1.3",
     "dependencies": {},
     "parent": "ajv"
   },
@@ -1148,10 +1066,25 @@
     "dependencies": {},
     "parent": "ajv"
   },
-  "callsites": {
-    "version": "4.2.0",
+  "acorn-jsx": {
+    "version": "5.3.2",
     "dependencies": {},
-    "parent": "parent-module"
+    "parent": "espree"
+  },
+  "fast-uri": {
+    "version": "3.0.6",
+    "dependencies": {},
+    "parent": "ajv"
+  },
+  "fast-deep-equal": {
+    "version": "3.1.3",
+    "dependencies": {},
+    "parent": "ajv"
+  },
+  "acorn": {
+    "version": "8.15.0",
+    "dependencies": {},
+    "parent": "espree"
   },
   "strip-json-comments": {
     "version": "5.0.2",
@@ -1186,8 +1119,8 @@
     "dependencies": {},
     "parent": "@humanfs/node"
   },
-  "escape-string-regexp": {
-    "version": "5.0.0",
+  "esutils": {
+    "version": "2.0.3",
     "dependencies": {},
     "parent": "eslint"
   },
@@ -1198,17 +1131,17 @@
     },
     "parent": "eslint"
   },
-  "esutils": {
-    "version": "2.0.3",
-    "dependencies": {},
-    "parent": "eslint"
-  },
   "eslint-scope": {
     "version": "8.4.0",
     "dependencies": {
       "esrecurse": "^4.3.0",
       "estraverse": "^5.2.0"
     },
+    "parent": "eslint"
+  },
+  "escape-string-regexp": {
+    "version": "5.0.0",
+    "dependencies": {},
     "parent": "eslint"
   },
   "estraverse": {
@@ -1223,32 +1156,16 @@
     },
     "parent": "eslint-scope"
   },
-  "file-entry-cache": {
-    "version": "10.1.1",
+  "is-glob": {
+    "version": "4.0.3",
     "dependencies": {
-      "flat-cache": "^6.1.10"
-    },
-    "parent": "eslint"
-  },
-  "find-up": {
-    "version": "7.0.0",
-    "dependencies": {
-      "locate-path": "^7.2.0",
-      "path-exists": "^5.0.0",
-      "unicorn-magic": "^0.1.0"
+      "is-extglob": "^2.1.1"
     },
     "parent": "eslint"
   },
   "imurmurhash": {
     "version": "0.1.4",
     "dependencies": {},
-    "parent": "eslint"
-  },
-  "glob-parent": {
-    "version": "6.0.2",
-    "dependencies": {
-      "is-glob": "^4.0.3"
-    },
     "parent": "eslint"
   },
   "json-stable-stringify-without-jsonify": {
@@ -1261,20 +1178,29 @@
     "dependencies": {},
     "parent": "eslint"
   },
-  "is-glob": {
-    "version": "4.0.3",
+  "is-extglob": {
+    "version": "2.1.1",
+    "dependencies": {},
+    "parent": "is-glob"
+  },
+  "find-up": {
+    "version": "7.0.0",
     "dependencies": {
-      "is-extglob": "^2.1.1"
+      "locate-path": "^7.2.0",
+      "path-exists": "^5.0.0",
+      "unicorn-magic": "^0.1.0"
     },
-    "parent": "glob-parent"
+    "parent": "eslint"
+  },
+  "glob-parent": {
+    "version": "6.0.2",
+    "dependencies": {
+      "is-glob": "^4.0.3"
+    },
+    "parent": "eslint"
   },
   "unicorn-magic": {
     "version": "0.3.0",
-    "dependencies": {},
-    "parent": "find-up"
-  },
-  "path-exists": {
-    "version": "5.0.0",
     "dependencies": {},
     "parent": "find-up"
   },
@@ -1285,6 +1211,37 @@
     },
     "parent": "find-up"
   },
+  "path-exists": {
+    "version": "5.0.0",
+    "dependencies": {},
+    "parent": "find-up"
+  },
+  "file-entry-cache": {
+    "version": "10.1.1",
+    "dependencies": {
+      "flat-cache": "^6.1.10"
+    },
+    "parent": "eslint"
+  },
+  "p-locate": {
+    "version": "6.0.0",
+    "dependencies": {
+      "p-limit": "^4.0.0"
+    },
+    "parent": "locate-path"
+  },
+  "p-limit": {
+    "version": "6.2.0",
+    "dependencies": {
+      "yocto-queue": "^1.1.1"
+    },
+    "parent": "p-locate"
+  },
+  "yocto-queue": {
+    "version": "1.2.1",
+    "dependencies": {},
+    "parent": "p-limit"
+  },
   "flat-cache": {
     "version": "6.1.11",
     "dependencies": {
@@ -1294,25 +1251,13 @@
     },
     "parent": "file-entry-cache"
   },
-  "is-extglob": {
-    "version": "2.1.1",
-    "dependencies": {},
-    "parent": "is-glob"
-  },
-  "p-locate": {
-    "version": "6.0.0",
-    "dependencies": {
-      "p-limit": "^4.0.0"
-    },
-    "parent": "locate-path"
-  },
-  "hookified": {
-    "version": "1.10.0",
+  "flatted": {
+    "version": "3.3.3",
     "dependencies": {},
     "parent": "flat-cache"
   },
-  "flatted": {
-    "version": "3.3.3",
+  "hookified": {
+    "version": "1.10.0",
     "dependencies": {},
     "parent": "flat-cache"
   },
@@ -1324,24 +1269,12 @@
     },
     "parent": "flat-cache"
   },
-  "p-limit": {
-    "version": "6.2.0",
-    "dependencies": {
-      "yocto-queue": "^1.1.1"
-    },
-    "parent": "p-locate"
-  },
   "keyv": {
     "version": "5.3.4",
     "dependencies": {
       "@keyv/serialize": "^1.0.3"
     },
     "parent": "cacheable"
-  },
-  "yocto-queue": {
-    "version": "1.2.1",
-    "dependencies": {},
-    "parent": "p-limit"
   },
   "@keyv/serialize": {
     "version": "1.0.3",
@@ -1385,13 +1318,13 @@
     "dependencies": {},
     "parent": "eslint"
   },
-  "deep-is": {
-    "version": "0.1.4",
+  "word-wrap": {
+    "version": "1.2.5",
     "dependencies": {},
     "parent": "optionator"
   },
-  "word-wrap": {
-    "version": "1.2.5",
+  "deep-is": {
+    "version": "0.1.4",
     "dependencies": {},
     "parent": "optionator"
   },
@@ -1406,5 +1339,111 @@
     "version": "1.0.16",
     "dependencies": {},
     "parent": "fast-levenshtein"
+  },
+  "eslint-config-airbnb": {
+    "version": "19.0.4",
+    "dependencies": {
+      "object.assign": "^4.1.2",
+      "object.entries": "^1.1.5",
+      "eslint-config-airbnb-base": "^15.0.0"
+    },
+    "parent": null
+  },
+  "object.assign": {
+    "version": "4.1.7",
+    "dependencies": {
+      "call-bind": "^1.0.8",
+      "call-bound": "^1.0.3",
+      "define-properties": "^1.2.1",
+      "es-object-atoms": "^1.0.0",
+      "has-symbols": "^1.1.0",
+      "object-keys": "^1.1.1"
+    },
+    "parent": "eslint-config-airbnb"
+  },
+  "object.entries": {
+    "version": "1.1.9",
+    "dependencies": {
+      "call-bind": "^1.0.8",
+      "call-bound": "^1.0.4",
+      "define-properties": "^1.2.1",
+      "es-object-atoms": "^1.1.1"
+    },
+    "parent": "eslint-config-airbnb"
+  },
+  "object-keys": {
+    "version": "1.1.1",
+    "dependencies": {},
+    "parent": "object.assign"
+  },
+  "define-properties": {
+    "version": "1.2.1",
+    "dependencies": {
+      "define-data-property": "^1.0.1",
+      "has-property-descriptors": "^1.0.0",
+      "object-keys": "^1.1.1"
+    },
+    "parent": "object.entries"
+  },
+  "call-bound": {
+    "version": "1.0.4",
+    "dependencies": {
+      "call-bind-apply-helpers": "^1.0.2",
+      "get-intrinsic": "^1.3.0"
+    },
+    "parent": "object.entries"
+  },
+  "call-bind": {
+    "version": "1.0.8",
+    "dependencies": {
+      "call-bind-apply-helpers": "^1.0.0",
+      "es-define-property": "^1.0.0",
+      "get-intrinsic": "^1.2.4",
+      "set-function-length": "^1.2.2"
+    },
+    "parent": "object.entries"
+  },
+  "eslint-config-airbnb-base": {
+    "version": "15.0.0",
+    "dependencies": {
+      "semver": "^6.3.0",
+      "object.assign": "^4.1.2",
+      "object.entries": "^1.1.5",
+      "confusing-browser-globals": "^1.0.10"
+    },
+    "parent": "eslint-config-airbnb"
+  },
+  "set-function-length": {
+    "version": "1.2.2",
+    "dependencies": {
+      "define-data-property": "^1.1.4",
+      "es-errors": "^1.3.0",
+      "function-bind": "^1.1.2",
+      "get-intrinsic": "^1.2.4",
+      "gopd": "^1.0.1",
+      "has-property-descriptors": "^1.0.2"
+    },
+    "parent": "call-bind"
+  },
+  "has-property-descriptors": {
+    "version": "1.0.2",
+    "dependencies": {
+      "es-define-property": "^1.0.0"
+    },
+    "parent": "define-properties"
+  },
+  "define-data-property": {
+    "version": "1.1.4",
+    "dependencies": {
+      "es-define-property": "^1.0.0",
+      "es-errors": "^1.3.0",
+      "gopd": "^1.0.1"
+    },
+    "parent": "define-properties"
+  },
+  "confusing-browser-globals": {
+    "version": "1.0.11",
+    "dependencies": {},
+    "parent": "eslint-config-airbnb-base"
   }
 }

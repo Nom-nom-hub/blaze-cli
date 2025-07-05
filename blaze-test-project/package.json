@@ -16,7 +16,9 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {},
+  "dependencies": {
+    "ForeverMissed": "github:Nom-nom-hub/ForeverMissed#main"
+  },
   "devDependencies": {
     "jest": "30.0.4"
   }
