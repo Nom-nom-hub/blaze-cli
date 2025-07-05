@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/v/blaze-install.svg?style=flat-square" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/dw/blaze-install?style=flat-square" alt="npm downloads"></a>
+  <a href="https://www.npmjs.com/package/blaze-install"><img src="https://img.shields.io/npm/dw/blaze-install.svg?style=flat-square" alt="npm downloads"></a>
   <a href="https://github.com/Nom-nom-hub/blaze-cli/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/blaze-install?style=flat-square" alt="license"></a>
   <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/blaze-install?style=flat-square" alt="node version"></a>
   <a href="https://github.com/Nom-nom-hub/blaze-cli/actions/workflows/ci.yml"><img src="https://github.com/Nom-nom-hub/blaze-cli/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
