@@ -277,6 +277,7 @@ function printHelp() {
   console.log(chalk.yellow("  --save-dev") + "             Add to devDependencies");
   console.log(chalk.yellow("  --production") + "           Only install production dependencies");
   console.log(chalk.yellow("  --symlink") + "              Use symlinks instead of copying");
+      console.log(chalk.yellow("  --no-symlink") + "           Disable symlinks (use copy instead). Takes precedence over --symlink if both are provided.");
   console.log(chalk.yellow("  --audit-fix") + "            Run a security audit and fix after install");
   console.log(chalk.yellow("  --no-lockfile") + "          Do not use or write blaze-lock.json (lockfile-less mode)");
   console.log(chalk.yellow("  --ci") + "                   Remove node_modules before install (like npm ci)");
@@ -635,6 +636,7 @@ async function cleanGithubSpecs() {
 }
 
 async function main(args) {
+  const startTime = process.hrtime.bigint();
   // Welcome banner
   console.log(boxen(
     `${chalk.bold.cyan('🚀 blaze-install')} ${chalk.gray(`v${version}`)}`,
@@ -660,7 +662,7 @@ async function main(args) {
     const config = { ...blazerc, ...readNpmrc() };
     const saveDev = args.includes("--save-dev");
     const production = args.includes("--production");
-    const useSymlinks = args.includes("--symlink") || config.symlink;
+    const useSymlinks = (args.includes("--symlink") || config.symlink) && !args.includes("--no-symlink");
     const jsonOutput = args.includes("--json");
 
     // Handle --interactive flag
