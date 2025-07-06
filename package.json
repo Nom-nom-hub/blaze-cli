@@ -37,7 +37,7 @@
     "workspaces",
     "monorepo"
   ],
-  "author": "",
+  "author": "codeteck",
   "license": "ISC",
   "workspaces": [
     "packages/pkg-b"

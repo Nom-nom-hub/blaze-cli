@@ -75,3 +75,94 @@ test/
 
 # .env
 .env
+
+# Source files (we only need the compiled lib/ directory)
+src/
+tsconfig.json
+
+# Development and test files
+test/
+*.test.js
+*.spec.js
+test-*.js
+
+# Documentation and assets that shouldn't be in npm
+docs/
+*.png
+*.svg
+*.ico
+logo*.svg
+blaze-*.png
+
+# Development configuration
+.eslintrc*
+eslint.config.*
+.prettierrc*
+.editorconfig
+.vscode/
+.idea/
+
+# Build artifacts and temporary files
+node_modules/
+*.log
+*.tmp
+*.temp
+.cache/
+dist/
+build/
+
+# Git and version control
+.git/
+.gitignore
+.github/
+
+# CI/CD and deployment
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+azure-pipelines.yml
+
+# Environment and local config
+.env
+.env.local
+.env.*.local
+.npmrc
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and editor files
+*.swp
+*.swo
+*~
+
+# Project-specific files
+PR_DESCRIPTION.md
+blaze-test-project/
+packages/
+plugins/
+
+# Lock files (not needed in published package)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# TypeScript declaration files (if not needed)
+*.d.ts
+
+# Coverage and test reports
+coverage/
+.nyc_output/
+*.lcov
+
+# Temporary and backup files
+*.bak
+*.backup
+*.orig
