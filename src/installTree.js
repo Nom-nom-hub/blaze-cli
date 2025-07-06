@@ -259,7 +259,12 @@ async function installTree(tree, destDir, options = {}) {
       if (gh) {
         return { name, info, tarballMeta: gh };
       }
-      const tarballMeta = await getTarballUrl(name, info.version);
+      // Check if this is an npm alias
+      let packageNameForTarball = name;
+      if (info._alias && info._realPackage) {
+        packageNameForTarball = info._realPackage;
+      }
+      const tarballMeta = await getTarballUrl(packageNameForTarball, info.version);
       return { name, info, tarballMeta };
     }),
   );

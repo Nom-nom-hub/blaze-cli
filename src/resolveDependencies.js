@@ -68,12 +68,41 @@ async function resolveDependencies(
       resolved[name] = { version: versionRange, dependencies: {} };
       return;
     }
+    // Handle npm alias: alias@npm:real-pkg@range
+    if (typeof versionRange === "string" && versionRange.startsWith("npm:")) {
+      // npm:real-pkg@range
+      const match = versionRange.match(/^npm:([^@]+)@(.+)$/);
+      if (match) {
+        const realPkg = match[1];
+        const realRange = match[2];
+        // Recursively resolve the real package
+        await worker([realPkg, realRange]);
+        // Copy the resolved real package under the alias name
+        resolved[name] = { 
+          ...resolved[realPkg],
+          _alias: true,
+          _realPackage: realPkg
+        };
+        return;
+      }
+    }
     const meta = await fetchPackageMeta(name, options);
-    const latestVersion = meta["dist-tags"].latest;
-    const pkg = meta.versions[latestVersion];
+    // Handle special cases like "latest" tag
+    let resolvedVersion;
+    if (versionRange === "latest") {
+      resolvedVersion = meta["dist-tags"].latest;
+    } else {
+      // Use semver.maxSatisfying to find the highest version that satisfies the range
+      const availableVersions = Object.keys(meta.versions);
+      resolvedVersion = semver.maxSatisfying(availableVersions, versionRange);
+      if (!resolvedVersion) {
+        throw new Error(`No version found for ${name}@${versionRange}. Available versions: ${availableVersions.slice(-5).join(', ')}`);
+      }
+    }
+    const pkg = meta.versions[resolvedVersion];
     // If the version is a GitHub/tarball spec, pass it through as-is for installTree to handle
     resolved[name] = {
-      version: latestVersion,
+      version: resolvedVersion,
       dependencies: pkg.dependencies || {},
       parent,
     };
@@ -85,11 +114,11 @@ async function resolveDependencies(
         const found = resolved[peerName];
         if (!found) {
           peerWarnings.push(
-            `Peer dependency missing: ${name}@${latestVersion} requires ${peerName}@${peerRange}`,
+            `Peer dependency missing: ${name}@${resolvedVersion} requires ${peerName}@${peerRange}`,
           );
         } else if (!semver.satisfies(found.version, peerRange)) {
           peerWarnings.push(
-            `Peer dependency version mismatch: ${name}@${latestVersion} requires ${peerName}@${peerRange}, found ${found.version}`,
+            `Peer dependency version mismatch: ${name}@${resolvedVersion} requires ${peerName}@${peerRange}, found ${found.version}`,
           );
         }
       }
@@ -105,7 +134,7 @@ async function resolveDependencies(
           }
         } catch (err) {
           optionalWarnings.push(
-            `Optional dependency failed: ${name}@${latestVersion} optional ${optName}@${optRange} (${err.message})`,
+            `Optional dependency failed: ${name}@${resolvedVersion} optional ${optName}@${optRange} (${err.message})`,
           );
         }
       }
