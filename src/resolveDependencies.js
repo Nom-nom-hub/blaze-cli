@@ -57,7 +57,7 @@ async function resolveDependencies(
 ) {
   const entries = Object.entries(dependencies);
   let idx = 0;
-  async function worker([name, versionRange]) {
+  async function worker([name, versionRange], aliasChain = []) {
     if (resolved[name]) return; // Avoid cycles
     // Handle file:, link:, and GitHub/tarball dependencies directly
     if (
@@ -70,7 +70,7 @@ async function resolveDependencies(
       return;
     }
     // Handle npm alias: alias@npm:real-pkg@range
-    if (await resolveNpmAlias(name, versionRange, worker, resolved)) {
+    if (await resolveNpmAlias(name, versionRange, worker, resolved, aliasChain)) {
       return;
     }
     const meta = await fetchPackageMeta(name, options);
