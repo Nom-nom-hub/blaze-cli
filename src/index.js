@@ -259,6 +259,7 @@ function printHelp() {
   console.log(chalk.gray("  blaze <command> [options]\n"));
 
   console.log(chalk.bold.white("Commands:"));
+  console.log(chalk.green("  init") + "                   Create a new package.json file");
   console.log(chalk.green("  install [package]") + "      Install all or a specific package");
   console.log(chalk.green("  uninstall <package>") + "    Remove a package and prune lockfile");
   console.log(chalk.green("  update <package>") + "       Update a package to the latest version");
@@ -720,7 +721,7 @@ async function main(args) {
     const [command, ...rest] = args;
 
     // Help command
-    if (command === "help" || command === "--help" || !command) {
+    if (command === "help" || command === "--help") {
       printHelp();
       return;
     }
@@ -866,11 +867,11 @@ async function main(args) {
       const pkg = await readPackageJson();
       const deps = pkg.dependencies || {};
       const devDeps = pkg.devDependencies || {};
-      const fs = require("fs");
+      const fsSync = require("fs");
       const path = require("path");
       function isInstalled(name) {
         try {
-          return fs.existsSync(path.join(process.cwd(), "node_modules", name));
+          return fsSync.existsSync(path.join(process.cwd(), "node_modules", name));
         } catch {
           return false;
         }
@@ -918,8 +919,8 @@ async function main(args) {
       }
       // Check for orphaned node_modules
       const nodeModulesPath = path.join(process.cwd(), "node_modules");
-      if (fs.existsSync(nodeModulesPath)) {
-        const installed = fs
+      if (fsSync.existsSync(nodeModulesPath)) {
+        const installed = fsSync
           .readdirSync(nodeModulesPath)
           .filter((f) => !f.startsWith("."));
         const allDeclared = [...Object.keys(deps), ...Object.keys(devDeps)];
@@ -1149,6 +1150,33 @@ async function main(args) {
       }
       return;
     }
+    if (command === "init") {
+      const fsSync = require("fs");
+      const pkgPath = path.join(process.cwd(), "package.json");
+      if (fsSync.existsSync(pkgPath)) {
+        console.log(chalk.yellow("⚠️ package.json already exists in this directory."));
+        return;
+      }
+      
+      const defaultPkg = {
+        name: path.basename(process.cwd()).toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+        version: "1.0.0",
+        description: "",
+        main: "index.js",
+        scripts: {
+          test: "echo \"Error: no test specified\" && exit 1"
+        },
+        keywords: [],
+        author: "",
+        license: "ISC"
+      };
+      
+      await fs.writeFile(pkgPath, JSON.stringify(defaultPkg, null, 2) + "\n", "utf-8");
+      console.log(chalk.green("✅ Created package.json"));
+      console.log(chalk.cyan("📝 Edit package.json to add your project details"));
+      return;
+    }
+    
     if (command === "doctor") {
       const fix = args.includes("--fix");
       const diagnostics = require("./diagnostics");
