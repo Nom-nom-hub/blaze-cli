@@ -35,6 +35,17 @@ async function initPackageJson() {
   } catch (error) {
     if (error.code === 'EEXIST') {
       console.log(chalk.yellow("⚠️ package.json already exists in this directory."));
+    } else if (
+      error.code === 'EACCES' ||
+      error.code === 'EPERM' ||
+      error.code === 'EROFS'
+    ) {
+      console.log(
+        chalk.red("❌ Cannot create package.json: Permission denied or directory is not writable.")
+      );
+      console.log(
+        chalk.yellow("Check your directory permissions or try running the command with elevated privileges.")
+      );
     } else {
       throw error;
     }
