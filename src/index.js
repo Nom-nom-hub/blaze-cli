@@ -3,7 +3,9 @@ const { readLockfile } = require("./readLockfile");
 const { resolveDependencies } = require("./resolveDependencies");
 const { installTree, runLifecycleScript } = require("./installTree");
 const { writeLockfile } = require("./writeLockfile");
+const { initPackageJson } = require("./utils");
 const fs = require("fs/promises");
+const fsSync = require("fs");
 const path = require("path");
 const axios = require("axios");
 const semver = require("semver");
@@ -721,7 +723,7 @@ async function main(args) {
     const [command, ...rest] = args;
 
     // Help command
-    if (command === "help" || command === "--help") {
+    if (command === "help" || command === "--help" || !command) {
       printHelp();
       return;
     }
@@ -1151,30 +1153,7 @@ async function main(args) {
       return;
     }
     if (command === "init") {
-      const fsSync = require("fs");
-      const fs = require("fs/promises");
-      const pkgPath = path.join(process.cwd(), "package.json");
-      if (fsSync.existsSync(pkgPath)) {
-        console.log(chalk.yellow("⚠️ package.json already exists in this directory."));
-        return;
-      }
-      
-      const defaultPkg = {
-        name: path.basename(process.cwd()).toLowerCase().replace(/[^a-z0-9-]/g, '-'),
-        version: "1.0.0",
-        description: "",
-        main: "index.js",
-        scripts: {
-          test: "echo \"Error: no test specified\" && exit 1"
-        },
-        keywords: [],
-        author: "",
-        license: "ISC"
-      };
-      
-      await fs.writeFile(pkgPath, JSON.stringify(defaultPkg, null, 2) + "\n", "utf-8");
-      console.log(chalk.green("✅ Created package.json"));
-      console.log(chalk.cyan("📝 Edit package.json to add your project details"));
+      await initPackageJson();
       return;
     }
     
