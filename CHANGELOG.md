@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.11.10
+
+- **Fix:** Resolved critical self-downgrade bug where Blaze would downgrade itself when running `npx blaze-install`
+- **Fix:** Dependency resolver now respects version ranges in `package.json` instead of always using registry `latest`
+- **Feat:** Added support for npm aliasing syntax (`alias@npm:real-pkg@range`)
+- **Fix:** Default command behavior - `npx blaze-install` now defaults to install (like npm)
+- **Chore:** Removed problematic git pre-commit hook that was blocking commits
+
 ## v1.11.0
 
 - Feat: Unified `blaze fix` command to auto-fix code style, remove unused dependencies, update outdated dependencies, run diagnostics, and audit in one step.
