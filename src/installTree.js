@@ -146,12 +146,20 @@ async function handleLocalDep(depName, depSpec, nodeModulesDir) {
   }
 }
 
-function parseGithubSpec(spec) {
+async function parseGithubSpec(spec) {
   // github:user/repo[#ref] or user/repo[#ref]
   let m = spec.match(/^github:([^/]+)\/([^#]+)(#(.+))?$/);
   if (!m) m = spec.match(/^([^/]+)\/([^#]+)(#(.+))?$/);
   if (!m) return null;
-  const user = m[1], repo = m[2], ref = m[4] || 'main';
+  const user = m[1], repo = m[2];
+  let ref = m[4];
+  
+  // If no ref specified, get the default branch from GitHub
+  if (!ref) {
+    const { getDefaultBranch } = require('./sshHelper');
+    ref = await getDefaultBranch(user, repo);
+  }
+  
   return {
     tarballUrl: `https://codeload.github.com/${user}/${repo}/tar.gz/${ref}`,
     sshUrl: `git@github.com:${user}/${repo}.git`,
@@ -191,9 +199,10 @@ async function downloadWithRetry(url, dest, headers = {}, maxRetries = 3) {
 
 const { downloadWithSSH, getGitHubAuthHeaders } = require('./sshHelper');
 
-function validateGithubOrTarballSpec(spec) {
+async function validateGithubOrTarballSpec(spec) {
   if (isTarballUrl(spec)) return true;
-  if (parseGithubSpec(spec)) return true;
+  const gh = await parseGithubSpec(spec);
+  if (gh) return true;
   return false;
 }
 
@@ -246,7 +255,7 @@ async function installTree(tree, destDir, options = {}) {
       if (isTarballUrl(info.version)) {
         return { name, info, tarballMeta: { tarballUrl: info.version } };
       }
-      const gh = parseGithubSpec(info.version);
+      const gh = await parseGithubSpec(info.version);
       if (gh) {
         return { name, info, tarballMeta: gh };
       }
@@ -265,10 +274,11 @@ async function installTree(tree, destDir, options = {}) {
       return;
     }
     // Only handle GitHub/tarball install if info.version is a GitHub/tarball spec
-    const isGithubOrTarball = isTarballUrl(info.version) || (parseGithubSpec(info.version) !== null);
+    const gh = await parseGithubSpec(info.version);
+    const isGithubOrTarball = isTarballUrl(info.version) || (gh !== null);
     if (isGithubOrTarball && (isTarballUrl(tarballMeta.tarballUrl) || tarballMeta.tarballUrl.includes('codeload.github.com'))) {
       // Validate spec
-      if (!validateGithubOrTarballSpec(info.version)) {
+      if (!(await validateGithubOrTarballSpec(info.version))) {
         console.error(chalk.red(`Invalid GitHub/tarball spec: '${info.version}'.\nExamples: user/repo, user/repo#branch, github:user/repo#sha, https://example.com/pkg.tgz`));
         throw new Error(`Invalid GitHub/tarball spec: ${info.version}`);
       }

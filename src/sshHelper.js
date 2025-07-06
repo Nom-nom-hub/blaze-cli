@@ -3,6 +3,7 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs').promises;
 const crypto = require('crypto');
+const axios = require('axios');
 
 /**
  * Download a GitHub repository using SSH and create a tarball
@@ -92,20 +93,94 @@ async function getGitHubAuthHeaders() {
   }
   
   // Then try SSH key authentication
-  try {
-    const sshKey = execSync('ssh-add -l', { encoding: 'utf8', stdio: 'pipe' });
-    if (sshKey && !sshKey.includes('no identities')) {
-      // SSH key is available, use SSH URL instead of HTTPS
-      return { useSSH: true };
-    }
-  } catch (err) {
-    // SSH key not available or ssh-add failed
+  const hasKeys = await hasSSHKeys();
+  if (hasKeys) {
+    // SSH key is available, use SSH URL instead of HTTPS
+    return { useSSH: true };
   }
   
   return headers;
 }
 
+/**
+ * Check if SSH keys exist in the user's .ssh directory
+ * @returns {Promise<boolean>} True if SSH keys are found
+ */
+async function hasSSHKeys() {
+  const sshDir = path.join(os.homedir(), '.ssh');
+  
+  try {
+    // Check if .ssh directory exists
+    await fs.access(sshDir);
+    
+    // Look for common SSH key files
+    const keyFiles = [
+      'id_rsa',
+      'id_ed25519', 
+      'id_ecdsa',
+      'id_dsa'
+    ];
+    
+    for (const keyFile of keyFiles) {
+      try {
+        await fs.access(path.join(sshDir, keyFile));
+        return true; // Found at least one SSH key
+      } catch {
+        // Key file doesn't exist, continue checking others
+      }
+    }
+    
+    // Also check for keys with .pub extension
+    const pubKeyFiles = [
+      'id_rsa.pub',
+      'id_ed25519.pub',
+      'id_ecdsa.pub', 
+      'id_dsa.pub'
+    ];
+    
+    for (const pubKeyFile of pubKeyFiles) {
+      try {
+        await fs.access(path.join(sshDir, pubKeyFile));
+        return true; // Found at least one SSH public key
+      } catch {
+        // Key file doesn't exist, continue checking others
+      }
+    }
+    
+    return false; // No SSH keys found
+  } catch {
+    // .ssh directory doesn't exist
+    return false;
+  }
+}
+
+/**
+ * Get the default branch for a GitHub repository
+ * @param {string} user - GitHub username
+ * @param {string} repo - Repository name
+ * @returns {Promise<string>} Default branch name
+ */
+async function getDefaultBranch(user, repo) {
+  try {
+    // Try to get default branch from GitHub API
+    const headers = {};
+    const token = process.env.GITHUB_TOKEN;
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
+    }
+    
+    const response = await axios.get(`https://api.github.com/repos/${user}/${repo}`, { headers });
+    return response.data.default_branch || 'main';
+  } catch (err) {
+    // If API call fails, fall back to 'main' as default
+    console.warn(`Warning: Could not determine default branch for ${user}/${repo}, using 'main' as fallback`);
+    return 'main';
+  }
+}
+
 module.exports = {
   downloadWithSSH,
-  getGitHubAuthHeaders
+  getGitHubAuthHeaders,
+  hasSSHKeys,
+  getDefaultBranch
 }; 
