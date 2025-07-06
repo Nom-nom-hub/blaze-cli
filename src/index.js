@@ -1152,6 +1152,7 @@ async function main(args) {
     }
     if (command === "init") {
       const fsSync = require("fs");
+      const fs = require("fs/promises");
       const pkgPath = path.join(process.cwd(), "package.json");
       if (fsSync.existsSync(pkgPath)) {
         console.log(chalk.yellow("⚠️ package.json already exists in this directory."));
@@ -1216,7 +1217,18 @@ async function main(args) {
       let addingPackage = rest.length >= 1 && rest[0];
       let pkgName, range, versionOrRange;
       let targetPkgPath = path.resolve(process.cwd(), "package.json");
-      let rootPkg = await readPackageJson();
+      let rootPkg;
+      try {
+        rootPkg = await readPackageJson();
+      } catch (error) {
+        console.log(chalk.red.bold("❌ " + error.message));
+        console.log(chalk.yellow("\nTo get started:"));
+        console.log(chalk.cyan("  • Run ") + chalk.white("npm init -y") + chalk.cyan(" to create a new package.json"));
+        console.log(chalk.cyan("  • Or run ") + chalk.white("blaze init") + chalk.cyan(" to create one with Blaze"));
+        console.log(chalk.cyan("  • Or navigate to a directory that already has a package.json"));
+        console.log(chalk.gray("\nCurrent directory: ") + chalk.white(process.cwd()));
+        process.exit(1);
+      }
       let isMonorepo =
         Array.isArray(rootPkg.workspaces) && rootPkg.workspaces.length > 0;
       let workspaceChoices = [];
@@ -1301,7 +1313,18 @@ async function main(args) {
         );
       }
       // Now, always re-read all workspace and root package.json files for dependency resolution
-      let rootPkgLatest = await readPackageJson();
+      let rootPkgLatest;
+      try {
+        rootPkgLatest = await readPackageJson();
+      } catch (error) {
+        console.log(chalk.red.bold("❌ " + error.message));
+        console.log(chalk.yellow("\nTo get started:"));
+        console.log(chalk.cyan("  • Run ") + chalk.white("npm init -y") + chalk.cyan(" to create a new package.json"));
+        console.log(chalk.cyan("  • Or run ") + chalk.white("blaze init") + chalk.cyan(" to create one with Blaze"));
+        console.log(chalk.cyan("  • Or navigate to a directory that already has a package.json"));
+        console.log(chalk.gray("\nCurrent directory: ") + chalk.white(process.cwd()));
+        process.exit(1);
+      }
       let depsToInstall = {};
       let workspacePaths = [];
       const ciMode = args.includes("--ci");
