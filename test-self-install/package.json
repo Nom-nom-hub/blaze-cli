@@ -1,0 +1,7 @@
+{
+  "name": "test-blaze-self-install",
+  "version": "1.0.0",
+  "dependencies": {
+    "blaze-install": "1.11.7"
+  }
+}
