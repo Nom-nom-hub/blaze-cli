@@ -12,13 +12,20 @@ if (args.includes('--version') || args.includes('-v')) {
   process.exit(0);
 }
 
-if (!command || command === "--help" || command === "help") {
+if (command === "--help" || command === "help") {
   printHelp();
   process.exit(0);
 }
 
+// If no command, default to install
+if (!command) {
+  main(["install", ...args]);
+  return;
+}
+
 // Supported commands (add more as you implement them)
 const supported = [
+  "init",
   "install",
   "uninstall",
   "update",
