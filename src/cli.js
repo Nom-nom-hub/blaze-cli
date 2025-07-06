@@ -30,7 +30,9 @@ function parseArgs(args) {
 
   // Filter out CLI flags from rest (package names)
   const packages = rest.filter(
-    (arg) => !arg.startsWith("--") && arg !== command,
+    (arg) =>
+      !(arg.startsWith("--") || (arg.startsWith("-") && arg.length > 1)) &&
+      arg !== command,
   );
 
   return {

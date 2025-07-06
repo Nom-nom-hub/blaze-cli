@@ -1209,14 +1209,17 @@ async function main(args) {
         });
         // If --workspace flag is used
         if (workspaceTarget) {
+          console.log(chalk.blue(`🎯 Using workspace target: ${workspaceTarget}`));
           const found = workspaceChoices.find(
             (w) =>
               w.name === workspaceTarget || w.value.includes(workspaceTarget),
           );
           if (found) {
             targetPkgPath = found.value;
+            console.log(chalk.green(`✅ Found workspace: ${found.name} -> ${found.value}`));
           } else {
             console.error(`Workspace '${workspaceTarget}' not found.`);
+            console.log(chalk.yellow(`Available workspaces: ${workspaceChoices.map(w => w.name).join(', ')}`));
             process.exit(1);
           }
         } else if (isMonorepo) {

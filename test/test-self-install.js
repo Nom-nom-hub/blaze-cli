@@ -81,7 +81,9 @@ console.log('5. Cleaned up npm files');
 // Install with blaze-install
 console.log('6. Installing with blaze-install...');
 try {
-  execSync('node ../bin/blaze-install.js install', { stdio: 'inherit' });
+  // Use dynamic path resolution for CLI
+  const cliPath = path.resolve(__dirname, '../bin/blaze-install.js');
+  execSync(`node ${cliPath} install`, { stdio: 'inherit' });
   console.log('✅ blaze install completed');
 } catch (error) {
   console.log('❌ blaze install failed:', error.message);
@@ -127,7 +129,9 @@ fs.mkdirSync(aliasTestDir, { recursive: true });
 fs.writeFileSync(path.join(aliasTestDir, 'package.json'), JSON.stringify(aliasPackageJson, null, 2));
 
 try {
-  execSync('node ../bin/blaze-install.js install', { cwd: aliasTestDir, stdio: 'inherit' });
+  // Use dynamic path resolution for CLI
+  const cliPath = path.resolve(__dirname, '../bin/blaze-install.js');
+  execSync(`node ${cliPath} install`, { cwd: aliasTestDir, stdio: 'inherit' });
   console.log('✅ npm alias install completed');
   
   // Check that the alias was resolved correctly
