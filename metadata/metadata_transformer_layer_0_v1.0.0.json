@@ -1,0 +1,16 @@
+{
+  "shard_id": "transformer_layer_0",
+  "version": "1.0.0",
+  "size_bytes": 4004338,
+  "checksum": "0b617a11001c2a61c3054c528360ad36f6ea62cd28fe1d0a7107492b5afc15a5",
+  "model_type": "transformer",
+  "created_at": "2025-08-10T00:21:44Z",
+  "updated_at": "2025-08-10T00:21:44Z",
+  "description": "Sample transformer encoder layer for demo",
+  "tags": [
+    "demo",
+    "encoder",
+    "layer_0"
+  ],
+  "dependencies": []
+}
