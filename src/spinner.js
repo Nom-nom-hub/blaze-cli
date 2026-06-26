@@ -20,11 +20,18 @@ class Spinner {
     }, 80);
   }
 
-  stop() {
+  stop(text, isSuccess = true) {
     if (!this.isSpinning) return;
     clearInterval(this.timer);
     this.isSpinning = false;
     process.stdout.write('\r');
+    if (text !== undefined) {
+      if (isSuccess === false) {
+        this.fail(text);
+      } else {
+        this.succeed(text);
+      }
+    }
   }
 
   succeed(msg) {
@@ -43,4 +50,4 @@ class Spinner {
   }
 }
 
-module.exports = Spinner; 
+module.exports = Spinner;
