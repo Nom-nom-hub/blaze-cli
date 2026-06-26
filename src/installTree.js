@@ -152,19 +152,28 @@ async function parseGithubSpec(spec) {
   if (!m) m = spec.match(/^([^/]+)\/([^#]+)(#(.+))?$/);
   if (!m) return null;
   const user = m[1], repo = m[2];
-  let ref = m[4];
-  
-  // If no ref specified, get the default branch from GitHub
-  if (!ref) {
-    const { getDefaultBranch } = require('./sshHelper');
-    ref = await getDefaultBranch(user, repo);
+  const explicitRef = m[4];
+
+  // If the user pinned an explicit ref (branch/tag/SHA), use it as-is and never
+  // silently replace it with a default-branch fallback. Otherwise, ask GitHub
+  // for the default and bundle the historical 'main'/'master' fallbacks so we
+  // can transparently support repos whose default branch is still 'master'.
+  let refCandidates;
+  if (explicitRef) {
+    refCandidates = [explicitRef];
+  } else {
+    const { getDefaultBranchCandidates } = require('./sshHelper');
+    refCandidates = await getDefaultBranchCandidates(user, repo);
   }
-  
+  const ref = refCandidates[0];
+
   return {
     tarballUrl: `https://codeload.github.com/${user}/${repo}/tar.gz/${ref}`,
     sshUrl: `git@github.com:${user}/${repo}.git`,
     name: repo,
     ref,
+    refCandidates,
+    explicitPinned: !!explicitRef,
     user,
   };
 }
@@ -199,11 +208,16 @@ async function downloadWithRetry(url, dest, headers = {}, maxRetries = 3) {
 
 const { downloadWithSSH, getGitHubAuthHeaders } = require('./sshHelper');
 
-async function validateGithubOrTarballSpec(spec) {
+async function validateGithubOrTarballSpec(spec, gh) {
+  // Cheap early-out for tarball URLs.
   if (isTarballUrl(spec)) return true;
-  const gh = await parseGithubSpec(spec);
-  if (gh) return true;
-  return false;
+  // If the caller already parsed the spec (e.g. worker has `tarballMeta`
+  // from the resolution phase), trust that result and skip the second
+  // parseGithubSpec call — it would otherwise hit the GitHub API again
+  // and increase install latency / rate-limit risk. Single-arg callers
+  // still get the old behaviour via the fallback below.
+  if (!gh) gh = await parseGithubSpec(spec);
+  return !!gh;
 }
 
 function sanitizePackageDirName(name) {
@@ -278,12 +292,24 @@ async function installTree(tree, destDir, options = {}) {
       bar.update(i, { pkg: chalk.yellow(name) });
       return;
     }
-    // Only handle GitHub/tarball install if info.version is a GitHub/tarball spec
-    const gh = await parseGithubSpec(info.version);
-    const isGithubOrTarball = isTarballUrl(info.version) || (gh !== null);
-    if (isGithubOrTarball && (isTarballUrl(tarballMeta.tarballUrl) || tarballMeta.tarballUrl.includes('codeload.github.com'))) {
-      // Validate spec
-      if (!(await validateGithubOrTarballSpec(info.version))) {
+    // Only handle GitHub/tarball install if info.version is a GitHub/tarball spec.
+    // Both `gh` and `isGithubOrTarball` are derived cheaply from `tarballMeta`
+    // (which the resolution phase already populated), so we avoid a redundant
+    // parseGithubSpec(info.version) call here — that would otherwise trigger
+    // a second GitHub API request per GitHub spec and burn rate-limit budget.
+    const gh = (tarballMeta && tarballMeta.user && tarballMeta.name)
+      ? tarballMeta
+      : null;
+    const isGithubOrTarball = !!tarballMeta.tarballUrl && (
+      isTarballUrl(tarballMeta.tarballUrl) ||
+      tarballMeta.tarballUrl.includes('codeload.github.com')
+    );
+    if (isGithubOrTarball) {
+      // Tertiary safety: validate cheaply using the already-parsed `gh`
+      // (no extra GitHub API call). The outer condition already established
+      // the spec is valid via `tarballMeta`, but this preserves the original
+      // error message for any unforeseen edge cases.
+      if (!(await validateGithubOrTarballSpec(info.version, gh))) {
         console.error(chalk.red(`Invalid GitHub/tarball spec: '${info.version}'.\nExamples: user/repo, user/repo#branch, github:user/repo#sha, https://example.com/pkg.tgz`));
         throw new Error(`Invalid GitHub/tarball spec: ${info.version}`);
       }
@@ -292,53 +318,183 @@ async function installTree(tree, destDir, options = {}) {
       await safeRemove(dest);
       await fs.mkdir(dest, { recursive: true });
       await fs.mkdir(TARBALL_CACHE_DIR, { recursive: true });
-      // Cache tarball by URL hash
-      const crypto = require("crypto");
-      const urlHash = crypto.createHash("sha1").update(tarballMeta.tarballUrl).digest("hex");
-      const tarballPath = path.join(TARBALL_CACHE_DIR, `${name}-${urlHash}.tar.gz`);
-      let usedCache = false;
-      if (await fs.stat(tarballPath).then(() => true, () => false)) {
-        usedCache = true;
-      } else {
-        // Download with retry and auth if needed
-        let headers = {};
-        let useSSH = false;
-        
-        if (tarballMeta.tarballUrl.includes('codeload.github.com')) {
-          const auth = await getGitHubAuthHeaders();
-          if (auth.useSSH) {
-            useSSH = true;
-          } else if (auth.Authorization) {
-            headers = auth;
-          }
-        }
-        
-        try {
-          if (useSSH && tarballMeta.sshUrl) {
-            // Use SSH to clone and create tarball
-            await downloadWithSSH(tarballMeta.sshUrl, tarballMeta.ref, tarballPath, isVerbose);
-          } else {
-            await downloadWithRetry(tarballMeta.tarballUrl, tarballPath, headers, 3);
-          }
-        } catch (err) {
-          if (tarballMeta.tarballUrl.includes('codeload.github.com')) {
-            if (!process.env.GITHUB_TOKEN) {
-              console.error(chalk.red(`Failed to download from GitHub. For private repos, either:`));
-              console.error(chalk.red(`  1. Set GITHUB_TOKEN env var with a personal access token, or`));
-              console.error(chalk.red(`  2. Add your SSH key with 'ssh-add' for SSH authentication`));
-            }
-          }
-          if (err.response && (err.response.status === 403 || err.response.status === 404)) {
-            console.error(chalk.red(`HTTP ${err.response.status} for ${tarballMeta.tarballUrl}. Check repo access or token.`));
-          }
-          throw err;
+      // Auth context (shared across all candidate attempts and the direct
+      // tarball path — branch choice doesn't affect auth headers).
+      let headers = {};
+      let useSSH = false;
+      if (tarballMeta.tarballUrl.includes('codeload.github.com')) {
+        const auth = await getGitHubAuthHeaders();
+        if (auth.useSSH) {
+          useSSH = true;
+        } else if (auth.Authorization) {
+          headers = auth;
         }
       }
-      // Extract
+
+      const crypto = require("crypto");
+
+      // We only enter the multi-branch fallback loop when this is a real
+      // GitHub spec (parseGithubSpec populated refCandidates + user/name).
+      // For raw tarball URLs (info.version = https://.../*.tgz) the
+      // tarballUrl IS the source of truth and refCandidates/user/name are
+      // absent — we must NOT overwrite it with a candidate-built URL.
+      const isGithubSpec =
+        !!tarballMeta.user &&
+        !!tarballMeta.name &&
+        Array.isArray(tarballMeta.refCandidates) &&
+        tarballMeta.refCandidates.length > 0;
+
+      let tarballPath = null;
+      let usedCache = false;
+
+      // Helper: drop a partial / zero-byte cache file left behind by an
+      // earlier failed download so the next attempt doesn't treat it as a
+      // valid cache hit.
+      const dropStalePartial = async (p) => {
+        try {
+          const st = await fs.stat(p);
+          if (st.size === 0) await fs.unlink(p);
+        } catch {}
+      };
+
+      if (isGithubSpec) {
+        // GitHub spec — try each candidate branch in priority order and stop
+        // at the first one that succeeds. HTTP 404 (and SSH clone failures,
+        // see below) are treated as "branch missing" and trigger the next
+        // candidate (issue #11: many repos like apache-superset/superset-
+        // frontend still default to 'master').
+        const candidates = tarballMeta.refCandidates;
+        const explicitPinned = !!tarballMeta.explicitPinned;
+        let downloaded = false;
+        let lastErr = null;
+
+        for (const candidateRef of candidates) {
+          const candidateTarballUrl =
+            `https://codeload.github.com/${tarballMeta.user}/${tarballMeta.name}/tar.gz/${candidateRef}`;
+          const candidateUrlHash =
+            crypto.createHash("sha1").update(candidateTarballUrl).digest("hex");
+          const candidateTarballPath =
+            path.join(TARBALL_CACHE_DIR, `${name}-${candidateUrlHash}.tar.gz`);
+
+          // Cache check: only treat non-empty files as hits; drop stale
+          // partial files from a prior failed download before proceeding.
+          await dropStalePartial(candidateTarballPath);
+          if (await fs.stat(candidateTarballPath).then(() => true, () => false)) {
+            tarballPath = candidateTarballPath;
+            tarballMeta.ref = candidateRef;
+            tarballMeta.tarballUrl = candidateTarballUrl;
+            usedCache = true;
+            downloaded = true;
+            break;
+          }
+
+          try {
+            if (useSSH && tarballMeta.sshUrl) {
+              // Use SSH to clone and create tarball
+              await downloadWithSSH(tarballMeta.sshUrl, candidateRef, candidateTarballPath, isVerbose);
+            } else {
+              await downloadWithRetry(candidateTarballUrl, candidateTarballPath, headers, 3);
+            }
+            tarballPath = candidateTarballPath;
+            tarballMeta.ref = candidateRef;
+            tarballMeta.tarballUrl = candidateTarballUrl;
+            usedCache = false;
+            downloaded = true;
+            if (!explicitPinned && candidates.length > 1) {
+              console.log(chalk.cyan(
+                `[${name}] Resolved default branch for ${info.version}: ${candidateRef}`
+              ));
+            }
+            break;
+          } catch (err) {
+            lastErr = err;
+            // Clean up any partial tarball before continuing/rethrowing.
+            await fs.unlink(candidateTarballPath).catch(() => {});
+            if (useSSH) {
+              // The git CLI doesn't surface a parseable "branch missing" error
+              // through the current spawn wiring, so for SSH we fall through
+              // to the next candidate on any failure when one is available,
+              // then rethrow the last error if all candidates are exhausted.
+              if (candidates.length > 1) {
+                console.warn(chalk.yellow(
+                  `[${name}] SSH attempt for ref '${candidateRef}' failed, trying next candidate.`
+                ));
+                continue;
+              }
+              throw err;
+            }
+            const is404 = err.response && err.response.status === 404;
+            if (is404 && candidates.length > 1) {
+              console.warn(chalk.yellow(
+                `[${name}] Ref '${candidateRef}' not found, trying next candidate.`
+              ));
+              continue;
+            }
+            if (tarballMeta.tarballUrl.includes('codeload.github.com')) {
+              if (!process.env.GITHUB_TOKEN) {
+                console.error(chalk.red(`Failed to download from GitHub. For private repos, either:`));
+                console.error(chalk.red(`  1. Set GITHUB_TOKEN env var with a personal access token, or`));
+                console.error(chalk.red(`  2. Add your SSH key with 'ssh-add' for SSH authentication`));
+              }
+            }
+            if (err.response && (err.response.status === 403 || err.response.status === 404)) {
+              console.error(chalk.red(`HTTP ${err.response.status} for ${candidateTarballUrl}. Check repo access or token.`));
+            }
+            throw err;
+          }
+        }
+
+        if (!downloaded) {
+          throw lastErr || new Error(
+            `Could not resolve a valid branch for ${info.version}`
+          );
+        }
+      } else {
+        // Raw tarball URL (or other non-GitHub-spec path). Single direct
+        // download — preserves today's behaviour for `blaze install https://.../*.tgz`.
+        const directUrl = tarballMeta.tarballUrl;
+        const directHash =
+          crypto.createHash("sha1").update(directUrl).digest("hex");
+        const directTarballPath =
+          path.join(TARBALL_CACHE_DIR, `${name}-${directHash}.tar.gz`);
+
+        await dropStalePartial(directTarballPath);
+        if (await fs.stat(directTarballPath).then(() => true, () => false)) {
+          tarballPath = directTarballPath;
+          usedCache = true;
+        } else {
+          try {
+            if (useSSH && tarballMeta.sshUrl) {
+              await downloadWithSSH(tarballMeta.sshUrl, tarballMeta.ref, directTarballPath, isVerbose);
+            } else {
+              await downloadWithRetry(directUrl, directTarballPath, headers, 3);
+            }
+            tarballPath = directTarballPath;
+            usedCache = false;
+          } catch (err) {
+            await fs.unlink(directTarballPath).catch(() => {});
+            if (directUrl.includes('codeload.github.com')) {
+              if (!process.env.GITHUB_TOKEN) {
+                console.error(chalk.red(`Failed to download from GitHub. For private repos, either:`));
+                console.error(chalk.red(`  1. Set GITHUB_TOKEN env var with a personal access token, or`));
+                console.error(chalk.red(`  2. Add your SSH key with 'ssh-add' for SSH authentication`));
+              }
+            }
+            if (err.response && (err.response.status === 403 || err.response.status === 404)) {
+              console.error(chalk.red(`HTTP ${err.response.status} for ${directUrl}. Check repo access or token.`));
+            }
+            throw err;
+          }
+        }
+      }
+      // Extract. Drop the on-disk tarball on extract failure so the next
+      // run doesn't treat a corrupted/half-extracted package as a cache hit
+      // and silently ship a broken node_modules entry.
       const tar = require("tar");
       try {
         await tar.x({ file: tarballPath, C: dest, strip: 1 });
       } catch (err) {
+        await fs.unlink(tarballPath).catch(() => {});
         console.error(chalk.red(`Failed to extract tarball: ${tarballPath}\n${err.message}`));
         throw err;
       }

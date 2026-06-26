@@ -155,12 +155,17 @@ async function hasSSHKeys() {
 }
 
 /**
- * Get the default branch for a GitHub repository
+ * Get candidate default branches for a GitHub repository, in priority order.
+ * Resolves the API-reported default branch first (if reachable), then falls
+ * back to the historical defaults 'main' and 'master'. Issue #11: many repos
+ * (e.g. apache-superset/superset-frontend) still use 'master' as their default.
+ *
  * @param {string} user - GitHub username
  * @param {string} repo - Repository name
- * @returns {Promise<string>} Default branch name
+ * @returns {Promise<string[]>} Ordered, deduplicated list of branch candidates
  */
-async function getDefaultBranch(user, repo) {
+async function getDefaultBranchCandidates(user, repo) {
+  const FALLBACKS = ['main', 'master'];
   try {
     // Try to get default branch from GitHub API
     const headers = {};
@@ -168,19 +173,45 @@ async function getDefaultBranch(user, repo) {
     if (token) {
       headers['Authorization'] = `token ${token}`;
     }
-    
-    const response = await axios.get(`https://api.github.com/repos/${user}/${repo}`, { headers });
-    return response.data.default_branch || 'main';
+
+    const response = await axios.get(
+      `https://api.github.com/repos/${user}/${repo}`,
+      { headers }
+    );
+    const detected = response.data && response.data.default_branch;
+    const candidates = [];
+    if (detected) candidates.push(detected);
+    for (const fb of FALLBACKS) {
+      if (fb && !candidates.includes(fb)) candidates.push(fb);
+    }
+    return candidates.length > 0 ? candidates : FALLBACKS.slice();
   } catch (err) {
-    // If API call fails, fall back to 'main' as default
-    console.warn(`Warning: Could not determine default branch for ${user}/${repo}, using 'main' as fallback`);
-    return 'main';
+    // If the API call fails, fall back to the historical defaults in order.
+    console.warn(
+      `Warning: Could not determine default branch for ${user}/${repo}; ` +
+      `will try 'main' and 'master' as fallbacks.`
+    );
+    return FALLBACKS.slice();
   }
+}
+
+/**
+ * Get the default branch for a GitHub repository (single string).
+ * Backwards-compatible wrapper around getDefaultBranchCandidates.
+ *
+ * @param {string} user - GitHub username
+ * @param {string} repo - Repository name
+ * @returns {Promise<string>} Default branch name
+ */
+async function getDefaultBranch(user, repo) {
+  const candidates = await getDefaultBranchCandidates(user, repo);
+  return candidates[0];
 }
 
 module.exports = {
   downloadWithSSH,
   getGitHubAuthHeaders,
   hasSSHKeys,
-  getDefaultBranch
+  getDefaultBranch,
+  getDefaultBranchCandidates
 }; 
