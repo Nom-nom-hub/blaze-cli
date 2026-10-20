@@ -248,17 +248,33 @@ if (supported.includes(command)) {
       }
     }
     // --- Start watcher as before ---
-    chokidar.watch(".", { ignored, persistent: true }).on("change", (file) => {
+    //
+    // Both "change" and "add" are handled. Chokidar only emits "change" for
+    // a file that already existed when the watcher started, so a file
+    // created afterwards (the common case - you write a new module and
+    // then import a package in it) emitted nothing at all and the missing
+    // dependency was never installed.
+    const inspectFile = (file, event) => {
       if (!watchedExts.some((ext) => file.endsWith(ext))) return;
-      console.log(`[blaze-watch] Detected change in: ${file}`);
-      const code = fs.readFileSync(file, "utf8");
+      console.log(`[blaze-watch] Detected ${event} in: ${file}`);
+      let code;
+      try {
+        code = fs.readFileSync(file, "utf8");
+      } catch {
+        return;
+      }
       const pkgs = extractPackages(code);
       pkgs.forEach((pkg) => {
         if (!installed.has(pkg)) pending.add(pkg);
       });
       if (batchTimeout) clearTimeout(batchTimeout);
       batchTimeout = setTimeout(batchInstall, 1000); // batch within 1s window
-    });
+    };
+
+    chokidar
+      .watch(".", { ignored, persistent: true })
+      .on("change", (file) => inspectFile(file, "change"))
+      .on("add", (file) => inspectFile(file, "add"));
     console.log(
       "[blaze-watch] Watching for new imports/requires in all supported file types...",
     );
