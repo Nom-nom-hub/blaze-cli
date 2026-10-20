@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.11.12
+
+- **Fix:** Scoped npm packages such as `@sindresorhus/merge-streams` were treated as GitHub specs and failed with a 404 — the leading `@` marks a package as scoped, and a GitHub username can never start with one
+- **Fix:** The tarball cache path was built from the package name, so a GitHub spec (`user/repo`) or a `github:` spec (`github:user/repo`) produced a path with a slash and a colon in it — the nested directory was never created and the first download on a clean machine failed with `ENOENT`
+- **Fix:** `blaze watch` ignored newly created files — chokidar emits `add` for a file that did not exist when the watcher started, and only `change` was handled, so writing a new module that imported a package installed nothing
+- **Fix:** The `blaze watch` test was a false positive — it never started a watcher and only checked whether `node_modules/left-pad` existed, which it did because the `pkg-b` workspace already depended on it
+- **Feat:** Added `test/test-blaze-specs.js` covering scoped packages, scoped packages with a version range, bare `user/repo` specs and `github:` prefixed specs
+- **Feat:** The `blaze watch` test now starts a real watcher in an isolated temp project, asserts the package is installed and usable, and asserts a second file change is noticed
+
 ## v1.11.11
 
 - **Fix:** `blaze install <package>` failed for every normal npm package with `Invalid GitHub/tarball spec: <version>` — registry packages were misclassified as GitHub specs because the check inspected the resolved tarball URL instead of the declared dependency spec
