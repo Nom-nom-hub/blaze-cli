@@ -8,38 +8,164 @@ on:
 
 jobs:
   build-and-test:
+    name: Build and test (npm)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (must come before CLI)
+      - name: Build
         run: npm run build
 
-      - name: List lib directory (debug)
-        run: ls -l lib
+      - name: Lint
+        run: npm run lint || true
 
-      - name: Clean non-npm specs from package.json
-        run: node bin/blaze-install.js clean-github-specs
+      - name: Run tests
+        run: npm test || true
 
-      - name: Lint (optional)
-        run: npm run lint
-        continue-on-error: true
+  blaze-install:
+    name: Install with blaze (dogfood)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Run tests (if you have tests)
-        run: npm test
-        continue-on-error: true
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
 
-      - name: Run feature script (optional)
-        run: node test-blaze-features.js
-        continue-on-error: true
+      # The CLI itself needs to exist before it can install anything, so the
+      # first pass uses npm to fetch the toolchain and build `lib/`.
+      - name: Bootstrap (npm, to build the CLI itself)
+        run: |
+          npm ci
+          npm run build
 
-      - name: Check build (optional)
-        run: npm run build
-        continue-on-error: true
+      - name: Install dependencies with blaze
+        run: node bin/blaze-install.js install
+
+      - name: Verify .bin shims were created
+        run: |
+          if [ ! -d node_modules/.bin ]; then
+            echo "::error::node_modules/.bin was not created by blaze install"
+            exit 1
+          fi
+          for tool in tsc eslint; do
+            if [ ! -e "node_modules/.bin/$tool" ]; then
+              echo "::error::expected .bin shim for $tool"
+              exit 1
+            fi
+          done
+          ls node_modules/.bin
+
+      - name: Verify workspace packages are linked
+        run: |
+          if [ ! -e node_modules/pkg-b ]; then
+            echo "::error::workspace package pkg-b was not linked into node_modules"
+            exit 1
+          fi
+          ls -l node_modules/pkg-b
+
+      # This is the point of the job: the build must work from a tree that
+      # blaze installed, using only the shims blaze created.
+      - name: Build using the blaze-installed tree
+        run: |
+          rm -rf lib
+          npm run build
+          test -f lib/index.js
+
+      - name: Run tests against the blaze-installed tree
+        run: npm test || true
+
+  tree-parity:
+    name: npm / blaze tree parity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Bootstrap (npm, to build the CLI itself)
+        run: |
+          npm ci
+          npm run build
+
+      # Produce the reference tree with npm, in its own directory so the
+      # CLI keeps the dependencies it needs to run.
+      #
+      # `src/` is copied across because the `prepare` script runs `tsc` on
+      # install, and the build would otherwise fail for reasons that have
+      # nothing to do with the comparison.
+      - name: Install with npm (reference tree)
+        run: |
+          mkdir -p /tmp/npm-tree
+          cp package.json package-lock.json tsconfig.json /tmp/npm-tree/
+          cp -r src packages /tmp/npm-tree/
+          cd /tmp/npm-tree
+          npm ci --no-audit --no-fund
+
+      # Produce the tree under test with blaze, also in its own directory.
+      # Blaze needs its own dependencies present in order to run at all,
+      # so the bootstrap tree stays in place and blaze installs into a
+      # separate folder.
+      - name: Install with blaze (tree under test)
+        run: |
+          mkdir -p /tmp/blaze-tree
+          cp package.json package-lock.json tsconfig.json /tmp/blaze-tree/
+          cp -r src packages /tmp/blaze-tree/
+          cd /tmp/blaze-tree
+          node "$GITHUB_WORKSPACE/bin/blaze-install.js" install
+
+      - name: Verify .bin shims exist in the blaze tree
+        run: |
+          test -d /tmp/blaze-tree/node_modules/.bin
+          ls /tmp/blaze-tree/node_modules/.bin
+
+      - name: Verify workspace packages are linked in the blaze tree
+        run: |
+          test -e /tmp/blaze-tree/node_modules/pkg-b
+          ls -l /tmp/blaze-tree/node_modules/pkg-b
+
+      # Any difference that is not already recorded in the baseline is a
+      # regression and fails the build. The baseline captures the gaps that
+      # are known and still open, so this job tracks improvements without
+      # blocking on them.
+      - name: Compare the two dependency trees
+        run: |
+          node test/diff-trees.js \
+            /tmp/npm-tree/node_modules \
+            /tmp/blaze-tree/node_modules \
+            --baseline test/baseline-trees.json
+
+      - name: Upload the tree comparison report
+        if: always()
+        run: |
+          node test/diff-trees.js \
+            /tmp/npm-tree/node_modules \
+            /tmp/blaze-tree/node_modules \
+            --baseline test/baseline-trees.json \
+            --json > tree-comparison.json || true
+          cat tree-comparison.json
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tree-comparison
+          path: tree-comparison.json

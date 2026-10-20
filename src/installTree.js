@@ -5,6 +5,7 @@ const os = require("os");
 const { ensureInStore } = require("./downloadAndExtract");
 const cliProgress = require("cli-progress");
 const { spawn } = require("child_process");
+const { createBinShims } = require("./binShims");
 const chalk = require('chalk');
 let boxen = require('boxen');
 if (boxen && boxen.default) boxen = boxen.default;
@@ -592,6 +593,27 @@ async function installTree(tree, destDir, options = {}) {
   }
 
   bar.stop();
+
+  // Create `node_modules/.bin` shims for every package that declares a `bin`
+  // field. Without these, `npm run <script>` and `npx <tool>` cannot find
+  // executables in a blaze-installed tree.
+  try {
+    const { created } = await createBinShims(nodeModulesDir, {
+      verbose: isVerbose,
+    });
+    if (created.length > 0 && isVerbose) {
+      console.log(
+        chalk.gray(`[TIMING] created ${created.length} .bin shims`),
+      );
+    }
+  } catch (err) {
+    console.warn(
+      chalk.yellow(
+        `⚠ Failed to create .bin shims: ${err.message}. Executables in node_modules may not be on PATH.`,
+      ),
+    );
+  }
+
   console.log(boxen(chalk.bold.green('✔ All packages installed!'), {
     padding: 1,
     margin: 1,
