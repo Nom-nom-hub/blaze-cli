@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.11.11
+
+- **Fix:** `blaze install <package>` failed for every normal npm package with `Invalid GitHub/tarball spec: <version>` — registry packages were misclassified as GitHub specs because the check inspected the resolved tarball URL instead of the declared dependency spec
+- **Fix:** `blaze info`, `blaze run`, `blaze version` and `blaze link` crashed with `ReferenceError: rest is not defined` after the CLI argument-parsing refactor
+- **Fix:** `blaze watch` failed with `'blaze' is not recognized` when run from a local checkout (npx, npm link, repo clone) — it shelled out to a bare `blaze` binary that only exists on a global install
+- **Fix:** `npm install` failed with `'tsc' is not recognized` — `typescript` was missing from `devDependencies`, so the `prepare` build step could never succeed from a clean checkout
+- **Chore:** Regenerated `lib/` from `src/` — the published artifact had drifted from the sources
+- **Fix:** `printBanner` was undefined in the banner plugin, which would have thrown when its `afterInstall`/`afterUpdate` hooks ran
+
 ## v1.11.10
 
 - **Fix:** Resolved critical self-downgrade bug where Blaze would downgrade itself when running `npx blaze-install`
