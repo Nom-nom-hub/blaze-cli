@@ -39,12 +39,14 @@ async function fetchPackageMeta(name, { offline = false } = {}) {
 const CONCURRENCY = 8;
 
 function isGithubOrTarballSpec(spec) {
-  return (
-    typeof spec === "string" &&
-    (/^github:[^/]+\/[^#]+(#.+)?$/.test(spec) ||
-      /^[^/]+\/[^#]+(#.+)?$/.test(spec) ||
-      /^https?:\/\/.+\.(tgz|tar\.gz)$/.test(spec))
-  );
+  if (typeof spec !== "string") return false;
+  if (/^https?:\/\/.+\.(tgz|tar\.gz)$/.test(spec)) return true;
+  if (/^github:[^/]+\/[^#]+(#.+)?$/.test(spec)) return true;
+  // `user/repo` is a GitHub spec, but a scoped npm package such as
+  // `@scope/name` has the same shape. The leading `@` marks it as a
+  // registry package, so it must not be treated as a GitHub reference.
+  if (/^@[^/]+\/[^#]+(#.+)?$/.test(spec)) return false;
+  return /^[^/]+\/[^#]+(#.+)?$/.test(spec);
 }
 
 async function resolveDependencies(

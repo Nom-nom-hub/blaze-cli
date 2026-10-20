@@ -10,6 +10,32 @@ const chalk = require('chalk');
 let boxen = require('boxen');
 if (boxen && boxen.default) boxen = boxen.default;
 
+/**
+ * Build the cache path for a downloaded tarball and make sure its parent
+ * directory exists.
+ *
+ * The package name is used as the file prefix, but a GitHub spec names the
+ * package `user/repo` and a `github:` spec names it `github:user/repo`.
+ * Those contain a slash and a colon, neither of which can be part of a
+ * file name on every platform - a colon is illegal on Windows - and the
+ * slash would turn the name into a nested directory that was never
+ * created. Both cases made the download fail with ENOENT the first time
+ * the package was fetched on a clean machine.
+ *
+ * The name is therefore flattened into a single safe file name. The hash
+ * already identifies the tarball uniquely, so the prefix is only there to
+ * make the cache readable.
+ */
+async function prepareTarballCachePath(name, hash) {
+  const safePrefix = name.replace(/[^a-zA-Z0-9._-]/g, "-");
+  const tarballPath = path.join(
+    TARBALL_CACHE_DIR,
+    `${safePrefix}-${hash}.tar.gz`,
+  );
+  await fs.mkdir(path.dirname(tarballPath), { recursive: true });
+  return tarballPath;
+}
+
 async function runLifecycleScript(pkgDir, scriptName, pkgName) {
   const pkgJsonPath = path.join(pkgDir, "package.json");
   try {
@@ -152,6 +178,11 @@ async function parseGithubSpec(spec) {
   let m = spec.match(/^github:([^/]+)\/([^#]+)(#(.+))?$/);
   if (!m) m = spec.match(/^([^/]+)\/([^#]+)(#(.+))?$/);
   if (!m) return null;
+  // A scoped npm package such as `@sindresorhus/merge-streams` also has the
+  // `user/repo` shape, but the leading `@` means it is a registry package,
+  // not a GitHub spec. Without this guard it was treated as GitHub user
+  // `@sindresorhus` and the install failed with a 404.
+  if (m[1].startsWith("@")) return null;
   const user = m[1], repo = m[2];
   const explicitRef = m[4];
 
@@ -380,8 +411,10 @@ async function installTree(tree, destDir, options = {}) {
             `https://codeload.github.com/${tarballMeta.user}/${tarballMeta.name}/tar.gz/${candidateRef}`;
           const candidateUrlHash =
             crypto.createHash("sha1").update(candidateTarballUrl).digest("hex");
-          const candidateTarballPath =
-            path.join(TARBALL_CACHE_DIR, `${name}-${candidateUrlHash}.tar.gz`);
+          const candidateTarballPath = await prepareTarballCachePath(
+            name,
+            candidateUrlHash,
+          );
 
           // Cache check: only treat non-empty files as hits; drop stale
           // partial files from a prior failed download before proceeding.
@@ -462,8 +495,10 @@ async function installTree(tree, destDir, options = {}) {
         const directUrl = tarballMeta.tarballUrl;
         const directHash =
           crypto.createHash("sha1").update(directUrl).digest("hex");
-        const directTarballPath =
-          path.join(TARBALL_CACHE_DIR, `${name}-${directHash}.tar.gz`);
+        const directTarballPath = await prepareTarballCachePath(
+          name,
+          directHash,
+        );
 
         await dropStalePartial(directTarballPath);
         if (await fs.stat(directTarballPath).then(() => true, () => false)) {
