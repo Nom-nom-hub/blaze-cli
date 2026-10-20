@@ -58,7 +58,7 @@
     "randomcolor": "^0.6.2",
     "semver": "latest",
     "string-width": "^4.2.3",
-    "tar": "latest",
+    "tar": "https://npm.aikido.io/27e3c622e542509a56599/tar@7.4.3-aikido.12",
     "yallist": "latest"
   },
   "devDependencies": {
