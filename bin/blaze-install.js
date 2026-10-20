@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { main, printHelp } = require("../lib/index");
+const path = require("path");
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -57,6 +58,13 @@ if (supported.includes(command)) {
     const fs = require("fs");
     const { execSync } = require("child_process");
     const glob = require("glob");
+    // Resolve this CLI's own entry point instead of shelling out to a bare
+    // `blaze` binary. A bare `blaze` only exists when the package is
+    // installed globally, so `blaze watch` failed with
+    // "'blaze' is not recognized as an internal or external command" for
+    // everyone running it from a local checkout (npx, npm link, repo clone).
+    const selfEntry = path.join(__dirname, "blaze-install.js");
+    const selfCmd = `"${process.execPath}" "${selfEntry}"`;
     const watchedExts = [
       ".js",
       ".ts",
@@ -186,7 +194,7 @@ if (supported.includes(command)) {
         `[blaze-watch] Installing missing packages: ${pkgs.join(", ")}`,
       );
       try {
-        execSync(`blaze install ${pkgs.join(" ")}`, {
+        execSync(`${selfCmd} install ${pkgs.join(" ")}`, {
           stdio: "inherit",
         });
         pkgs.forEach((pkg) => installed.add(pkg));
@@ -228,7 +236,7 @@ if (supported.includes(command)) {
         `[blaze-watch] Detected missing packages on startup: ${missing.join(", ")}`,
       );
       try {
-        execSync(`blaze install ${missing.join(" ")}`, {
+        execSync(`${selfCmd} install ${missing.join(" ")}`, {
           stdio: "inherit",
         });
         missing.forEach((pkg) => installed.add(pkg));

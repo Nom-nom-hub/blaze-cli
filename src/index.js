@@ -721,7 +721,7 @@ async function main(args) {
       process.exit(0);
     }
 
-    const { command, packages, flags, workspaceTarget } = parseArgs(args);
+    const { command, rest, packages, flags, workspaceTarget } = parseArgs(args);
 
     // Help command
     if (command === "help" || command === "--help" || !command) {

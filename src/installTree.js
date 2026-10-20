@@ -293,22 +293,28 @@ async function installTree(tree, destDir, options = {}) {
       return;
     }
     // Only handle GitHub/tarball install if info.version is a GitHub/tarball spec.
-    // Both `gh` and `isGithubOrTarball` are derived cheaply from `tarballMeta`
-    // (which the resolution phase already populated), so we avoid a redundant
-    // parseGithubSpec(info.version) call here — that would otherwise trigger
-    // a second GitHub API request per GitHub spec and burn rate-limit budget.
+    //
+    // The decision must be driven by the *declared dependency spec*
+    // (`info.version`), NOT by the shape of the resolved tarball URL. Every
+    // normal npm package also resolves to a `.tgz` URL, so keying off
+    // `tarballMeta.tarballUrl` misclassified every registry package as a
+    // "GitHub/tarball" install and then failed validation with
+    // "Invalid GitHub/tarball spec: 1.3.0".
+    //
+    // `gh` is only populated for real GitHub specs (parseGithubSpec set
+    // user/name/refCandidates). Deriving it from `tarballMeta` avoided a
+    // second GitHub API request per spec (rate-limit budget) — we keep that
+    // property by reusing the already-parsed metadata instead of re-parsing.
     const gh = (tarballMeta && tarballMeta.user && tarballMeta.name)
       ? tarballMeta
       : null;
-    const isGithubOrTarball = !!tarballMeta.tarballUrl && (
-      isTarballUrl(tarballMeta.tarballUrl) ||
-      tarballMeta.tarballUrl.includes('codeload.github.com')
-    );
-    if (isGithubOrTarball) {
-      // Tertiary safety: validate cheaply using the already-parsed `gh`
-      // (no extra GitHub API call). The outer condition already established
-      // the spec is valid via `tarballMeta`, but this preserves the original
-      // error message for any unforeseen edge cases.
+    const isGithubSpec = !!gh;
+    const isRawTarballSpec = isTarballUrl(info.version);
+    if (isGithubSpec || isRawTarballSpec) {
+      // Validate cheaply using the already-parsed `gh` (no extra GitHub API
+      // call). The outer condition already established the spec is valid via
+      // `tarballMeta`, but this preserves the original error message for any
+      // unforeseen edge cases.
       if (!(await validateGithubOrTarballSpec(info.version, gh))) {
         console.error(chalk.red(`Invalid GitHub/tarball spec: '${info.version}'.\nExamples: user/repo, user/repo#branch, github:user/repo#sha, https://example.com/pkg.tgz`));
         throw new Error(`Invalid GitHub/tarball spec: ${info.version}`);
@@ -338,7 +344,7 @@ async function installTree(tree, destDir, options = {}) {
       // For raw tarball URLs (info.version = https://.../*.tgz) the
       // tarballUrl IS the source of truth and refCandidates/user/name are
       // absent — we must NOT overwrite it with a candidate-built URL.
-      const isGithubSpec =
+      const isGithubRefSpec =
         !!tarballMeta.user &&
         !!tarballMeta.name &&
         Array.isArray(tarballMeta.refCandidates) &&
@@ -357,7 +363,7 @@ async function installTree(tree, destDir, options = {}) {
         } catch {}
       };
 
-      if (isGithubSpec) {
+      if (isGithubRefSpec) {
         // GitHub spec — try each candidate branch in priority order and stop
         // at the first one that succeeds. HTTP 404 (and SSH clone failures,
         // see below) are treated as "branch missing" and trigger the next
