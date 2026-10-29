@@ -7,7 +7,7 @@
     "blaze": "bin/blaze-install.js"
   },
   "scripts": {
-    "test": "node test/test-blaze-features.js && node test/test-blaze-plugins.js && node test/test-blaze-specs.js && node test/test-blaze-watch.js && node test/blaze-watch-test.js",
+    "test": "node test/test-blaze-features.js && node test/test-blaze-plugins.js && node test/test-blaze-specs.js && node test/test-blaze-watch.js && node test/blaze-watch-test.js && node test/test-doctor-json.js",
     "preinstall": "echo preinstall script",
     "install": "echo install script",
     "postinstall": "echo postinstall script",
