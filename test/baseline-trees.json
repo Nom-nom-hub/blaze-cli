@@ -13,6 +13,7 @@
       "binshim:glob:glob",
       "extra:@inquirer/ansi",
       "extra:@inquirer/external-editor",
+      "extra:@isaacs/nonrecursive-glob-match",
       "extra:agent-base",
       "extra:async-generator-function",
       "extra:fast-string-truncated-width",
