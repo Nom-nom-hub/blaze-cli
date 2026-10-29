@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>blaze-install v2 preview</title>
+<style>
+body{margin:0;font-family:system-ui,sans-serif;background:#0b0d12;color:#f3f4f6}
+.container{max-width:960px;margin:0 auto;padding:4rem 1.5rem}
+h1{font-size:3rem;margin:0 0 1rem;background:linear-gradient(90deg,#ff6a00,#7c5cff);-webkit-background-clip:text;color:transparent}
+p.lead{color:#a3a8b3;font-size:1.2rem;margin:0 0 2rem}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.2rem;margin:1rem 0}
+.code{font-family:monospace;background:#0e1118;padding:.8rem 1rem;border-radius:10px;color:#ffb27a;display:inline-block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.btn{display:inline-block;background:#ff6a00;color:#fff;padding:.8rem 1.2rem;border-radius:10px;text-decoration:none;margin-right:.6rem}
+</style></head><body>
+<div class="container">
+<h1>blaze-install</h1>
+<p class="lead">A Node package manager focused on <strong>health</strong>, <strong>diagnostics</strong>, and <strong>plugins</strong> — npm-compatible, with a built-in doctor and 30+ checks.</p>
+<a class="btn" href="https://github.com/Nom-nom-hub/blaze-cli">GitHub</a>
+<a class="btn" style="background:#7c5cff" href="#features">Features</a>
+<div class="card"><span class="code">npm i -g blaze-install</span> &nbsp; then &nbsp; <span class="code">blaze doctor --json</span></div>
+<section id="features" class="grid">
+  <div class="card"><h3>Doctor & health</h3><p>Auto-fix lockfile drift, missing node_modules, broken symlinks. JSON output for CI.</p></div>
+  <div class="card"><h3>Plugins</h3><p>Health score, license checker, dependency-age reporter, size analyzer, monorepo cross-link checker.</p></div>
+  <div class="card"><h3>Workspaces</h3><p>Monorepo linking with cross-link validation.</p></div>
+  <div class="card"><h3>Offline</h3><p>Prefetch and offline installs from global cache.</p></div>
+</section>
+<section class="card"><h3>Honest speed</h3><p>pnpm ~3.0s · yarn ~4.9s · npm ~7.1s · blaze ~5.9s on a 7-dep cold install. We compete on health, not raw speed.</p></section>
+</div></body></html>
