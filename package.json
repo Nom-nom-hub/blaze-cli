@@ -1,6 +1,6 @@
 {
   "name": "blaze-install",
-  "version": "1.11.12",
+  "version": "1.12.0",
   "description": "A new package manager",
   "main": "lib/index.js",
   "bin": {
@@ -54,19 +54,19 @@
     "inquirer": "latest",
     "jiti": "^2.4.2",
     "lodash": "^4.17.21",
-    "open": "^10.1.2",
+    "open": "^11.0.4",
     "randomcolor": "^0.6.2",
-    "semver": "latest",
-    "string-width": "^4.2.3",
-    "tar": "latest",
+    "semver": "^7.8.5",
+    "string-width": "^8.3.0",
+    "tar": "^7.5.22",
     "yallist": "latest"
   },
   "devDependencies": {
-    "@eslint/js": "^9.30.1",
-    "eslint": "^8.57.1",
-    "globals": "^16.3.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
     "is-odd": "^3.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
     "@types/node": ">=18"
