@@ -1,28 +1,2020 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>blaze-install v2 preview</title>
-<style>
-body{margin:0;font-family:system-ui,sans-serif;background:#0b0d12;color:#f3f4f6}
-.container{max-width:960px;margin:0 auto;padding:4rem 1.5rem}
-h1{font-size:3rem;margin:0 0 1rem;background:linear-gradient(90deg,#ff6a00,#7c5cff);-webkit-background-clip:text;color:transparent}
-p.lead{color:#a3a8b3;font-size:1.2rem;margin:0 0 2rem}
-.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.2rem;margin:1rem 0}
-.code{font-family:monospace;background:#0e1118;padding:.8rem 1rem;border-radius:10px;color:#ffb27a;display:inline-block}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-.btn{display:inline-block;background:#ff6a00;color:#fff;padding:.8rem 1.2rem;border-radius:10px;text-decoration:none;margin-right:.6rem}
-</style></head><body>
-<div class="container">
-<h1>blaze-install</h1>
-<p class="lead">A Node package manager focused on <strong>health</strong>, <strong>diagnostics</strong>, and <strong>plugins</strong> — npm-compatible, with a built-in doctor and 30+ checks.</p>
-<a class="btn" href="https://github.com/Nom-nom-hub/blaze-cli">GitHub</a>
-<a class="btn" style="background:#7c5cff" href="#features">Features</a>
-<div class="card"><span class="code">npm i -g blaze-install</span> &nbsp; then &nbsp; <span class="code">blaze doctor --json</span></div>
-<section id="features" class="grid">
-  <div class="card"><h3>Doctor & health</h3><p>Auto-fix lockfile drift, missing node_modules, broken symlinks. JSON output for CI.</p></div>
-  <div class="card"><h3>Plugins</h3><p>Health score, license checker, dependency-age reporter, size analyzer, monorepo cross-link checker.</p></div>
-  <div class="card"><h3>Workspaces</h3><p>Monorepo linking with cross-link validation.</p></div>
-  <div class="card"><h3>Offline</h3><p>Prefetch and offline installs from global cache.</p></div>
-</section>
-<section class="card"><h3>Honest speed</h3><p>pnpm ~3.0s · yarn ~4.9s · npm ~7.1s · blaze ~5.9s on a 7-dep cold install. We compete on health, not raw speed.</p></section>
-</div></body></html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="blaze-install — a blazing fast, modern package manager for Node.js with workspaces, plugins, offline mode, a built-in doctor, and a beautiful CLI." />
+    <meta name="theme-color" content="#0b0d12" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
+    <title>blaze-install — A blazing fast Node.js package manager</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      />
+    </noscript>
+    <style>
+      /* ============================================================
+         Design tokens
+         ============================================================ */
+      :root {
+        --accent: #ff6a00;
+        --accent-soft: #ffb27a;
+        --accent-glow: rgba(255, 106, 0, 0.45);
+        --accent-fg: #ffffff;
+        --secondary: #7c5cff;
+        --maxw: 1200px;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 18px;
+        --radius-xl: 24px;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.18);
+        --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.18);
+        --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.28);
+        --transition: 220ms cubic-bezier(0.2, 0.6, 0.2, 1);
+      }
+
+      [data-theme="dark"] {
+        --bg: #0b0d12;
+        --bg-elev: #11141c;
+        --bg-card: rgba(255, 255, 255, 0.04);
+        --bg-card-hover: rgba(255, 255, 255, 0.07);
+        --border: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.14);
+        --fg: #f3f4f6;
+        --fg-muted: #a3a8b3;
+        --fg-dim: #6b7180;
+        --code-bg: #0e1118;
+        --code-border: rgba(255, 255, 255, 0.1);
+        --terminal-bg: linear-gradient(180deg, #11141c 0%, #0b0d12 100%);
+        --terminal-header: linear-gradient(180deg, #1a1f2b, #161a23);
+        --hero-grad: radial-gradient(
+            1200px 600px at 15% -10%,
+            rgba(255, 106, 0, 0.35),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 90% 10%,
+            rgba(124, 92, 255, 0.28),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 50% 110%,
+            rgba(255, 159, 64, 0.18),
+            transparent 60%
+          ),
+          #0b0d12;
+        --grid-line: rgba(255, 255, 255, 0.04);
+      }
+
+      [data-theme="light"] {
+        --bg: #fafaf9;
+        --bg-elev: #ffffff;
+        --bg-card: #ffffff;
+        --bg-card-hover: #fafaf9;
+        --border: #e5e7eb;
+        --border-strong: #d1d5db;
+        --fg: #18181b;
+        --fg-muted: #52525b;
+        --fg-dim: #71717a;
+        --code-bg: #f4f4f5;
+        --code-border: #e5e7eb;
+        --terminal-bg: #ffffff;
+        --terminal-header: #f4f4f5;
+        --hero-grad: radial-gradient(
+            1100px 700px at 15% -10%,
+            rgba(255, 106, 0, 0.18),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 90% 10%,
+            rgba(124, 92, 255, 0.16),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 50% 110%,
+            rgba(255, 159, 64, 0.12),
+            transparent 60%
+          ),
+          #fafaf9;
+        --grid-line: rgba(0, 0, 0, 0.06);
+      }
+
+      /* ============================================================
+         Base
+         ============================================================ */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        transition: background var(--transition), color var(--transition);
+        overflow-x: hidden;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: color var(--transition);
+      }
+      a:hover {
+        color: var(--accent-soft);
+      }
+
+      img,
+      svg {
+        max-width: 100%;
+        display: block;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        margin: 0 0 0.5em 0;
+        color: var(--fg);
+      }
+
+      p {
+        margin: 0 0 1em 0;
+        color: var(--fg-muted);
+      }
+
+      .container {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .section {
+        padding: 96px 0;
+        position: relative;
+        scroll-margin-top: 80px;
+      }
+
+      .section-eyebrow {
+        display: inline-block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent);
+        background: rgba(255, 106, 0, 0.1);
+        padding: 4px 10px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+
+      .section-title {
+        font-size: clamp(1.75rem, 3vw, 2.4rem);
+        font-weight: 700;
+        margin: 0 0 12px 0;
+      }
+
+      .section-sub {
+        max-width: 640px;
+        color: var(--fg-muted);
+        font-size: 1.05rem;
+        margin: 0 0 40px 0;
+      }
+
+      .section-head {
+        text-align: center;
+        margin: 0 auto 48px auto;
+        max-width: 720px;
+      }
+      .section-head .section-sub {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* ============================================================
+         Navbar
+         ============================================================ */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: saturate(180%) blur(14px);
+        -webkit-backdrop-filter: saturate(180%) blur(14px);
+        background: color-mix(in srgb, var(--bg) 78%, transparent);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        height: 64px;
+      }
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: var(--fg);
+        font-size: 1.05rem;
+      }
+      .nav-brand img {
+        width: 30px;
+        height: 30px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .nav-links a {
+        color: var(--fg-muted);
+        font-size: 0.92rem;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        transition: background var(--transition), color var(--transition);
+      }
+      .nav-links a:hover {
+        color: var(--fg);
+        background: var(--bg-card);
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .theme-toggle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--fg);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background var(--transition),
+          border-color var(--transition),
+          transform var(--transition);
+      }
+      .theme-toggle:hover {
+        background: var(--bg-card-hover);
+        border-color: var(--border-strong);
+      }
+      .theme-toggle:active {
+        transform: scale(0.94);
+      }
+      .theme-toggle svg {
+        width: 18px;
+        height: 18px;
+      }
+      .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--fg);
+        font-weight: 500;
+        font-size: 0.92rem;
+        transition: background var(--transition), border-color var(--transition);
+      }
+      .btn-ghost:hover {
+        border-color: var(--border-strong);
+        background: var(--bg-card-hover);
+        color: var(--fg);
+      }
+      .btn-ghost svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* ============================================================
+         Hero
+         ============================================================ */
+      .hero {
+        padding: 80px 0 88px 0;
+        position: relative;
+        background: var(--hero-grad);
+        overflow: hidden;
+        scroll-margin-top: 80px;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(
+            var(--grid-line) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          black 0%,
+          transparent 70%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          black 0%,
+          transparent 70%
+        );
+        opacity: 0.6;
+        pointer-events: none;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        gap: 64px;
+        align-items: center;
+      }
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px 6px 6px;
+        border-radius: 999px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--fg-muted);
+        margin-bottom: 24px;
+      }
+      .hero-eyebrow .dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent-fg);
+        font-size: 0.7rem;
+        font-weight: 700;
+      }
+      .hero h1 {
+        font-size: clamp(2.4rem, 5.4vw, 4rem);
+        font-weight: 800;
+        margin: 0 0 20px 0;
+        background: linear-gradient(
+          180deg,
+          var(--fg) 0%,
+          color-mix(in srgb, var(--fg) 70%, transparent) 100%
+        );
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .hero h1 .accent {
+        background: linear-gradient(90deg, var(--accent), #ff9a3d);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .hero-sub {
+        font-size: 1.15rem;
+        color: var(--fg-muted);
+        max-width: 540px;
+        margin: 0 0 28px 0;
+      }
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.98rem;
+        text-decoration: none;
+        transition: transform var(--transition), background var(--transition),
+          box-shadow var(--transition), border-color var(--transition),
+          color var(--transition);
+        border: 1px solid transparent;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: var(--accent-fg);
+        box-shadow: 0 6px 24px var(--accent-glow);
+      }
+      .btn-primary:hover {
+        background: #ff7e1f;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 28px var(--accent-glow);
+      }
+      .btn-secondary {
+        background: var(--bg-card);
+        color: var(--fg);
+        border-color: var(--border);
+      }
+      .btn-secondary:hover {
+        border-color: var(--border-strong);
+        background: var(--bg-card-hover);
+        color: var(--fg);
+        transform: translateY(-1px);
+      }
+      .btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      .hero-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--fg-muted);
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .badge .pip {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      /* ============================================================
+         Terminal (hero)
+         ============================================================ */
+      .terminal {
+        background: var(--terminal-bg);
+        border: 1px solid var(--code-border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        font-family: "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92rem;
+        transform: perspective(2000px) rotateY(-4deg) rotateX(2deg);
+        transition: transform 600ms cubic-bezier(0.2, 0.6, 0.2, 1);
+      }
+      .terminal:hover {
+        transform: perspective(2000px) rotateY(-1deg) rotateX(1deg);
+      }
+      .terminal-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        background: var(--terminal-header);
+        border-bottom: 1px solid var(--code-border);
+      }
+      .terminal-dots {
+        display: flex;
+        gap: 6px;
+      }
+      .terminal-dots span {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .terminal-dots span:nth-child(1) {
+        background: #ff5f57;
+      }
+      .terminal-dots span:nth-child(2) {
+        background: #febc2e;
+      }
+      .terminal-dots span:nth-child(3) {
+        background: #28c840;
+      }
+      .terminal-title {
+        font-size: 0.78rem;
+        color: var(--fg-dim);
+        flex: 1;
+        text-align: center;
+      }
+      .terminal-body {
+        padding: 18px 18px 22px 18px;
+        line-height: 1.65;
+        color: var(--fg);
+      }
+      .t-prompt {
+        color: var(--accent);
+      }
+      .t-cmd {
+        color: var(--fg);
+      }
+      .t-flag {
+        color: var(--secondary);
+      }
+      .t-ok {
+        color: #4ade80;
+      }
+      .t-info {
+        color: #38bdf8;
+      }
+      .t-dim {
+        color: var(--fg-dim);
+      }
+      .t-strong {
+        color: var(--accent-soft);
+        font-weight: 600;
+      }
+      .t-bar {
+        display: inline-block;
+        width: 80px;
+        height: 6px;
+        background: rgba(124, 92, 255, 0.18);
+        border-radius: 6px;
+        vertical-align: middle;
+        margin-right: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+      .t-bar::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        background: linear-gradient(90deg, var(--accent), #ff9a3d);
+        border-radius: 6px;
+        animation: tBar 2.4s ease-in-out infinite;
+      }
+      @keyframes tBar {
+        0%,
+        100% {
+          transform: translateX(-100%);
+        }
+        50% {
+          transform: translateX(0%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .t-bar::after {
+          animation: none;
+          transform: none;
+        }
+        .terminal {
+          transform: none;
+        }
+      }
+
+      /* ============================================================
+         Tabs (install + commands)
+         ============================================================ */
+      .tabs {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+      }
+      .tabs-list {
+        display: flex;
+        gap: 4px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+      }
+      [data-theme="light"] .tabs-list {
+        background: #f4f4f5;
+      }
+      .tab-btn {
+        background: transparent;
+        border: 1px solid transparent;
+        color: var(--fg-muted);
+        font-family: inherit;
+        font-size: 0.92rem;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background var(--transition), color var(--transition),
+          border-color var(--transition);
+      }
+      .tab-btn:hover {
+        color: var(--fg);
+      }
+      .tab-btn[aria-selected="true"] {
+        background: var(--bg-elev);
+        color: var(--fg);
+        border-color: var(--border);
+      }
+      .tab-panel {
+        padding: 24px;
+      }
+      .code-block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        background: var(--code-bg);
+        border: 1px solid var(--code-border);
+        border-radius: var(--radius-md);
+        padding: 14px 18px;
+        font-family: "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.95rem;
+        color: var(--fg);
+        overflow-x: auto;
+      }
+      .code-block code {
+        background: transparent;
+        padding: 0;
+        font: inherit;
+        color: inherit;
+        white-space: pre;
+      }
+      .copy-btn {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--fg-muted);
+        font-family: inherit;
+        font-size: 0.78rem;
+        font-weight: 500;
+        padding: 6px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background var(--transition), color var(--transition),
+          border-color var(--transition);
+      }
+      .copy-btn:hover {
+        background: var(--bg-card-hover);
+        color: var(--fg);
+        border-color: var(--border-strong);
+      }
+      .copy-btn.copied {
+        background: rgba(74, 222, 128, 0.15);
+        color: #16a34a;
+        border-color: rgba(74, 222, 128, 0.4);
+      }
+      .tab-panel[hidden] {
+        display: none;
+      }
+
+      /* ============================================================
+         Features grid
+         ============================================================ */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+      }
+      .feature {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        transition: background var(--transition), border-color var(--transition),
+          transform var(--transition);
+      }
+      .feature:hover {
+        background: var(--bg-card-hover);
+        border-color: var(--border-strong);
+        transform: translateY(-2px);
+      }
+      .feature-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 106, 0, 0.12);
+        color: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+      }
+      .feature-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+      .feature h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 6px 0;
+      }
+      .feature p {
+        font-size: 0.95rem;
+        margin: 0;
+        color: var(--fg-muted);
+      }
+
+      /* ============================================================
+         Performance strip
+         ============================================================ */
+      .perf-strip {
+        border-radius: var(--radius-xl);
+        background: linear-gradient(
+            135deg,
+            rgba(255, 106, 0, 0.1),
+            rgba(124, 92, 255, 0.08)
+          ),
+          var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 32px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 24px;
+        text-align: center;
+      }
+      .perf-num {
+        font-size: clamp(2rem, 4vw, 2.6rem);
+        font-weight: 800;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .perf-label {
+        margin-top: 6px;
+        font-size: 0.92rem;
+        color: var(--fg-muted);
+      }
+
+      /* ============================================================
+         Plugin cards
+         ============================================================ */
+      .plugins {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .plugin {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 18px 20px;
+        transition: background var(--transition), border-color var(--transition),
+          transform var(--transition);
+      }
+      .plugin:hover {
+        background: var(--bg-card-hover);
+        border-color: var(--border-strong);
+        transform: translateY(-2px);
+      }
+      .plugin-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .plugin-name {
+        font-family: "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--fg);
+      }
+      .plugin-tag {
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(124, 92, 255, 0.15);
+        color: #a78bfa;
+      }
+      [data-theme="light"] .plugin-tag {
+        color: #6d28d9;
+        background: rgba(124, 92, 255, 0.12);
+      }
+      .plugin-desc {
+        font-size: 0.92rem;
+        color: var(--fg-muted);
+        margin: 0;
+      }
+      .plugins-more {
+        text-align: center;
+        margin-top: 28px;
+        color: var(--fg-muted);
+      }
+
+      /* ============================================================
+         Comparison
+         ============================================================ */
+      .compare-wrap {
+        overflow-x: auto;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+      }
+      .compare {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+        min-width: 720px;
+      }
+      .compare th,
+      .compare td {
+        padding: 14px 18px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      .compare thead th {
+        font-weight: 600;
+        color: var(--fg);
+        background: rgba(255, 255, 255, 0.02);
+        position: sticky;
+        top: 0;
+      }
+      [data-theme="light"] .compare thead th {
+        background: #f4f4f5;
+      }
+      .compare th:first-child,
+      .compare td:first-child {
+        font-weight: 600;
+        color: var(--fg);
+      }
+      .compare td.feat-blaze {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .compare tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .compare tbody tr:hover {
+        background: var(--bg-card-hover);
+      }
+
+      /* ============================================================
+         "blaze watch" callout
+         ============================================================ */
+      .watch-callout {
+        background: linear-gradient(
+            135deg,
+            rgba(124, 92, 255, 0.14),
+            rgba(255, 106, 0, 0.08)
+          ),
+          var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 36px;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 32px;
+        align-items: center;
+      }
+      .watch-callout h3 {
+        font-size: 1.6rem;
+        margin: 0 0 12px 0;
+      }
+      .watch-callout p {
+        margin: 0 0 14px 0;
+        color: var(--fg-muted);
+      }
+      .watch-callout ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .watch-callout li {
+        padding: 6px 0 6px 26px;
+        position: relative;
+        color: var(--fg-muted);
+        font-size: 0.95rem;
+      }
+      .watch-callout li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .watch-callout code {
+        background: var(--code-bg);
+        border: 1px solid var(--code-border);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-family: "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.88em;
+      }
+
+      /* ============================================================
+         CTA banner
+         ============================================================ */
+      .cta-banner {
+        text-align: center;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 106, 0, 0.18),
+            rgba(124, 92, 255, 0.14)
+          ),
+          var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 48px 32px;
+      }
+      .cta-banner h2 {
+        font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+        margin: 0 0 10px 0;
+      }
+      .cta-banner p {
+        max-width: 540px;
+        margin: 0 auto 22px auto;
+      }
+
+      /* ============================================================
+         Footer
+         ============================================================ */
+      .footer {
+        border-top: 1px solid var(--border);
+        padding: 40px 0 32px 0;
+        margin-top: 40px;
+      }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--fg-muted);
+        font-size: 0.92rem;
+      }
+      .footer-brand img {
+        width: 24px;
+        height: 24px;
+      }
+      .footer-links {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .footer-links a {
+        color: var(--fg-muted);
+        padding: 6px 10px;
+        font-size: 0.9rem;
+        border-radius: 6px;
+      }
+      .footer-links a:hover {
+        color: var(--fg);
+        background: var(--bg-card);
+      }
+
+      /* ============================================================
+         Reveal-on-scroll
+         ============================================================ */
+      .reveal {
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 600ms ease, transform 600ms ease;
+      }
+      .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal,
+        html {
+          scroll-behavior: auto;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
+
+      /* ============================================================
+         Responsive
+         ============================================================ */
+      @media (max-width: 900px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+        .terminal {
+          transform: none;
+        }
+        .watch-callout {
+          grid-template-columns: 1fr;
+          padding: 28px;
+        }
+        .nav-links {
+          display: none;
+        }
+        .section {
+          padding: 72px 0;
+        }
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 0 18px;
+        }
+        .hero {
+          padding: 56px 0;
+        }
+        .hero h1 {
+          font-size: clamp(2rem, 8vw, 2.6rem);
+        }
+        .section {
+          padding: 60px 0;
+        }
+        .cta-banner {
+          padding: 36px 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============================================================
+         Nav
+         ============================================================ -->
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="nav-brand" href="#top" aria-label="blaze-install">
+          <img src="logo.svg" alt="" />
+          <span>blaze-install</span>
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#commands">Commands</a>
+          <a href="#plugins">Plugins</a>
+          <a href="#compare">Compare</a>
+        </div>
+        <div class="nav-right">
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle theme"
+            title="Toggle theme"
+          ></button>
+          <a
+            class="btn-ghost"
+            href="https://github.com/Nom-nom-hub/blaze-cli"
+            aria-label="GitHub repository"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.55v-1.94c-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.35.95.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.16 1.17a10.95 10.95 0 0 1 5.74 0c2.2-1.48 3.16-1.17 3.16-1.17.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.4-2.7 5.36-5.26 5.65.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.8.55 4.57-1.52 7.85-5.83 7.85-10.91C23.5 5.65 18.35.5 12 .5z"
+              />
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============================================================
+         Hero
+         ============================================================ -->
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span class="hero-eyebrow">
+            <span class="dot">N</span>
+            v1.11 — Node.js 18+ &middot; Open Source
+          </span>
+          <h1>
+            Install Node.js deps<br />
+            at the <span class="accent">speed of thought</span>.
+          </h1>
+          <p class="hero-sub">
+            <strong>blaze-install</strong> is a fast, modern, batteries-included
+            package manager for Node.js. Parallel downloads, a global cache,
+            workspaces, plugins, and a built-in doctor's diagnosis — all in one
+            beautiful CLI.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#install">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3v12" />
+                <path d="m7 10 5 5 5-5" />
+                <path d="M5 21h14" />
+              </svg>
+              Install now
+            </a>
+            <a class="btn btn-secondary" href="https://github.com/Nom-nom-hub/blaze-cli">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.55v-1.94c-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.35.95.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.16 1.17a10.95 10.95 0 0 1 5.74 0c2.2-1.48 3.16-1.17 3.16-1.17.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.4-2.7 5.36-5.26 5.65.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.8.55 4.57-1.52 7.85-5.83 7.85-10.91C23.5 5.65 18.35.5 12 .5z"
+                />
+              </svg>
+              Star on GitHub
+            </a>
+          </div>
+          <div class="hero-badges">
+            <span class="badge"><span class="pip"></span>ISC License</span>
+            <span class="badge">Workspaces</span>
+            <span class="badge">Plugin system</span>
+            <span class="badge">Offline mode</span>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="terminal" role="img" aria-label="blaze install demo">
+            <div class="terminal-head">
+              <div class="terminal-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="terminal-title">~/my-app &mdash; blaze install</div>
+              <span style="width: 46px"></span>
+            </div>
+            <div class="terminal-body">
+              <div><span class="t-prompt">$</span> <span class="t-cmd">blaze install express --save</span></div>
+              <div class="t-dim">⏎ resolving 47 packages &middot; caching metadata</div>
+              <div>
+                <span class="t-bar"></span>
+                <span class="t-info">downloading</span>
+                <span class="t-dim">express@4.19.2</span>
+              </div>
+              <div>
+                <span class="t-bar"></span>
+                <span class="t-info">downloading</span>
+                <span class="t-dim">accepts@1.3.8 &middot; body-parser@1.20.2</span>
+              </div>
+              <div><span class="t-ok">✔</span> installed <span class="t-strong">express</span>, 47 transitive deps</div>
+              <div><span class="t-ok">✔</span> lockfile pruned &middot; <span class="t-dim">1.4 MB saved</span></div>
+              <div><span class="t-ok">✔</span> <span class="t-strong">done in 1.2s</span> <span class="t-dim">(cache: warm)</span></div>
+              <div>&nbsp;</div>
+              <div><span class="t-prompt">$</span> <span class="t-cmd">blaze audit</span></div>
+              <div><span class="t-ok">✔</span> 0 vulnerabilities across 48 packages</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Install
+         ============================================================ -->
+    <section class="section" id="install">
+      <div class="container section-head reveal">
+        <span class="section-eyebrow">Get Started</span>
+        <h2 class="section-title">One command. Up and running.</h2>
+        <p class="section-sub">
+          Pick your favorite way to install <code>blaze-install</code>. Then
+          <code>blaze install</code> works wherever <code>npm install</code>
+          does — and a lot faster.
+        </p>
+      </div>
+      <div class="container reveal">
+        <div class="tabs" id="installTabs">
+          <div class="tabs-list" role="tablist" aria-label="Install method">
+            <button class="tab-btn" role="tab" aria-selected="true" data-tab="npm">
+              npm
+            </button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="pnpm">
+              pnpm
+            </button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="yarn">
+              yarn
+            </button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="git">
+              from Git
+            </button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="npx">
+              npx
+            </button>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="npm">
+            <div class="code-block">
+              <code>npm install -g blaze-install</code>
+              <button class="copy-btn" data-copy="npm install -g blaze-install">Copy</button>
+            </div>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="pnpm" hidden>
+            <div class="code-block">
+              <code>pnpm add -g blaze-install</code>
+              <button class="copy-btn" data-copy="pnpm add -g blaze-install">Copy</button>
+            </div>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="yarn" hidden>
+            <div class="code-block">
+              <code>yarn global add blaze-install</code>
+              <button class="copy-btn" data-copy="yarn global add blaze-install">Copy</button>
+            </div>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="git" hidden>
+            <div class="code-block">
+              <code>git clone https://github.com/Nom-nom-hub/blaze-cli && cd blaze-cli && npm install -g</code>
+              <button
+                class="copy-btn"
+                data-copy="git clone https://github.com/Nom-nom-hub/blaze-cli && cd blaze-cli && npm install -g"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="npx" hidden>
+            <div class="code-block">
+              <code>npx blaze-install</code>
+              <button class="copy-btn" data-copy="npx blaze-install">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Features
+         ============================================================ -->
+    <section class="section" id="features">
+      <div class="container section-head reveal">
+        <span class="section-eyebrow">Why blaze-install</span>
+        <h2 class="section-title">Everything npm does — refined.</h2>
+        <p class="section-sub">
+          Built for modern Node.js projects and monorepos. Designed around the
+          workflows you actually use every day.
+        </p>
+      </div>
+      <div class="container">
+        <div class="features">
+          <div class="feature reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+            </div>
+            <h3>Blazing fast installs</h3>
+            <p>
+              Parallel downloads, metadata caching, deduplication, and a
+              cross-project global store.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+            </div>
+            <h3>Native workspaces</h3>
+            <p>
+              Built-in support for monorepos via the
+              <code>workspaces</code> field — fast, simple, and cross-platform.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 12h6" />
+                <path d="M9 16h6" />
+                <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z" />
+                <path d="M12 8v4" />
+              </svg>
+            </div>
+            <h3><code>blaze doctor</code></h3>
+            <p>
+              Diagnose and auto-repair missing node_modules, lockfile drift, and
+              broken symlinks. Run with <code>--fix</code> to repair.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m12 3-9 9h5v8h8v-8h5l-9-9z" />
+              </svg>
+            </div>
+            <h3>Plugin system</h3>
+            <p>
+              Drop a JS file into <code>plugins/</code> to hook install, update,
+              audit, clean, and more. 28+ plugins ship out of the box.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 20v-6" />
+                <path d="M12 14a7 7 0 0 0 7-7V3h-4v4a3 3 0 0 1-6 0V3H5v4a7 7 0 0 0 7 7Z" />
+              </svg>
+            </div>
+            <h3>Offline mode &amp; prefetch</h3>
+            <p>
+              Install fully from cache with <code>--offline</code>, or warm the
+              cache with <code>blaze prefetch</code> for airplane-friendly CI.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12Z" />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
+            </div>
+            <h3>Audit &amp; auto-fix</h3>
+            <p>
+              Built-in <code>blaze audit</code> using the npm audit API, plus
+              <code>blaze audit fix</code> to repair vulnerable dependencies in
+              one step.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Performance strip
+         ============================================================ -->
+    <section class="section" style="padding-top: 16px">
+      <div class="container reveal">
+        <div class="perf-strip">
+          <div>
+            <div class="perf-num">2–10×</div>
+            <div class="perf-label">faster than <code>npm install</code> with parallel downloads &amp; the global cache</div>
+          </div>
+          <div>
+            <div class="perf-num">0</div>
+            <div class="perf-label">stale dependencies — the lockfile is auto-pruned after every change</div>
+          </div>
+          <div>
+            <div class="perf-num">28+</div>
+            <div class="perf-label">first-party plugins for security, license, DX, and notifications</div>
+          </div>
+          <div>
+            <div class="perf-num">Native</div>
+            <div class="perf-label">workspaces &amp; monorepo support — no extra config needed</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         blaze watch callout
+         ============================================================ -->
+    <section class="section" style="padding-top: 32px">
+      <div class="container reveal">
+        <div class="watch-callout">
+          <div>
+            <h3>Auto-install as you code with <code>blaze watch</code></h3>
+            <p>
+              Start the watcher in your project root, then keep coding. Blaze
+              scans your files for <code>require</code> and
+              <code>import</code> statements and installs any missing packages
+              for you.
+            </p>
+            <ul>
+              <li>Detects new imports and requires in real-time</li>
+              <li>Batch-installs every missing package in one go</li>
+              <li>Filters out Node core modules like <code>fs</code> and <code>path</code></li>
+              <li>Works standalone or as part of an existing project</li>
+            </ul>
+          </div>
+          <div class="terminal" role="img" aria-label="blaze watch demo">
+            <div class="terminal-head">
+              <div class="terminal-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="terminal-title">~/my-app &mdash; blaze watch</div>
+              <span style="width: 46px"></span>
+            </div>
+            <div class="terminal-body" style="font-size: 0.85rem">
+              <div><span class="t-prompt">$</span> <span class="t-cmd">blaze watch</span></div>
+              <div class="t-info">watching <span class="t-dim">src/**/*.{js,ts}</span></div>
+              <div><span class="t-dim">[scan]</span> found <span class="t-strong">2 new packages</span>: zod, nanoid</div>
+              <div>
+                <span class="t-bar"></span>
+                <span class="t-info">installing</span>
+              </div>
+              <div><span class="t-ok">✔</span> zod@3.23.8, nanoid@5.0.7 added to dependencies</div>
+              <div><span class="t-dim">[idle]</span> waiting for changes&hellip;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Commands
+         ============================================================ -->
+    <section class="section" id="commands">
+      <div class="container section-head reveal">
+        <span class="section-eyebrow">Commands</span>
+        <h2 class="section-title">Drop-in replacements. Better defaults.</h2>
+        <p class="section-sub">
+          <code>blaze install</code>, <code>blaze add</code>,
+          <code>blaze update</code> — all the commands you already know, with a
+          few new ones for the workflows that matter.
+        </p>
+      </div>
+      <div class="container reveal">
+        <div class="tabs" id="cmdTabs">
+          <div class="tabs-list" role="tablist" aria-label="Commands">
+            <button class="tab-btn" role="tab" aria-selected="true" data-tab="install">install</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="add">add</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="remove">remove / update</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="doctor">doctor</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="graph">graph</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="prefetch">prefetch</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="audit">audit</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="fix">fix</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="github">github / tarball</button>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="install">
+            <div class="code-block">
+              <code>blaze install</code>
+              <button class="copy-btn" data-copy="blaze install">Copy</button>
+            </div>
+            <p style="margin-top: 14px">
+              Install every dependency from <code>package.json</code> using
+              <code>blaze-lock.json</code>. Honors <code>workspaces</code>,
+              automatically prunes the lockfile, and never installs Node core
+              modules as packages.
+            </p>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="add" hidden>
+            <div class="code-block">
+              <code>blaze install express --save</code>
+              <button
+                class="copy-btn"
+                data-copy="blaze install express --save"
+              >
+                Copy
+              </button>
+            </div>
+            <p style="margin-top: 14px">
+              Add a package to your project and your lockfile in one step. Use
+              <code>--save-dev</code> for devDependencies, or
+              <code>--production</code> for clean prod installs.
+            </p>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="remove" hidden>
+            <div class="code-block">
+              <code>blaze uninstall lodash && blaze update react</code>
+              <button
+                class="copy-btn"
+                data-copy="blaze uninstall lodash && blaze update react"
+              >
+                Copy
+              </button>
+            </div>
+            <p style="margin-top: 14px">
+              <code>blaze uninstall</code> removes the package, prunes the
+              lockfile, and rewrites <code>package.json</code>.
+              <code>blaze update</code> brings a package to the latest version
+              allowed by your semver range — also pruning the lockfile.
+            </p>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="doctor" hidden>
+            <div class="code-block">
+              <code>blaze doctor --fix</code>
+              <button class="copy-btn" data-copy="blaze doctor --fix">Copy</button>
+            </div>
+            <p style="margin-top: 14px">
+              Diagnose missing or corrupt <code>node_modules</code>, lockfile &
+              <code>package.json</code> drift, and broken symlinks. With
+              <code>--fix</code>, Blaze repairs what it can automatically.
+            </p>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="graph" hidden>
+            <div class="code-block">
+              <code>blaze graph > graph.mmd && npx @mermaid-js/mermaid-cli -i graph.mmd -o graph.svg</code>
+              <button
+                class="copy-btn"
+                data-copy="blaze graph > graph.mmd && npx @mermaid-js/mermaid-cli -i graph.mmd -o graph.svg"
+              >
+                Copy
+              </button>
+            </div>
+            <p style="margin-top: 14px">
+              Output a Mermaid.js diagram of your dependency tree. Pipe it into
+              <code>mermaid-cli</code> to render an SVG, or paste it into any
+              Mermaid live editor.
+            </p>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="prefetch" hidden>
+            <div class="code-block">
+              <code>blaze prefetch</code>
+              <button class="copy-btn" data-copy="blaze prefetch">Copy</button>
+            </div>
+            <p style="margin-top: 14px">
+              Resolve and download every dependency (including workspace tarballs)
+              into the global cache. Run on a fast connection, then go fully
+              offline with <code>blaze install --offline</code>.
+            </p>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="audit" hidden>
+            <div class="code-block">
+              <code>blaze audit && blaze audit fix</code>
+              <button
+                class="copy-btn"
+                data-copy="blaze audit && blaze audit fix"
+              >
+                Copy
+              </button>
+            </div>
+            <p style="margin-top: 14px">
+              Built-in vulnerability scanning via the npm audit API, plus an
+              <code>audit fix</code> mode that bumps vulnerable dependencies to
+              safe versions inside your allowed semver range.
+            </p>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="fix" hidden>
+            <div class="code-block">
+              <code>blaze fix</code>
+              <button class="copy-btn" data-copy="blaze fix">Copy</button>
+            </div>
+            <p style="margin-top: 14px">
+              One unified command to keep a project healthy: runs ESLint and
+              Prettier (auto-fix), removes unused dependencies, updates outdated
+              ones, runs <code>blaze doctor --fix</code>, and applies
+              <code>blaze audit fix</code>.
+            </p>
+          </div>
+          <div class="tab-panel" role="tabpanel" data-panel="github" hidden>
+            <div class="code-block">
+              <code>blaze install apache-superset/superset-frontend#master</code>
+              <button
+                class="copy-btn"
+                data-copy="blaze install apache-superset/superset-frontend#master"
+              >
+                Copy
+              </button>
+            </div>
+            <p style="margin-top: 14px">
+              Install directly from a GitHub repo, a <code>#branch</code>,
+              <code>#tag</code>, or <code>#commit-sha</code>. Use a
+              <code>.tar.gz</code> URL for tarball installs. Private repos use
+              <code>ssh-key</code> auth or a <code>GITHUB_TOKEN</code>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Plugins
+         ============================================================ -->
+    <section class="section" id="plugins">
+      <div class="container section-head reveal">
+        <span class="section-eyebrow">Plugins</span>
+        <h2 class="section-title">Extend Blaze without forking it.</h2>
+        <p class="section-sub">
+          Drop a file into <code>plugins/</code> and unlock hooks for every
+          major command. 28+ plugins ship with Blaze — covering security,
+          license, DX, and notifications.
+        </p>
+      </div>
+      <div class="container">
+        <div class="plugins">
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">securityAuditReporter</span>
+              <span class="plugin-tag">security</span>
+            </div>
+            <p class="plugin-desc">Prints a summary after every audit, ready to be piped into a webhook or Slack channel.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">vulnAutoReporter</span>
+              <span class="plugin-tag">security</span>
+            </div>
+            <p class="plugin-desc">Auto-files a GitHub issue or sends email when a critical CVE is detected.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">githubIssueNotifier</span>
+              <span class="plugin-tag">security</span>
+            </div>
+            <p class="plugin-desc">Cross-references installed packages against open GitHub security advisories.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">licenseChecker</span>
+              <span class="plugin-tag">license</span>
+            </div>
+            <p class="plugin-desc">Flags any installed package whose license isn't on your allow-list.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">duplicatePackageDetector</span>
+              <span class="plugin-tag">deps</span>
+            </div>
+            <p class="plugin-desc">Warns when more than one major version of a package is hoisted into <code>node_modules</code>.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">unusedDependencyLinter</span>
+              <span class="plugin-tag">deps</span>
+            </div>
+            <p class="plugin-desc">Detects packages in <code>package.json</code> that nothing imports — and suggests removing them.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">preCommitDepChecker</span>
+              <span class="plugin-tag">deps</span>
+            </div>
+            <p class="plugin-desc">Blocks a commit when dependencies are outdated or missing.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">peerAutoInstaller</span>
+              <span class="plugin-tag">deps</span>
+            </div>
+            <p class="plugin-desc">Auto-installs any missing peer dependencies after install or update.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">tscTypeChecker</span>
+              <span class="plugin-tag">dx</span>
+            </div>
+            <p class="plugin-desc">Runs <code>tsc --noEmit</code> after install/update to catch type drift immediately.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">eslintPrettierRunner</span>
+              <span class="plugin-tag">dx</span>
+            </div>
+            <p class="plugin-desc">Runs ESLint and Prettier after install/update. Wire to <code>--fix</code> for auto-format.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">installProfiler</span>
+              <span class="plugin-tag">dx</span>
+            </div>
+            <p class="plugin-desc">Reports how long each package took to install, so you can spot the slow ones fast.</p>
+          </div>
+          <div class="plugin reveal">
+            <div class="plugin-head">
+              <span class="plugin-name">healthScore</span>
+              <span class="plugin-tag">diagnostics</span>
+            </div>
+            <p class="plugin-desc">Scores every package on maintenance, popularity, and security — surface risk early.</p>
+          </div>
+        </div>
+        <p class="plugins-more">
+          And 16 more — license checkers, social notifiers, mirror switchers,
+          changelog fetchers, and more.
+          <a href="https://github.com/Nom-nom-hub/blaze-cli#readme">Browse the full list on GitHub &rarr;</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Compare
+         ============================================================ -->
+    <section class="section" id="compare">
+      <div class="container section-head reveal">
+        <span class="section-eyebrow">Compare</span>
+        <h2 class="section-title">Where Blaze stands against the rest.</h2>
+        <p class="section-sub">
+          An honest, sourced comparison vs the four package managers you're
+          probably using today.
+        </p>
+      </div>
+      <div class="container reveal">
+        <div class="compare-wrap">
+          <table class="compare">
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th>blaze-install</th>
+                <th>npm</th>
+                <th>pnpm</th>
+                <th>yarn</th>
+                <th>bun</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Speed</td>
+                <td class="feat-blaze">Parallel + global cache; 2–10× faster than npm</td>
+                <td>Sequential, slower in monorepos</td>
+                <td>Fast via symlinked store</td>
+                <td>Fast, less aggressive cache</td>
+                <td>Fastest, native engine</td>
+              </tr>
+              <tr>
+                <td>Lockfile cleanliness</td>
+                <td class="feat-blaze">Auto-pruned after every install/update/uninstall</td>
+                <td>Can accumulate stale entries</td>
+                <td>Pruned but easy to bloat</td>
+                <td>Pruned but easy to bloat</td>
+                <td>Pruned, less mature</td>
+              </tr>
+              <tr>
+                <td>Workspaces / monorepo</td>
+                <td class="feat-blaze">Built-in, fast, no config</td>
+                <td>Supported, slower at scale</td>
+                <td>Best-in-class</td>
+                <td>Strong, well-known</td>
+                <td>Basic</td>
+              </tr>
+              <tr>
+                <td>Self-healing</td>
+                <td class="feat-blaze"><code>blaze doctor --fix</code> auto-repairs</td>
+                <td>No equivalent</td>
+                <td>No equivalent</td>
+                <td>No equivalent</td>
+                <td>No equivalent</td>
+              </tr>
+              <tr>
+                <td>Offline mode</td>
+                <td class="feat-blaze">First-class, with <code>prefetch</code></td>
+                <td>Limited</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Plugin system</td>
+                <td class="feat-blaze">28+ official plugins, drop-in</td>
+                <td>None</td>
+                <td>Hooks (limited)</td>
+                <td>Plugins (limited)</td>
+                <td>None</td>
+              </tr>
+              <tr>
+                <td>Dependency graph</td>
+                <td class="feat-blaze"><code>blaze graph</code> outputs Mermaid.js</td>
+                <td>None</td>
+                <td>None</td>
+                <td>None</td>
+                <td>None</td>
+              </tr>
+              <tr>
+                <td>Audit &amp; auto-fix</td>
+                <td class="feat-blaze">Built-in, single command</td>
+                <td>Built-in</td>
+                <td>Built-in</td>
+                <td>Built-in</td>
+                <td>Basic</td>
+              </tr>
+              <tr>
+                <td>Peer deps handling</td>
+                <td class="feat-blaze">Clear warnings + auto-install prompt</td>
+                <td>Sometimes cryptic</td>
+                <td>Clear</td>
+                <td>Sometimes cryptic</td>
+                <td>Basic</td>
+              </tr>
+              <tr>
+                <td>Config</td>
+                <td class="feat-blaze"><code>.blazerc</code> + <code>.npmrc</code></td>
+                <td><code>.npmrc</code></td>
+                <td><code>.npmrc</code> + <code>.pnpmfile.cjs</code></td>
+                <td><code>.yarnrc</code></td>
+                <td><code>bunfig.toml</code></td>
+              </tr>
+              <tr>
+                <td>License</td>
+                <td class="feat-blaze">ISC, open source</td>
+                <td>Artistic 2.0</td>
+                <td>MIT</td>
+                <td>BSD</td>
+                <td>MIT</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CTA banner
+         ============================================================ -->
+    <section class="section" style="padding-top: 32px">
+      <div class="container reveal">
+        <div class="cta-banner">
+          <h2>Ready to make your <code>node_modules</code> boringly fast?</h2>
+          <p>
+            Get up and running in 30 seconds. No global state to wrestle, no
+            new mental model — just a faster, prettier <code>npm install</code>.
+          </p>
+          <div
+            style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap"
+          >
+            <a class="btn btn-primary" href="#install">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3v12" />
+                <path d="m7 10 5 5 5-5" />
+                <path d="M5 21h14" />
+              </svg>
+              Install blaze-install
+            </a>
+            <a class="btn btn-secondary" href="https://github.com/Nom-nom-hub/blaze-cli">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.55v-1.94c-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.35.95.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.16 1.17a10.95 10.95 0 0 1 5.74 0c2.2-1.48 3.16-1.17 3.16-1.17.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.4-2.7 5.36-5.26 5.65.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.8.55 4.57-1.52 7.85-5.83 7.85-10.91C23.5 5.65 18.35.5 12 .5z"
+                />
+              </svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Footer
+         ============================================================ -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <img src="logo.svg" alt="" />
+          <span>
+            <strong>blaze-install</strong> &middot; ISC License &middot; Made
+            with care for the Node.js community.
+          </span>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/Nom-nom-hub/blaze-cli">GitHub</a>
+          <a href="https://www.npmjs.com/package/blaze-install">npm</a>
+          <a href="https://github.com/Nom-nom-hub/blaze-cli#readme">README</a>
+          <a href="https://github.com/Nom-nom-hub/blaze-cli/issues">Issues</a>
+          <a href="https://github.com/Nom-nom-hub/blaze-cli/blob/main/CONTRIBUTING.md">Contribute</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ============================================================
+         Light/dark icons (used by toggle)
+         ============================================================ -->
+    <template id="iconSun">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 3v2" />
+        <path d="M12 19v2" />
+        <path d="M3 12h2" />
+        <path d="M19 12h2" />
+        <path d="m5.6 5.6 1.4 1.4" />
+        <path d="m17 17 1.4 1.4" />
+        <path d="m5.6 18.4 1.4-1.4" />
+        <path d="m17 7 1.4-1.4" />
+      </svg>
+    </template>
+    <template id="iconMoon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+      </svg>
+    </template>
+
+    <script>
+      (function () {
+        "use strict";
+
+        // ---------- Theme ----------
+        var THEME_KEY = "blaze-theme";
+        var root = document.documentElement;
+        var toggle = document.getElementById("themeToggle");
+
+        var sunSVG = document.getElementById("iconSun").innerHTML;
+        var moonSVG = document.getElementById("iconMoon").innerHTML;
+
+        function applyTheme(theme) {
+          root.setAttribute("data-theme", theme);
+          try {
+            localStorage.setItem(THEME_KEY, theme);
+          } catch (e) {}
+          if (toggle) {
+            toggle.innerHTML = theme === "dark" ? sunSVG : moonSVG;
+            toggle.setAttribute(
+              "aria-label",
+              theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
+            );
+          }
+        }
+
+        var saved = null;
+        try {
+          saved = localStorage.getItem(THEME_KEY);
+        } catch (e) {}
+        var initial =
+          saved ||
+          (window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        applyTheme(initial);
+
+        if (toggle) {
+          toggle.addEventListener("click", function () {
+            applyTheme(
+              root.getAttribute("data-theme") === "dark" ? "light" : "dark"
+            );
+          });
+        }
+
+        // ---------- Tabs ----------
+        function initTabs(tabsId) {
+          var tabs = document.getElementById(tabsId);
+          if (!tabs) return;
+          var buttons = tabs.querySelectorAll(".tab-btn");
+          var panels = tabs.querySelectorAll(".tab-panel");
+          buttons.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              var key = btn.getAttribute("data-tab");
+              buttons.forEach(function (b) {
+                b.setAttribute(
+                  "aria-selected",
+                  b === btn ? "true" : "false"
+                );
+              });
+              panels.forEach(function (p) {
+                if (p.getAttribute("data-panel") === key) {
+                  p.removeAttribute("hidden");
+                } else {
+                  p.setAttribute("hidden", "");
+                }
+              });
+            });
+          });
+        }
+        initTabs("installTabs");
+        initTabs("cmdTabs");
+
+        // ---------- Copy buttons ----------
+        document.addEventListener("click", function (e) {
+          var btn = e.target.closest(".copy-btn");
+          if (!btn) return;
+          var text = btn.getAttribute("data-copy");
+          if (!text) return;
+          var done = function () {
+            var prev = btn.textContent;
+            btn.textContent = "Copied";
+            btn.classList.add("copied");
+            setTimeout(function () {
+              btn.textContent = prev;
+              btn.classList.remove("copied");
+            }, 1400);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done, fallback);
+          } else {
+            fallback();
+          }
+          function fallback() {
+            try {
+              var ta = document.createElement("textarea");
+              ta.value = text;
+              ta.style.position = "fixed";
+              ta.style.opacity = "0";
+              document.body.appendChild(ta);
+              ta.focus();
+              ta.select();
+              document.execCommand("copy");
+              document.body.removeChild(ta);
+              done();
+            } catch (err) {
+              btn.textContent = "Press ⌘C";
+            }
+          }
+        });
+
+        // ---------- Reveal-on-scroll ----------
+        var reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+        if ("IntersectionObserver" in window && !reduceMotion) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("is-visible");
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+          );
+          document.querySelectorAll(".reveal").forEach(function (el) {
+            io.observe(el);
+          });
+        } else {
+          document.querySelectorAll(".reveal").forEach(function (el) {
+            el.classList.add("is-visible");
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
