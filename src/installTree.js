@@ -276,7 +276,7 @@ async function installTree(tree, destDir, options = {}) {
   }, cliProgress.Presets.shades_classic);
   bar.start(pkgs.length, 0, { pkg: "" });
 
-  const concurrency = 8;
+  const concurrency = 32;
   let i = 0;
 
   // Step 1: Resolve all tarball URLs in parallel
