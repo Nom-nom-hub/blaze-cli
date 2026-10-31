@@ -43,7 +43,7 @@
     "packages/pkg-b"
   ],
   "dependencies": {
-    "axios": "latest",
+    "axios": "^1.18.0",
     "boxen": "^5.1.2",
     "chalk": "^4.1.2",
     "chokidar": "^4.0.3",
